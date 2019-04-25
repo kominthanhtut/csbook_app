@@ -1,4 +1,4 @@
-# csbruno_app
+# Catholic Song Book
 
 A new Flutter project.
 
