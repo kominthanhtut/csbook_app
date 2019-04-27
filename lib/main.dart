@@ -2,22 +2,6 @@ import 'package:csbruno_app/model/Instance.dart';
 import 'package:csbruno_app/model/Song.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'csbook',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Catholic Song Book'),
-    );
-  }
-}
-
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
   final String title;
@@ -29,11 +13,16 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   void getInstances(Song song){
-    Instance.get(0).then((Instance instance) => {
-      instance.setSong(song);
+    Instance.get(song).then((List<Instance> instances) {
+      var toastText = "";
+      instances.forEach((a){
+        toastText += a.choir.toString()+"\n";
+      });
+      print(toastText);
     }
     );
   }
+
 
 
   @override
