@@ -1,4 +1,5 @@
 import 'package:csbruno_app/list.dart';
+import 'package:csbruno_app/song.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -12,7 +13,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Catholic Song Book'),
+      home: ListScreen(title: 'Catholic Song Book'),
+      routes: {
+        SongScreen.routeName: (context) => SongScreen(),
+        ListScreen.routeName: (context) => ListScreen(),
+      },  
     );
   }
 }

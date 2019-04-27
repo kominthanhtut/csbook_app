@@ -1,29 +1,33 @@
 import 'package:csbruno_app/model/Instance.dart';
 import 'package:csbruno_app/model/Song.dart';
+import 'package:csbruno_app/song.dart';
 import 'package:flutter/material.dart';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class ListScreen extends StatefulWidget {
+    static const routeName = '/song_list';
+  ListScreen({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _ListState createState() => _ListState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-
-  void getInstances(Song song){
+class _ListState extends State<ListScreen> {
+  void getInstances(BuildContext context, Song song) {
     Instance.get(song).then((List<Instance> instances) {
       var toastText = "";
-      instances.forEach((a){
-        toastText += a.choir.toString()+"\n";
+      instances.forEach((a) {
+        toastText += a.choir.toString() + "\n";
       });
       print(toastText);
-    }
-    );
+
+      Navigator.pushNamed(
+        context,
+        SongScreen.routeName,
+        arguments: instances[0],
+      );
+    });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -50,14 +54,14 @@ class _MyHomePageState extends State<MyHomePage> {
                           title: new Text(snapshot.data[index].getTitle()),
                           subtitle: new Text(snapshot.data[index].getAuthor()),
                           onTap: () {
-                            getInstances(snapshot.data[index]);
+                            getInstances(context,snapshot.data[index]);
                           },
                         );
                       } else {
                         return new ListTile(
                           title: new Text(snapshot.data[index].getTitle()),
                           onTap: () {
-                            getInstances(snapshot.data[index]);
+                            getInstances(context, snapshot.data[index]);
                           },
                         );
                       }
