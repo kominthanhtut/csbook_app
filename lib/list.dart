@@ -1,6 +1,6 @@
-import 'package:csbruno_app/model/Instance.dart';
-import 'package:csbruno_app/model/Song.dart';
-import 'package:csbruno_app/song.dart';
+import 'package:csbook_app/model/Instance.dart';
+import 'package:csbook_app/model/Song.dart';
+import 'package:csbook_app/song.dart';
 import 'package:flutter/material.dart';
 
 class ListScreen extends StatefulWidget {
@@ -15,12 +15,6 @@ class ListScreen extends StatefulWidget {
 class _ListState extends State<ListScreen> {
   void getInstances(BuildContext context, Song song) {
     Instance.get(song).then((List<Instance> instances) {
-      var toastText = "";
-      instances.forEach((a) {
-        toastText += a.choir.toString() + "\n";
-      });
-      print(toastText);
-
       Navigator.pushNamed(
         context,
         SongScreen.routeName,

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:csbruno_app/Api.dart';
-import 'package:csbruno_app/model/Song.dart';
+import 'package:csbook_app/Api.dart';
+import 'package:csbook_app/model/Song.dart';
 
 class Instance {
   final int id;

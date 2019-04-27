@@ -1,5 +1,5 @@
-import 'package:csbruno_app/list.dart';
-import 'package:csbruno_app/song.dart';
+import 'package:csbook_app/list.dart';
+import 'package:csbook_app/song.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
