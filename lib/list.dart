@@ -4,7 +4,7 @@ import 'package:csbook_app/song.dart';
 import 'package:flutter/material.dart';
 
 class ListScreen extends StatefulWidget {
-    static const routeName = '/song_list';
+  static const routeName = '/song_list';
   ListScreen({Key key, this.title}) : super(key: key);
   final String title;
 
@@ -13,6 +13,8 @@ class ListScreen extends StatefulWidget {
 }
 
 class _ListState extends State<ListScreen> {
+  List<Song> songs = new List<Song>();
+
   void getInstances(BuildContext context, Song song) {
     Instance.get(song).then((List<Instance> instances) {
       Navigator.pushNamed(
@@ -24,44 +26,35 @@ class _ListState extends State<ListScreen> {
   }
 
   @override
+  void initState() {
+    Song.get(0, 0).then((s) => this.songs = s);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: FutureBuilder(
-          future: Song.get(0, 0),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.none:
-              case ConnectionState.waiting:
-                return new Text('loading...');
-              default:
-                if (snapshot.hasError)
-                  return new Text('Error: ${snapshot.error}');
-                else
-                  return new ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      if (snapshot.data[index].hasAuthor()) {
-                        return new ListTile(
-                          title: new Text(snapshot.data[index].getTitle()),
-                          subtitle: new Text(snapshot.data[index].getAuthor()),
-                          onTap: () {
-                            getInstances(context,snapshot.data[index]);
-                          },
-                        );
-                      } else {
-                        return new ListTile(
-                          title: new Text(snapshot.data[index].getTitle()),
-                          onTap: () {
-                            getInstances(context, snapshot.data[index]);
-                          },
-                        );
-                      }
-                    },
-                  );
-                ;
+        body: new ListView.builder(
+          itemCount: songs.length,
+          itemBuilder: (BuildContext context, int index) {
+            if (songs[index].hasAuthor()) {
+              return new ListTile(
+                title: new Text(songs[index].getTitle()),
+                subtitle: new Text(songs[index].getAuthor()),
+                onTap: () {
+                  getInstances(context, songs[index]);
+                },
+              );
+            } else {
+              return new ListTile(
+                title: new Text(songs[index].getTitle()),
+                onTap: () {
+                  getInstances(context, songs[index]);
+                },
+              );
             }
           },
         ));

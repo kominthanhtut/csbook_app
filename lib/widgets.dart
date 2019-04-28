@@ -10,34 +10,43 @@ class SongText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(20),
-      child: new Column(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: createWidgetList(songText),
       ),
     );
   }
 
   List<Widget> createWidgetList(String songText, {transpose: 0}) {
-    List<String> parts = process(songText);
+    //songText = songText.replaceAll("\r\n\r\n", "\r\n");
+    List<String> parts = songText.split("\r\n");
     List<Widget> widgets = new List<Widget>();
 
+    bool chorus = false;
+
     parts.forEach((e) {
-      if(e.contains("{start_of_chorus}")){
-        e = e.replaceAll("{start_of_chorus}", "");
-        e = e.replaceAll("{end_of_chorus}", "");
-        widgets.add(new Text(e, style: TextStyle(fontWeight: FontWeight.bold),));
-      }else 
-        widgets.add(new Text(e));
+      if (e.contains("{start_of_chorus}")) {
+        chorus = true;
+        widgets.add(new Text(""));
+      } else if (e.contains("{end_of_chorus}")) {
+        chorus = false;
+        widgets.add(new Text(""));
+      } else {
+        processLine(widgets, e, chorus);
+      }
     });
 
     return widgets;
   }
 
-  List<String> process(String songText, {transpose: 0}) {
-    //Remove or modify Chords
-    songText = songText.replaceAll(chordRegex, "");
-
-    List<String> parts = songText.split("\r\n\r\n");
-    return parts;
-    //return parts[0];
+  void processLine(List<Widget> widgets, String line, bool chorus) {
+    if (chorus) {
+      widgets.add(new Text(
+        line,
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ));
+    } else {
+      widgets.add(new Text(line));
+    }
   }
 }

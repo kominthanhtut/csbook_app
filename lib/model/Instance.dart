@@ -13,6 +13,8 @@ class Instance {
 
   Song song;
 
+  final chordRegex = RegExp(r'\[(.*?)\]');
+
   Instance(
       this.id, this.songText, this.capo, this.rithm, this.choir, this.tone);
 
@@ -37,5 +39,9 @@ class Instance {
 
   void setSong(Song song) {
     this.song = song;
+  }
+
+  String removeChords(){
+    return songText.replaceAll(chordRegex, ""); 
   }
 }
