@@ -4,7 +4,6 @@ import 'package:csbook_app/widgets.dart';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class SongScreen extends StatefulWidget {
   static const routeName = '/song_view';
@@ -40,7 +39,7 @@ class _SongScreenState extends State<SongScreen> {
           child: Icon(Icons.play_arrow),
           //Widget to display inside Floating Action Button, can be `Text`, `Icon` or any widget.
           onPressed: () {
-            _launchURL("https://www.youtube.com/watch?v="+instance.song.youtubeId.toString());
+            //_launchURL("https://www.youtube.com/watch?v="+instance.song.youtubeId.toString());
           },
         ),
         bottomNavigationBar: BottomAppBar(
@@ -62,11 +61,5 @@ class _SongScreenState extends State<SongScreen> {
         ));
   }
 
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
+
 }
