@@ -40,6 +40,10 @@ class Song {
     return title;
   }
 
+  String getSubTitle(){
+    return subtitle;
+  }
+
   String getAuthor(){
     return hasAuthor() ? author: "";
   }

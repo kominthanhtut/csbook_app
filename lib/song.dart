@@ -1,3 +1,4 @@
+import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/model/Song.dart';
 import 'package:csbook_app/widgets.dart';
@@ -18,6 +19,8 @@ class _SongScreenState extends State<SongScreen> {
   _SongScreenState(this.instance);
   final Instance instance;
 
+  int transpose = 0;
+
   @override
   Widget build(BuildContext context) {
     final Instance instance = ModalRoute.of(context).settings.arguments;
@@ -30,13 +33,13 @@ class _SongScreenState extends State<SongScreen> {
             child: Column(children: [
           Row(children: [
             Expanded(
-              child: SongText(instance.removeChords()),
+              child: SongText(instance.transpose(transpose)),
             ),
           ])
         ])),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.play_arrow),
+          child: Icon(FontAwesomeIcons.youtube),
           //Widget to display inside Floating Action Button, can be `Text`, `Icon` or any widget.
           onPressed: () {
             //_launchURL("https://www.youtube.com/watch?v="+instance.song.youtubeId.toString());
@@ -48,13 +51,25 @@ class _SongScreenState extends State<SongScreen> {
             mainAxisSize: MainAxisSize.max,
             //mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.add),
-                onPressed: () {},
-              ),
+              
               IconButton(
                 icon: Icon(Icons.remove),
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                   transpose--; 
+                  });
+                },
+              ),
+              FlatButton(child: Text("Original "+instance.getTone(Chord.CHORD_SET_SPANISH)), onPressed: () {
+                setState((){transpose = 0;});
+              },),
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  setState(() {
+                   transpose++; 
+                  });
+                },
               ),
             ],
           ),

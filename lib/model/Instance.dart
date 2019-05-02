@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:csbook_app/Api.dart';
+import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/model/Song.dart';
 
 class Instance {
@@ -43,5 +44,15 @@ class Instance {
 
   String removeChords(){
     return songText.replaceAll(chordRegex, ""); 
+  }
+
+  String getTone(List<String> chordset){
+    return Chord(tone).paint(chordset);
+  }
+
+  String transpose(int semiTone){
+    return songText.replaceAllMapped(Chord.chordRegex, (match) {
+      return "["+Chord(match.group(1)).transpose(semiTone).paint(Chord.CHORD_SET_SPANISH)+"]";
+    });
   }
 }
