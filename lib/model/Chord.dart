@@ -76,7 +76,7 @@ class Chord {
   }
 
   Chord transpose(int semiTones) {
-    if (semiTones != 0) this.chordnum = ((this.chordnum + semiTones) % 11);
+    if (semiTones != 0) this.chordnum = ((this.chordnum + semiTones) % 12);
     return this;
   }
 

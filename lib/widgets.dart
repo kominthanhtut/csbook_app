@@ -1,9 +1,11 @@
 import 'package:csbook_app/model/Chord.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SongText extends StatelessWidget {
-  SongText(this.songText);
+  SongText(this.songText, {this.textSize = 16});
   final String songText;
+  final double textSize;
 
   @override
   Widget build(BuildContext context) {
@@ -16,23 +18,25 @@ class SongText extends StatelessWidget {
     );
   }
 
-  List<Widget> createWidgetList(String songText, {transpose: 0}) {
-    //songText = songText.replaceAll("\r\n\r\n", "\r\n");
-    List<String> parts = songText.split("\r\n");
+  List<Widget> createWidgetList(String songText) {
+    List<String> paragraphs = songText.split("\r\n\r\n");
+    List<String> parts;
     List<Widget> widgets = new List<Widget>();
 
     bool chorus = false;
 
-    parts.forEach((e) {
-      if (e.contains("{start_of_chorus}")) {
-        chorus = true;
-        widgets.add(new Text(""));
-      } else if (e.contains("{end_of_chorus}")) {
-        chorus = false;
-        widgets.add(new Text(""));
-      } else {
-        processLine(widgets, e, chorus);
-      }
+    paragraphs.forEach((f) {
+      parts = f.split("\r\n");
+      parts.forEach((e) {
+        if (e.contains("{start_of_chorus}")) {
+          chorus = true;
+        } else if (e.contains("{end_of_chorus}")) {
+          chorus = false;
+        } else {
+          processLine(widgets, e, chorus);
+        }
+      });
+      widgets.add(new Text("\r\n"));
     });
 
     return widgets;
@@ -40,40 +44,85 @@ class SongText extends StatelessWidget {
 
   //Primero simplemente ASCII;
   void processLine(List<Widget> widgets, String line, bool chorus) {
+    List<Widget> currentLine = List<Widget>();
+
     //Tenemos troceada la cadena sin notas...
     List<String> parts = line.split(Chord.chordRegex);
     //... y las notas
     List<Match> matches = Chord.chordRegex.allMatches(line).toList();
-    //matches.forEach((m) => print(m.group(1)));
 
-    String chordLine = "";
-    for(var i = 0; i< matches.length; i++){
-      String currentChord = matches[i].group(1);
-      chordLine += currentChord;
-      for(var k = 0; k < (parts[i+1].length - currentChord.length); k++){
-        chordLine+=" ";
-      }
-    }
-
-
-    if (chorus) {
-      //ChordLine
-      widgets.add(new Text(
-        chordLine,
-        style: TextStyle(fontWeight: FontWeight.bold,),
-      ));
-
-      //Line
-      widgets.add(new Text(
-        parts.join(""),
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ));
+    //if (parts[0] == "") parts.removeAt(0);
+    if (parts.length == 1) {
+      widgets.add(Wrap(children: [
+        Text(parts[0],
+            style: TextStyle(
+              fontSize: textSize,
+              fontWeight: chorus ? FontWeight.bold : FontWeight.normal,
+            ))
+      ]));
     } else {
-      //ChordLine
-      widgets.add(new Text(chordLine));
+      for (var i = 0; i < parts.length; i++) {
+        String currentChord;
+        String currentPart;
 
-      //Line
-      widgets.add(new Text(parts.join("")));
+        if (parts.length > matches.length) {
+          currentChord = (i == 0) ? "" : matches[i - 1].group(1);
+        } else {
+          currentChord = matches[i].group(1);
+        }
+
+        currentPart = parts[i];
+        currentLine.add(Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(currentChord,
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: textSize,
+                  fontWeight: chorus ? FontWeight.bold : FontWeight.normal,
+                )),
+            Text(currentPart,
+                style: TextStyle(
+                  fontSize: textSize,
+                  fontWeight: chorus ? FontWeight.bold : FontWeight.normal,
+                ))
+          ],
+        ));
+      }
+
+      widgets.add(Wrap(children: currentLine));
     }
+  }
+}
+
+
+class FetchingWidget extends StatelessWidget {
+  final text;
+  
+  FetchingWidget(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              FontAwesomeIcons.download,
+              size: 128,
+              color: Colors.grey,
+            ),
+            Container(
+              height: 32,
+            ),
+            Center(
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: 30,
+                ),
+              ),
+            )
+          ]);
   }
 }
