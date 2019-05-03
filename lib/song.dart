@@ -26,6 +26,14 @@ class _SongScreenState extends State<SongScreen> {
 
   _SongScreenState(Song song);
 
+  bool fullscreen = false;
+
+  @override
+  void initState() {
+    fullscreen = false;
+    super.initState();
+  }
+
   void getInstances(Song song) {
     Instance.get(song).then((List<Instance> instances) {
       setState(() {
@@ -34,32 +42,34 @@ class _SongScreenState extends State<SongScreen> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    if (song == null){
-      song = ModalRoute.of(context).settings.arguments;
-      getInstances(song);
-    }
-    if (instance == null)
-      return Scaffold(
-          appBar: AppBar(
-            title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(song.title.toString()),
-                  Text(
-                    song.author.toString(),
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.normal,
-                        fontStyle: FontStyle.italic),
-                  ),
-                ]),
-          ),
-          body: FetchingWidget("Fetching song ..."));
-    else
-      return Scaffold(
+  Widget getWaitingApp() {
+    return Scaffold(
+        appBar: AppBar(
+          title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(song.title.toString()),
+                Text(
+                  song.author.toString(),
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                      fontStyle: FontStyle.italic),
+                ),
+              ]),
+        ),
+        body: FetchingWidget("Fetching song ..."));
+  }
+
+  Widget getNormalApp() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          fullscreen = !fullscreen;
+        });
+      },
+      child: Scaffold(
           appBar: AppBar(
             title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,17 +113,7 @@ class _SongScreenState extends State<SongScreen> {
               ),
             ),
           ]),
-          /*
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        floatingActionButton: FloatingActionButton(
-          child: Icon(FontAwesomeIcons.youtube),
-          //Widget to display inside Floating Action Button, can be `Text`, `Icon` or any widget.
-          onPressed: () {
-            //_launchURL("https://www.youtube.com/watch?v="+instance.song.youtubeId.toString());
-          },
-        ),*/
           bottomNavigationBar: BottomAppBar(
-            //shape: CircularNotchedRectangle(),
             child: new Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -145,6 +145,63 @@ class _SongScreenState extends State<SongScreen> {
                 ),
               ],
             ),
-          ));
+          )),
+    );
+  }
+
+  Widget getFullscreenApp() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          fullscreen = !fullscreen;
+        });
+      },
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 32),
+            child: Column(children: [
+              Text(
+                song.title,
+                style: TextStyle(fontSize: 32),
+              ),
+              Text(
+                song.author,
+                style: TextStyle(fontSize: 24, fontStyle: FontStyle.italic),
+              ),
+              (song.subtitle != null && song.subtitle != "") ?
+              Text(
+                "(" + song.subtitle + ")",
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ):Container(),
+              Row(children: [
+                Expanded(
+                  child: SongText(
+                    instance.transpose(transpose),
+                    textSize: fontSize,
+                  ),
+                ),
+              ]),
+            ]),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (song == null) {
+      song = ModalRoute.of(context).settings.arguments;
+      getInstances(song);
+    }
+    if (instance == null)
+      return getWaitingApp();
+    else {
+      if (!fullscreen)
+        return getNormalApp();
+      else
+        return getFullscreenApp();
+    }
   }
 }

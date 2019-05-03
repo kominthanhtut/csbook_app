@@ -11,7 +11,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'csbook',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: Colors.black,
+        //primaryColorDark: Colors.brown
+        //bottomAppBarColor: Colors.black
       ),
       home: ListScreen(title: 'Catholic Song Book'),
       routes: {

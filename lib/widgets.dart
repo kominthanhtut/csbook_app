@@ -77,7 +77,7 @@ class SongText extends StatelessWidget {
           children: <Widget>[
             Text(currentChord,
                 style: TextStyle(
-                  color: Colors.red,
+                  color: Colors.grey,
                   fontSize: textSize,
                   fontWeight: chorus ? FontWeight.bold : FontWeight.normal,
                 )),
