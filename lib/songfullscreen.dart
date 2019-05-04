@@ -1,3 +1,4 @@
+import 'package:csbook_app/SongTextWidget.dart';
 import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/model/Song.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:screen/screen.dart';
 
 class SongFullScreen extends StatefulWidget {
   static const routeName = '/song_view_fs';
@@ -34,43 +36,60 @@ class _SongFullScreenState extends State<SongFullScreen> {
 
   _SongFullScreenState();
 
+@override
+  void initState() {
+    // Prevent screen from going into sleep mode:
+    Screen.keepOn(true);
+    super.initState();
+  }
+  
+
   Widget getFullscreenApp(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        
+        Screen.keepOn(false);
         Navigator.of(context).pop();
       },
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 32, left: 10, right: 10),
-            child: Column(children: [
-              Text(
-                instance.song.title,
-                style: TextStyle(fontSize: 32),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                instance.song.author,
-                style: TextStyle(fontSize: 24, fontStyle: FontStyle.italic),
-                textAlign: TextAlign.center,
-              ),
-              (instance.song.subtitle != null && instance.song.subtitle != "")
-                  ? Text(
-                      "(" + instance.song.subtitle + ")",
-                      style: TextStyle(fontStyle: FontStyle.italic),
-                      textAlign: TextAlign.center,
-                    )
-                  : Container(),
-              Row(children: [
-                Expanded(
-                  child: SongText(
-                    instance.transpose(transpose),
-                    textSize: fontSize,
-                  ),
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          //brightness: Brightness.dark,
+          scaffoldBackgroundColor: Colors.black,
+          textTheme: TextTheme(
+            body1: TextStyle(color: Colors.white)
+          )
+          ),
+        child: Scaffold(
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 32, left: 10, right: 10),
+              child: Column(children: [
+                Text(
+                  instance.song.title,
+                  style: TextStyle(fontSize: 32),
+                  textAlign: TextAlign.center,
                 ),
+                Text(
+                  instance.song.author,
+                  style: TextStyle(fontSize: 24, fontStyle: FontStyle.italic),
+                  textAlign: TextAlign.center,
+                ),
+                (instance.song.subtitle != null && instance.song.subtitle != "")
+                    ? Text(
+                        "(" + instance.song.subtitle + ")",
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                        textAlign: TextAlign.center,
+                      )
+                    : Container(),
+                Row(children: [
+                  Expanded(
+                    child: SongText(
+                      instance.transpose(transpose),
+                      textSize: fontSize,
+                    ),
+                  ),
+                ]),
               ]),
-            ]),
+            ),
           ),
         ),
       ),

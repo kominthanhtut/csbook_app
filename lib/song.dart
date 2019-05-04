@@ -1,3 +1,4 @@
+import 'package:csbook_app/SongTextWidget.dart';
 import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/model/Song.dart';
@@ -5,6 +6,8 @@ import 'package:csbook_app/songfullscreen.dart';
 import 'package:csbook_app/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'package:screen/screen.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -29,14 +32,6 @@ class _SongScreenState extends State<SongScreen> {
   var searchBar;
 
   _SongScreenState(Song song);
-
-  bool fullscreen = false;
-
-  @override
-  void initState() {
-    fullscreen = false;
-    super.initState();
-  }
 
   void getInstances(Song song) {
     Instance.get(song).then((List<Instance> instances) {
