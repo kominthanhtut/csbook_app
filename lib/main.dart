@@ -1,5 +1,6 @@
 import 'package:csbook_app/list.dart';
 import 'package:csbook_app/song.dart';
+import 'package:csbook_app/songfullscreen.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
       routes: {
         SongScreen.routeName: (context) => SongScreen(),
         ListScreen.routeName: (context) => ListScreen(),
+        SongFullScreen.routeName: (context) => SongFullScreen()
       },  
     );
   }

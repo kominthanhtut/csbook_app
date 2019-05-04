@@ -18,6 +18,8 @@ class ListScreen extends StatefulWidget {
 class _ListState extends State<ListScreen> {
   List<Song> songs = new List<Song>();
 
+  _ListState();
+
   void getInstances(BuildContext context, Song song) {
       Navigator.pushNamed(
         context,

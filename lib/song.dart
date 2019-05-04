@@ -1,8 +1,10 @@
 import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/model/Song.dart';
+import 'package:csbook_app/songfullscreen.dart';
 import 'package:csbook_app/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -23,6 +25,8 @@ class _SongScreenState extends State<SongScreen> {
   int transpose = 0;
   double defaultFontSize = 16;
   double initfontSize, fontSize = 16;
+
+  var searchBar;
 
   _SongScreenState(Song song);
 
@@ -62,11 +66,15 @@ class _SongScreenState extends State<SongScreen> {
         body: FetchingWidget("Fetching song ..."));
   }
 
-  Widget getNormalApp() {
+  Widget getNormalApp(BuildContext context) {
     return GestureDetector(
       onTap: () {
         setState(() {
-          fullscreen = !fullscreen;
+          Navigator.pushNamed(
+            context,
+            SongFullScreen.routeName,
+            arguments: SongState(transpose, fontSize, instance),
+          );
         });
       },
       child: Scaffold(
@@ -149,48 +157,9 @@ class _SongScreenState extends State<SongScreen> {
     );
   }
 
-  Widget getFullscreenApp() {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          fullscreen = !fullscreen;
-        });
-      },
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 32),
-            child: Column(children: [
-              Text(
-                song.title,
-                style: TextStyle(fontSize: 32),
-              ),
-              Text(
-                song.author,
-                style: TextStyle(fontSize: 24, fontStyle: FontStyle.italic),
-              ),
-              (song.subtitle != null && song.subtitle != "") ?
-              Text(
-                "(" + song.subtitle + ")",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ):Container(),
-              Row(children: [
-                Expanded(
-                  child: SongText(
-                    instance.transpose(transpose),
-                    textSize: fontSize,
-                  ),
-                ),
-              ]),
-            ]),
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    //SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     if (song == null) {
       song = ModalRoute.of(context).settings.arguments;
       getInstances(song);
@@ -198,10 +167,7 @@ class _SongScreenState extends State<SongScreen> {
     if (instance == null)
       return getWaitingApp();
     else {
-      if (!fullscreen)
-        return getNormalApp();
-      else
-        return getFullscreenApp();
+      return getNormalApp(context);
     }
   }
 }
