@@ -1,6 +1,6 @@
-import 'package:csbook_app/list.dart';
-import 'package:csbook_app/song.dart';
-import 'package:csbook_app/songfullscreen.dart';
+import 'package:csbook_app/mainScreen.dart';
+import 'package:csbook_app/pages/song.dart';
+import 'package:csbook_app/pages/songfullscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -19,10 +19,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.brown
         //bottomAppBarColor: Colors.black
       ),
-      home: ListScreen(title: 'Catholic Song Book'),
+      home: MainScreen(title: 'Catholic Song Book'),
       routes: {
         SongScreen.routeName: (context) => SongScreen(),
-        ListScreen.routeName: (context) => ListScreen(),
+        MainScreen.routeName: (context) => MainScreen(),
         SongFullScreen.routeName: (context) => SongFullScreen()
       },  
     );

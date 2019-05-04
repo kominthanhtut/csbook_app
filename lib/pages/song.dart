@@ -2,7 +2,7 @@ import 'package:csbook_app/SongTextWidget.dart';
 import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/model/Song.dart';
-import 'package:csbook_app/songfullscreen.dart';
+import 'package:csbook_app/pages/songfullscreen.dart';
 import 'package:csbook_app/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

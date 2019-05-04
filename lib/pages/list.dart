@@ -1,24 +1,36 @@
 import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/model/Song.dart';
-import 'package:csbook_app/song.dart';
+import 'package:csbook_app/pages/PageInterface.dart';
+import 'package:csbook_app/pages/song.dart';
 import 'package:csbook_app/widgets.dart';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class ListScreen extends StatefulWidget {
+class ListScreen extends StatefulWidget implements PageInterface {
   static const routeName = '/song_list';
   ListScreen({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
   _ListState createState() => _ListState();
+
+  @override
+  List<Widget> getActions(BuildContext context) {
+    return _ListState().getActions(context);
+  }
 }
 
 class _ListState extends State<ListScreen> {
   List<Song> songs = new List<Song>();
 
-  _ListState();
+  var index = 0;
+
+  _ListState(){
+    Song.get(0, 0).then((s) {
+        this.songs = s;      
+    });
+  }
 
   void getInstances(BuildContext context, Song song) {
     Navigator.pushNamed(
@@ -54,39 +66,36 @@ class _ListState extends State<ListScreen> {
     }
   }
 
+  List<Widget> getActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.search),
+        tooltip: 'Filter',
+        onPressed: () {
+          showSearch(
+              context: context,
+              delegate: SongSearch(songs, (song) {
+                getInstances(context, song);
+              }));
+        },
+      ),
+      IconButton(
+        icon: Icon(Icons.refresh),
+        tooltip: 'Refresh list',
+        onPressed: () {
+          Song.get(0, 0).then((s) {
+            setState(() {
+              this.songs = s;
+            });
+          });
+        },
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.search),
-              tooltip: 'Filter',
-              onPressed: () {
-                showSearch(
-                    context: context,
-                    delegate: SongSearch(songs, (song) {
-                      getInstances(context, song);
-                    }));
-              },
-            ),
-            /*
-            IconButton(
-              icon: Icon(Icons.refresh),
-              tooltip: 'Refresh list',
-              onPressed: () {
-                Song.get(0, 0).then((s) {
-                  setState(() {
-                    this.songs = s;
-                  });
-                });
-              },
-            ),
-            */
-          ],
-        ),
-        body: makeBody());
+    return makeBody();
   }
 }
 
