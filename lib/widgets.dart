@@ -1,7 +1,9 @@
 import 'package:csbook_app/model/Chord.dart';
+import 'package:csbook_app/model/Mass.dart';
 import 'package:csbook_app/model/Song.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
 class SongTile extends StatelessWidget {
   final Song song;
@@ -26,6 +28,36 @@ class SongTile extends StatelessWidget {
         },
       );
     }
+  }
+}
+
+class MassTile extends StatelessWidget {
+  final Mass mass;
+  final void Function(Mass) onTap;
+  MassTile(this.mass, {this.onTap});
+
+  final List<String> weekDays = [
+    'Lunes',
+    'Martes',
+    'Miercoles',
+    'Jueves',
+    'Viernes',
+    'Sabado',
+    'Domingo'
+  ];
+  final DateFormat formatterFullDate = new DateFormat('dd/MM/yyyy');
+  final DateFormat formatterDayOfWeek = new DateFormat('EEEE');
+
+  @override
+  Widget build(BuildContext context) {
+    return new ListTile(
+      title: new Text(
+          mass.hasName() ? mass.name : formatterDayOfWeek.format(mass.date)),
+      subtitle: new Text(formatterFullDate.format(mass.date)),
+      onTap: () {
+        if (onTap != null) onTap(mass);
+      },
+    );
   }
 }
 
