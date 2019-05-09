@@ -1,8 +1,8 @@
 import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/model/Song.dart';
-import 'package:csbook_app/pages/list.dart';
-import 'package:csbook_app/pages/masses.dart';
-import 'package:csbook_app/pages/parish.dart';
+import 'package:csbook_app/pages/list_fragment.dart';
+import 'package:csbook_app/pages/masses_fragment.dart';
+import 'package:csbook_app/pages/parish_fragment.dart';
 import 'package:csbook_app/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -31,10 +31,7 @@ class _MainState extends State<MainScreen> {
     List pages = [ListScreen(), ParishScreen(), MassesScreen()];
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: pages[index].getActions(context),
-      ),
+      
       body: pages[index],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: index,

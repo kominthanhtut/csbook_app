@@ -1,9 +1,12 @@
+import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/model/Song.dart';
 import 'package:csbook_app/pages/PageInterface.dart';
 import 'package:csbook_app/pages/song.dart';
 import 'package:csbook_app/widgets.dart';
 import 'package:flutter/material.dart';
+
+import 'package:sticky_headers/sticky_headers.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -26,9 +29,9 @@ class _ListState extends State<ListScreen> {
 
   var index = 0;
 
-  _ListState(){
+  _ListState() {
     Song.get(0, 0).then((s) {
-        this.songs = s;      
+      this.songs = s;
     });
   }
 
@@ -50,6 +53,13 @@ class _ListState extends State<ListScreen> {
     super.initState();
   }
 
+  Widget makeAppBar() {
+    return AppBar(
+      title: Text(Constants.APP_TITLE),
+      actions: (this.songs.length > 0) ? getActions(context) : [],
+    );
+  }
+
   Widget makeBody() {
     if (this.songs.length > 0) {
       return Scrollbar(
@@ -62,9 +72,11 @@ class _ListState extends State<ListScreen> {
             }),
       );
     } else {
-      return FetchingWidget("Fetching list ...");
+      return FetchingWidget(Constants.SONGS_WAITING);
     }
   }
+
+  
 
   List<Widget> getActions(BuildContext context) {
     return [
@@ -95,7 +107,7 @@ class _ListState extends State<ListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return makeBody();
+    return Scaffold(appBar: makeAppBar(), body: makeBody());
   }
 }
 

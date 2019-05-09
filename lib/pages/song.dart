@@ -1,3 +1,4 @@
+import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/SongTextWidget.dart';
 import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/model/Instance.dart';
@@ -41,7 +42,7 @@ class _SongScreenState extends State<SongScreen> {
     });
   }
 
-  Widget getWaitingApp() {
+  Widget getWaitingApp() {;
     return Scaffold(
         appBar: AppBar(
           title: Column(
@@ -58,7 +59,7 @@ class _SongScreenState extends State<SongScreen> {
                 ),
               ]),
         ),
-        body: FetchingWidget("Fetching song ..."));
+        body: FetchingWidget(Constants.SONG_WAITING));
   }
 
   Widget getNormalApp(BuildContext context) {

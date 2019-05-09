@@ -14,8 +14,9 @@ environment:
 
 dependencies:
   font_awesome_flutter: ^8.4.0
-  flutter_calendar:
   screen:
+  sticky_headers:
+  intl: ^0.15.8
   http: ^0.12.0+2
   flutter:
     sdk: flutter

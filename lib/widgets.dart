@@ -1,3 +1,4 @@
+import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/model/Mass.dart';
 import 'package:csbook_app/model/Song.dart';
@@ -82,9 +83,11 @@ class FetchingWidget extends StatelessWidget {
           ),
           Center(
             child: Text(
-              text,
+              Constants.FETCHING_TEXT + text + " ...",
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 30,
+                color: Colors.grey
               ),
             ),
           )
