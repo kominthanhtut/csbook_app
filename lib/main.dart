@@ -1,4 +1,5 @@
 import 'package:csbook_app/mainScreen.dart';
+import 'package:csbook_app/pages/mass_view.dart';
 import 'package:csbook_app/pages/song.dart';
 import 'package:csbook_app/pages/songfullscreen.dart';
 import 'package:flutter/material.dart';
@@ -12,19 +13,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'csbook',
       theme: ThemeData(
-        //brightness: Brightness.dark,
-        //scaffoldBackgroundColor: Colors.black,
-        primarySwatch: Colors.brown
-        //bottomAppBarColor: Colors.black
-      ),
+          //brightness: Brightness.dark,
+          //scaffoldBackgroundColor: Colors.black,
+          primarySwatch: Colors.brown
+          //bottomAppBarColor: Colors.black
+          ),
       home: MainScreen(title: 'Catholic Song Book'),
       routes: {
         SongScreen.routeName: (context) => SongScreen(),
         MainScreen.routeName: (context) => MainScreen(),
+        MassScreen.routeName: (context) => MassScreen(),
         SongFullScreen.routeName: (context) => SongFullScreen()
-      },  
+      },
     );
   }
 }

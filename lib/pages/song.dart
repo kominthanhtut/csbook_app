@@ -42,7 +42,7 @@ class _SongScreenState extends State<SongScreen> {
     });
   }
 
-  Widget getWaitingApp() {;
+  Widget getWaitingApp() {
     return Scaffold(
         appBar: AppBar(
           title: Column(

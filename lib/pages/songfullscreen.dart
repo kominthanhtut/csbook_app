@@ -36,15 +36,17 @@ class _SongFullScreenState extends State<SongFullScreen> {
 
   _SongFullScreenState();
 
-@override
+  @override
   void initState() {
     // Prevent screen from going into sleep mode:
     Screen.keepOn(true);
     super.initState();
   }
-  
+
 
   Widget getFullscreenApp(BuildContext context) {
+
+
     return GestureDetector(
       onTap: () {
         Screen.keepOn(false);
@@ -52,12 +54,9 @@ class _SongFullScreenState extends State<SongFullScreen> {
       },
       child: Theme(
         data: Theme.of(context).copyWith(
-          //brightness: Brightness.dark,
-          scaffoldBackgroundColor: Colors.black,
-          textTheme: TextTheme(
-            body1: TextStyle(color: Colors.white)
-          )
-          ),
+            //brightness: Brightness.dark,
+            scaffoldBackgroundColor: Colors.black,
+            textTheme: TextTheme(body1: TextStyle(color: Colors.white))),
         child: Scaffold(
           body: SingleChildScrollView(
             child: Padding(
@@ -73,7 +72,8 @@ class _SongFullScreenState extends State<SongFullScreen> {
                   style: TextStyle(fontSize: 24, fontStyle: FontStyle.italic),
                   textAlign: TextAlign.center,
                 ),
-                (instance.song.subtitle != null && instance.song.subtitle != "")
+                (instance.song.subtitle != null &&
+                        instance.song.subtitle != "")
                     ? Text(
                         "(" + instance.song.subtitle + ")",
                         style: TextStyle(fontStyle: FontStyle.italic),

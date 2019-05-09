@@ -3,6 +3,7 @@ class Constants{
 static final String APP_TITLE = "Cancionero";
 static final String MASS_TITLE = "Misas";
 static final String PARISH_TITLE = "Parroquias";
+static final String MASS_VIEW_TITLE = "Misa: ";
 
 static final String SONGS_WAITING = "canciones";
 static final String SONG_WAITING = "cancion";
