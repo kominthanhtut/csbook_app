@@ -11,24 +11,16 @@ class Song {
   final String time;
   final String youtubeId;
 
-
-  Song(this.id, this.title, this.subtitle, this.author, this.type, this.time, this.youtubeId);
+  Song(this.id, this.title, this.subtitle, this.author, this.type, this.time,
+      this.youtubeId);
 
   factory Song.fromJson(Map<String, dynamic> json) {
-    return new Song(
-      json['id'],
-      json['title'],
-      json['subtitle'],
-      json['author'],
-      json['type'],
-      json['time'],
-      json['youtubeId']
-      );
+    return new Song(json['id'], json['title'], json['subtitle'], json['author'],
+        json['type'], json['time'], json['youtubeId']);
   }
 
   static Future<List<Song>> get(int skip, int take) async {
-    var response =
-        await Api.get('api/v1/songs');
+    var response = await Api.get('api/v1/songs');
 
     final responseJson = json.decode(response.body);
     final items = (responseJson as List).map((i) => new Song.fromJson(i));
@@ -36,19 +28,35 @@ class Song {
     return items.toList();
   }
 
-  String getTitle(){
+  String getTitle() {
     return title;
   }
 
-  String getSubTitle(){
+  String getSubTitle() {
     return subtitle;
   }
 
-  String getAuthor(){
-    return hasAuthor() ? author: "";
+  String getAuthor() {
+    return hasAuthor() ? author : "";
   }
 
-  bool hasAuthor(){
+  bool hasAuthor() {
     return author != null;
   }
+
+  Map<String, dynamic> toMapForDb() {
+    var map = Map<String, dynamic>();
+    map['id'] = this.id;
+    map['title'] = this.title;
+    map['subtitle'] = this.subtitle;
+    map['author'] = this.author;
+    map['type'] = this.type;
+    map['time'] = this.time;
+    map['youtubeId'] = this.youtubeId;
+    return map;
+  }
+  factory Song.fromDb(Map<String, dynamic> json) {
+    return new Song.fromJson(json);
+  }
+
 }

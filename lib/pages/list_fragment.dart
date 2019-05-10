@@ -1,12 +1,13 @@
 import 'package:csbook_app/Constants.dart';
-import 'package:csbook_app/model/Instance.dart';
+import 'package:csbook_app/databases/SongDatabase.dart';
 import 'package:csbook_app/model/Song.dart';
 import 'package:csbook_app/pages/PageInterface.dart';
 import 'package:csbook_app/pages/song.dart';
 import 'package:csbook_app/widgets.dart';
 import 'package:flutter/material.dart';
 
-import 'package:sticky_headers/sticky_headers.dart';
+import 'dart:async';
+
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -30,9 +31,33 @@ class _ListState extends State<ListScreen> {
   var index = 0;
 
   _ListState() {
-    Song.get(0, 0).then((s) {
+    _retrieveSongs().then((s) {
       this.songs = s;
     });
+  }
+
+  Future<List<Song>> _retrieveSongs() async {
+    SongDatabase db = new SongDatabase();
+    List<Song> songs = await db.fetchAll();
+    if ((songs == null) || (songs.length == 0)) {
+      //Retrieve from Internet
+      songs = await Song.get(0, 0);
+      //Save all to db
+      db.saveOrUpdateAll(songs);
+    }else{
+      //Update DB in Background if i get a hit on Songs in db
+      Song.get(0, 0).then(db.saveOrUpdateAll);
+    }
+    return songs;
+  }
+
+  Future<List<Song>> _updateSongs() async {
+    SongDatabase db = new SongDatabase();
+    //Retrieve from Internet
+    songs = await Song.get(0, 0);
+    //Save all to db
+    db.saveOrUpdateAll(songs);
+    return songs;
   }
 
   void getInstances(BuildContext context, Song song) {
@@ -76,8 +101,6 @@ class _ListState extends State<ListScreen> {
     }
   }
 
-  
-
   List<Widget> getActions(BuildContext context) {
     return [
       IconButton(
@@ -95,11 +118,7 @@ class _ListState extends State<ListScreen> {
         icon: Icon(Icons.refresh),
         tooltip: 'Refresh list',
         onPressed: () {
-          Song.get(0, 0).then((s) {
-            setState(() {
-              this.songs = s;
-            });
-          });
+          _updateSongs().then((s)=> this.songs = s);
         },
       ),
     ];

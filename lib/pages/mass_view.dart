@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:csbook_app/Constants.dart';
+import 'package:csbook_app/databases/InstanceDatabase.dart';
 import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/model/Mass.dart';
+import 'package:csbook_app/model/Song.dart';
 import 'package:csbook_app/pages/songfullscreen.dart';
 import 'package:csbook_app/widgets.dart';
 import 'package:flutter/material.dart';
@@ -123,6 +127,19 @@ class _MassScreenState extends State<MassScreen> {
   @override
   void initState() {
     super.initState();
+  }
+
+  Future<List<Instance>> _retrieveInstances(int song_id) async {
+    InstanceDatabase db = new InstanceDatabase();
+    List<Instance> instances = await db.fetchInstancesForSong(song_id);
+    if ((instances == null) || (instances.length == 0)) {
+      //Retrieve from Internet
+      instances = await Instance.getForMass(mass);
+      //Save all to db
+      instances.forEach((i)=> db.saveOrUpdateInstance(i));
+      print("Saved ${instances.map((i)=> i.song.title)}");
+    }
+    return instances;
   }
 
   @override

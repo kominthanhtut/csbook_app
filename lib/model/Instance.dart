@@ -67,13 +67,38 @@ class Instance {
     for (String key in mass.songs.keys) {
       var response = await Api.get('api/v1/song/' + mass.songs[key].toString());
       final responseJson = json.decode(response.body);
-      Instance current = Instance.fromJson((responseJson['instances'] as List)[0]);
+      Instance current =
+          Instance.fromJson((responseJson['instances'] as List)[0]);
       current.song = Song.fromJson(responseJson['song']);
-      _songs.putIfAbsent(
-          key, () => current);
+      _songs.putIfAbsent(key, () => current);
     }
     ;
 
     return _songs;
+  }
+
+  Map<String, dynamic> toMapForDb() {
+    var map = Map<String, dynamic>();
+    map['id'] = this.id;
+    map['songId'] = this.song.id;
+    map['songText'] = this.songText;
+    map['capo'] = this.capo;
+    map['rithm'] = this.rithm;
+    map['choir'] = this.choir;
+    map['tone'] = this.tone;
+    return map;
+  }
+
+  factory Instance.fromDb(Song song, Map<String, dynamic> instance_map) {
+    Instance retVal = new Instance(
+        instance_map['id'],
+        instance_map['songText'],
+        instance_map['capo'],
+        instance_map['rithm'],
+        instance_map['choir'],
+        instance_map['tone']);
+
+    retVal.setSong(song);
+    return retVal;
   }
 }

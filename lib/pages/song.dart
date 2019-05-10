@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/SongTextWidget.dart';
+import 'package:csbook_app/databases/InstanceDatabase.dart';
 import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/model/Song.dart';
@@ -35,11 +38,24 @@ class _SongScreenState extends State<SongScreen> {
   _SongScreenState(Song song);
 
   void getInstances(Song song) {
-    Instance.get(song).then((List<Instance> instances) {
+    _retrieveInstances(song).then((List<Instance> instances) {
       setState(() {
         instance = instances[0];
       });
     });
+  }
+
+  Future<List<Instance>> _retrieveInstances(Song song) async {
+    InstanceDatabase db = new InstanceDatabase();
+    List<Instance> instances = await db.fetchInstancesForSong(song.id);
+    if ((instances == null) || (instances.length == 0)) {
+      //Retrieve from Internet
+      instances = await Instance.get(song);
+      //Save all to db
+      instances.forEach((i)=> db.saveOrUpdateInstance(i));
+      print("Saved ${instances.map((i)=> i.song.title)}");
+    }
+    return instances;
   }
 
   Widget getWaitingApp() {
