@@ -15,6 +15,7 @@ class SongTile extends StatelessWidget {
   Widget build(BuildContext context) {
     if (song.hasAuthor()) {
       return new ListTile(
+        trailing: song.cached ? Icon(Icons.cached): null,
         title: new Text(song.getTitle()),
         subtitle: new Text(song.getAuthor()),
         onTap: () {
@@ -23,6 +24,7 @@ class SongTile extends StatelessWidget {
       );
     } else {
       return new ListTile(
+        trailing: song.cached ? Icon(Icons.cached): null,
         title: new Text(song.getTitle()),
         onTap: () {
           if (onTap != null) onTap(song);

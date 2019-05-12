@@ -46,7 +46,8 @@ class SongDatabase {
       author TEXT,
       type TEXT,
       time TEXT,
-      youtubeId TEXT)
+      youtubeId TEXT,
+      cached INTEGER)
   ''');
     print("Song Database was created!");
   }

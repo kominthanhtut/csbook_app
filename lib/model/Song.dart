@@ -11,6 +11,8 @@ class Song {
   final String time;
   final String youtubeId;
 
+  bool cached = false;
+
   Song(this.id, this.title, this.subtitle, this.author, this.type, this.time,
       this.youtubeId);
 
@@ -53,10 +55,18 @@ class Song {
     map['type'] = this.type;
     map['time'] = this.time;
     map['youtubeId'] = this.youtubeId;
+    map['cached'] = this.cached ? 1 :0;
     return map;
   }
   factory Song.fromDb(Map<String, dynamic> json) {
-    return new Song.fromJson(json);
+    Song s = new Song.fromJson(json);
+    s.cached = json['cached'] == 1;
+    return s;
+  }
+
+  Song setCached(){
+    cached = true;
+    return this;
   }
 
 }

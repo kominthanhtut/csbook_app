@@ -40,6 +40,20 @@ class Instance {
     return items.toList();
   }
 
+  static Future<List<Instance>> getBySongId(int song_id) async {
+    var response = await Api.get('api/v1/song/' + song_id.toString());
+
+    final responseJson = json.decode(response.body);
+    Instance current;
+    final items = (responseJson['instances'] as List).map((i) {
+      current = new Instance.fromJson(i);
+      current.setSong(Song.fromJson(responseJson['song']));
+      return current;
+    });
+
+    return items.toList();
+  }
+
   void setSong(Song song) {
     this.song = song;
   }

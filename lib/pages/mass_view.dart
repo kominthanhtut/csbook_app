@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/databases/InstanceDatabase.dart';
+import 'package:csbook_app/databases/SongDatabase.dart';
 import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/model/Mass.dart';
 import 'package:csbook_app/model/Song.dart';
@@ -21,7 +22,6 @@ class MassScreen extends StatefulWidget {
 }
 
 class _MassScreenState extends State<MassScreen> {
-  List<Step> _steps;
   Mass _mass;
   Map<String, Instance> _instances;
 
@@ -32,7 +32,7 @@ class _MassScreenState extends State<MassScreen> {
   final DateFormat formatterFullDate = new DateFormat('dd/MM/yyyy');
 
   void getInstances(Mass mass) {
-    Instance.getForMass(mass).then((Map<String, Instance> instances) {
+    _retrieveInstances(mass).then((Map<String, Instance> instances) {
       setState(() {
         _instances = instances;
         print(instances);
@@ -40,12 +40,14 @@ class _MassScreenState extends State<MassScreen> {
     });
   }
 
-  List<Step> _toSteps(BuildContext context,Map<String, Instance> songs) {
+  List<Step> _toSteps(BuildContext context, Map<String, Instance> songs) {
     List<Step> _steps = new List<Step>();
     songs.forEach((key, value) {
       _steps.add(new Step(
-          title: Text(key,
-          style: TextStyle(color: Theme.of(context).primaryColor),),
+          title: Text(
+            key,
+            style: TextStyle(color: Theme.of(context).primaryColor),
+          ),
           subtitle: Text(value.song.title),
           content: InkWell(
             onTap: _openFullScreenSong,
@@ -82,7 +84,6 @@ class _MassScreenState extends State<MassScreen> {
         mainAxisSize: MainAxisSize.max,
         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          
           Padding(
             padding: const EdgeInsets.only(left: 20),
             child: Text("Acordes"),
@@ -129,17 +130,28 @@ class _MassScreenState extends State<MassScreen> {
     super.initState();
   }
 
-  Future<List<Instance>> _retrieveInstances(int song_id) async {
-    InstanceDatabase db = new InstanceDatabase();
-    List<Instance> instances = await db.fetchInstancesForSong(song_id);
-    if ((instances == null) || (instances.length == 0)) {
-      //Retrieve from Internet
-      instances = await Instance.getForMass(mass);
-      //Save all to db
-      instances.forEach((i)=> db.saveOrUpdateInstance(i));
-      print("Saved ${instances.map((i)=> i.song.title)}");
+  Future<Map<String, Instance>> _retrieveInstances(Mass mass) async {
+    InstanceDatabase instancesdb = new InstanceDatabase();
+    List<String> songs_keys = mass.songs.keys.toList();
+
+    Map<String, Instance> recovered = new Map<String, Instance>();
+
+    for (String element in songs_keys) {
+      int song_id = mass.songs[element];
+      Instance instance;
+      List<Instance> instances =
+          (await instancesdb.fetchInstancesForSong(song_id));
+      if (instances == null || instances.length == 0) {
+        instance = (await Instance.getBySongId(song_id))[0];
+        instancesdb.saveOrUpdateInstance(instance);
+      } else {
+        instance = instances[0];
+      }
+
+      recovered[element] = instance;
     }
-    return instances;
+
+    return recovered;
   }
 
   @override
@@ -152,7 +164,10 @@ class _MassScreenState extends State<MassScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _mass.hasName() ? Constants.MASS_VIEW_TITLE + _mass.name : Constants.MASS_VIEW_TITLE + formatterFullDate.format(_mass.date),
+          _mass.hasName()
+              ? Constants.MASS_VIEW_TITLE + _mass.name
+              : Constants.MASS_VIEW_TITLE +
+                  formatterFullDate.format(_mass.date),
           style: TextStyle(color: Theme.of(context).primaryColor),
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -172,7 +187,7 @@ class _MassScreenState extends State<MassScreen> {
           ? Stepper(
               //type: StepperType.horizontal,
               currentStep: _currentMoment,
-              steps: _toSteps(context,_instances),
+              steps: _toSteps(context, _instances),
               onStepTapped: (step) {
                 setState(() {
                   _currentMoment = step;

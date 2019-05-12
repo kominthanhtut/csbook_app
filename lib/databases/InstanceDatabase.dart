@@ -94,6 +94,8 @@ class InstanceDatabase {
 
 
   Future<int> saveOrUpdateInstance(Instance song) async{
+    SongDatabase songdb = new SongDatabase();
+    await songdb.updateSong(song.song.setCached());
     int updateResult = await updateInstance(song);
     return (updateResult > 0)? updateResult : await addInstance(song);
   }
