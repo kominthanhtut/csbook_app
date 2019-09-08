@@ -46,7 +46,10 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
       appBar: AppBar(
         title: Text(_currentTitle),
         actions: _currentActions,
-        bottom: TabBar(controller: _tabController, tabs: [
+        bottom: TabBar(
+          controller: _tabController, 
+          indicatorColor: Colors.white,
+          tabs: [
           Tab(
             text: "Canciones",
             //icon: Icon(Icons.list),

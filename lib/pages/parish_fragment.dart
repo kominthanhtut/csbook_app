@@ -93,13 +93,12 @@ class _ParishScreenState extends State<ParishScreen> {
         itemBuilder: (context, index) {
           return new StickyHeader(
             header: new Container(
-              height: 50.0,
-              color: Theme.of(context).primaryColorDark,
-              padding: new EdgeInsets.symmetric(horizontal: 16.0),
+              color: Theme.of(context).primaryColorLight,
+              padding: new EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
               alignment: Alignment.centerLeft,
               child: new Text(
-                mapped.keys.elementAt(index),
-                style: const TextStyle(color: Colors.white),
+                "Parroquia de " + mapped.keys.elementAt(index),
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
             ),
             content: new Container(
