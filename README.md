@@ -1,12 +1,6 @@
 # Catholic Song Book
 
-Simple Flutter App (Android only for now) to access the songs of the Online Catholic SongBook (right now hosted on https://csbruno.herokuapp.com)
+Simple Flutter App (Android only for now) to access the songs of the Online Catholic SongBook (right now hosted on https://parroquias.csbook.es)
 
-## Screen Shots
-![Song List](https://raw.githubusercontent.com/hkfuertes/csbook_app/master/screens/main.png)
-
-![Song Search](https://raw.githubusercontent.com/hkfuertes/csbook_app/master/screens/search.png)
-
-![Song](https://raw.githubusercontent.com/hkfuertes/csbook_app/master/screens/song.png)
-
-![Song Fullscreen](https://raw.githubusercontent.com/hkfuertes/csbook_app/master/screens/songfullscreen.png)
+## Tasks (08/09/2019)
+- API-> get Tansposes; APP-> Paint Transposes
