@@ -50,7 +50,9 @@ class _SongScreenState extends State<SongScreen> {
     List<Instance> instances = await db.fetchInstancesForSong(song.id);
     if ((instances == null) || (instances.length == 0)) {
       //Retrieve from Internet
-      instances = await Instance.get(song);
+      for(var instanceId in song.instances.keys){
+        instances.add(await Instance.get(instanceId));
+      }
       //Save all to db
       instances.forEach((i)=> db.saveOrUpdateInstance(i));
       print("Saved ${instances.map((i)=> i.song.title)}");

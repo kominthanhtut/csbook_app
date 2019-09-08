@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:csbook_app/Api.dart';
+import 'package:csbook_app/model/Parish.dart';
 
 class Mass {
-  final int id;
+  final String id;
   final DateTime date;
   final String name;
   final String type;
-  final String parish;
+  final Parish parish;
   final Map<String,int> songs;
 
 
@@ -19,8 +20,8 @@ class Mass {
       DateTime.parse(json['date']),
       json['name'],
       json['type'],
-      json['parish'],
-      Map<String,int>.from(json['songs']),
+      Parish.fromSimpleJson(json['parish']),
+      Map<String,int>.from(json['songs'])
       );
   }
 

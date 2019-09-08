@@ -139,14 +139,13 @@ class _MassScreenState extends State<MassScreen> {
     for (String element in songs_keys) {
       int song_id = mass.songs[element];
       Instance instance;
-      List<Instance> instances =
-          (await instancesdb.fetchInstancesForSong(song_id));
-      if (instances == null || instances.length == 0) {
-        instance = (await Instance.getBySongId(song_id))[0];
-        instancesdb.saveOrUpdateInstance(instance);
-      } else {
-        instance = instances[0];
-      }
+      //List<Instance> instances = (await instancesdb.fetchInstancesForSong(song_id));
+      //if (instances == null || instances.length == 0) {
+        instance = (await Instance.get(song_id));
+        //instancesdb.saveOrUpdateInstance(instance);
+      //} else {
+      //  instance = instances[0];
+      //}
 
       recovered[element] = instance;
     }
@@ -199,7 +198,7 @@ class _MassScreenState extends State<MassScreen> {
                 return Container();
               },
             )
-          : FetchingWidget(Constants.SONG_WAITING),
+          : FetchingWidget(Constants.SONGS_WAITING),
       floatingActionButton: _recovered()
           ? FloatingActionButton(
               child: Icon(Icons.arrow_right),

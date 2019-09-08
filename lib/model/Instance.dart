@@ -4,6 +4,8 @@ import 'dart:core';
 import 'package:csbook_app/Api.dart';
 import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/model/Mass.dart';
+import 'package:csbook_app/model/Parish.dart';
+import 'package:csbook_app/model/Parish.dart' as prefix0;
 import 'package:csbook_app/model/Song.dart';
 
 class Instance {
@@ -16,6 +18,8 @@ class Instance {
 
   Song song;
 
+  Parish parish;
+
   final chordRegex = RegExp(r'\[(.*?)\]');
 
   Instance(
@@ -26,18 +30,15 @@ class Instance {
         json['rithm'], json['choir'], json['tone']);
   }
 
-  static Future<List<Instance>> get(Song song) async {
-    var response = await Api.get('api/v1/song/' + song.id.toString());
+  static Future<Instance> get(int instance) async {
+    var response = await Api.get('api/v1/instance/' + instance.toString());
 
     final responseJson = json.decode(response.body);
     Instance current;
-    final items = (responseJson['instances'] as List).map((i) {
-      current = new Instance.fromJson(i);
-      current.setSong(song);
-      return current;
-    });
-
-    return items.toList();
+    current = new Instance.fromJson(responseJson);
+    current.setSong(Song.fromJson(responseJson['song']));
+    current.setParish(Parish.fromSimpleJson(responseJson['parish']));
+    return current;
   }
 
   static Future<List<Instance>> getBySongId(int song_id) async {
@@ -56,6 +57,10 @@ class Instance {
 
   void setSong(Song song) {
     this.song = song;
+  }
+
+  void setParish(Parish parish){
+    this.parish = parish;
   }
 
   String removeChords() {

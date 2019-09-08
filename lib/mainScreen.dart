@@ -1,5 +1,7 @@
+import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/model/Song.dart';
+import 'package:csbook_app/pages/PageInterface.dart';
 import 'package:csbook_app/pages/list_fragment.dart';
 import 'package:csbook_app/pages/masses_fragment.dart';
 import 'package:csbook_app/pages/parish_fragment.dart';
@@ -17,37 +19,55 @@ class MainScreen extends StatefulWidget {
   _MainState createState() => _MainState();
 }
 
-class _MainState extends State<MainScreen> {
+class _MainState extends State<MainScreen> with TickerProviderStateMixin {
   List<Song> songs = new List<Song>();
 
   var index = 0;
+  List<Widget> _pages;
+
+  TabController _tabController;
+  String _currentTitle = Constants.APP_TITLE;
+  List<Widget> _currentActions = [];
 
   _MainState();
 
-
+   @override
+  void initState() {
+    super.initState();
+    _tabController = new TabController(vsync: this, length: 2);
+    _tabController.addListener(() {_onTabChanged(context);});
+  }
 
   @override
   Widget build(BuildContext context) {
-    List pages = [ListScreen(), ParishScreen(), MassesScreen()];
+    _pages = [ListScreen(), ParishScreen()];
 
     return Scaffold(
-      
-      body: pages[index],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: index,
-        onTap: (int index) {
-          setState(() {
-            this.index = index;
-          });
-        },
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.list), title: Text("List")),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.people), title: Text("Parish")),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.playlist_play), title: Text("Masses")),
-        ],
+      appBar: AppBar(
+        title: Text(_currentTitle),
+        actions: _currentActions,
+        bottom: TabBar(controller: _tabController, tabs: [
+          Tab(
+            text: "Canciones",
+            //icon: Icon(Icons.list),
+          ),
+          Tab(
+            text: "Misas",
+            //icon: Icon(Icons.people),
+          )
+        ]),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: _pages,
       ),
     );
+  }
+
+  void _onTabChanged(BuildContext context) {
+    setState(() {
+      //_currentTitle = _pages[_tabController.index].key.toString();
+      _currentActions = (_pages[_tabController.index] as PageInterface).getActions(context);
+    });
   }
 }

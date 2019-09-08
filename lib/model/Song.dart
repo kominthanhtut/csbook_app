@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:csbook_app/Api.dart';
+import 'package:csbook_app/model/Parish.dart';
 
 class Song {
   final int id;
@@ -10,6 +11,9 @@ class Song {
   final String type;
   final String time;
   final String youtubeId;
+
+  //Simply to show a popup
+  Map<int, String> instances = Map();
 
   bool cached = false;
 
@@ -25,7 +29,14 @@ class Song {
     var response = await Api.get('api/v1/songs');
 
     final responseJson = json.decode(response.body);
-    final items = (responseJson as List).map((i) => new Song.fromJson(i));
+    final items = (responseJson as List).map((i) {
+      var current = new Song.fromJson(i);
+      var instances = i['instances'] as List;
+      for (int i = 0; i< instances.length; i++){
+        current.instances[instances[i]['id']] = instances[i]['parish']['name'];
+      }
+      return current;
+      });
 
     return items.toList();
   }

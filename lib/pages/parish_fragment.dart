@@ -47,6 +47,8 @@ class _ParishScreenState extends State<ParishScreen> {
   }
 
   List<Widget> getActions(BuildContext context) {
+    return [];
+    /*
     return [
       (!_picked)
           ? IconButton(
@@ -72,6 +74,7 @@ class _ParishScreenState extends State<ParishScreen> {
                 });
               })
     ];
+    */
   }
 
   Future<DateTime> _selectDate(BuildContext context) async {
@@ -84,23 +87,38 @@ class _ParishScreenState extends State<ParishScreen> {
   }
 
   Widget makeBodyHeaders() {
-    return new ListView.builder(itemBuilder: (context, index) {
-      return new StickyHeader(
-        header: new Container(
-          height: 50.0,
-          color: Colors.blueGrey[700],
-          padding: new EdgeInsets.symmetric(horizontal: 16.0),
-          alignment: Alignment.centerLeft,
-          child: new Text(
-            _filteredMases[index].parish,
-            style: const TextStyle(color: Colors.white),
-          ),
-        ),
-        content: new Container(
-            child: Column(
-                children: _filteredMases.map((m) => MassTile(m)).toList())),
-      );
-    });
+    Map<String, List<Mass>> mapped = _sortMasses(_filteredMases);
+    return new ListView.builder(
+        itemCount: _filteredMases != null ? mapped.keys.length : 0,
+        itemBuilder: (context, index) {
+          return new StickyHeader(
+            header: new Container(
+              height: 50.0,
+              color: Theme.of(context).primaryColorDark,
+              padding: new EdgeInsets.symmetric(horizontal: 16.0),
+              alignment: Alignment.centerLeft,
+              child: new Text(
+                mapped.keys.elementAt(index),
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+            content: new Container(
+                child: Column(
+                    children: mapped[mapped.keys.elementAt(index)]
+                        .map((m) => MassTile(
+                              m,
+                              onTap: (mass) {
+                                print(mass.songs);
+                                Navigator.pushNamed(
+                                  context,
+                                  MassScreen.routeName,
+                                  arguments: mass,
+                                );
+                              },
+                            ))
+                        .toList())),
+          );
+        });
   }
 
   Widget makeBody() {
@@ -124,15 +142,27 @@ class _ParishScreenState extends State<ParishScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text((!_picked)
-            ? Constants.PARISH_TITLE
-            : Constants.FILTERING_TEXT + formatterFullDate.format(_date)),
-        actions: getActions(context),
-      ),
+      /*
+          appBar: AppBar(
+            title: Text((!_picked)
+                ? Constants.PARISH_TITLE
+                : Constants.FILTERING_TEXT + formatterFullDate.format(_date)),
+            actions: getActions(context),
+          ),
+          */
       body: (_filteredMases != null)
-          ? makeBody()
+          ? makeBodyHeaders()
           : FetchingWidget(Constants.PARISH_WAITING),
     );
+  }
+
+  Map<String, List<Mass>> _sortMasses(List<Mass> filteredMases) {
+    Map<String, List<Mass>> sortedMasses = new Map();
+    for (var mass in _filteredMases) {
+      if (sortedMasses[mass.parish.name] == null)
+        sortedMasses[mass.parish.name] = new List<Mass>();
+      sortedMasses[mass.parish.name].add(mass);
+    }
+    return sortedMasses;
   }
 }

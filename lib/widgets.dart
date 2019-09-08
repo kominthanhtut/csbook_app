@@ -55,7 +55,7 @@ class MassTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return new ListTile(
       title: new Text(
-          mass.hasName() ? mass.name : formatterDayOfWeek.format(mass.date)),
+          mass.hasName() ? mass.name : weekDays[mass.date.weekday-1]),
       subtitle: new Text(formatterFullDate.format(mass.date)),
       onTap: () {
         if (onTap != null) onTap(mass);
@@ -78,18 +78,21 @@ class FetchingWidget extends StatelessWidget {
           Icon(
             FontAwesomeIcons.download,
             size: 128,
-            color: Colors.grey,
+            color: Theme.of(context).primaryColorLight,
           ),
           Container(
             height: 32,
           ),
           Center(
-            child: Text(
-              Constants.FETCHING_TEXT + text + " ...",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 30,
-                color: Colors.grey
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                Constants.FETCHING_TEXT + text + " ...",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Theme.of(context).primaryColorLight,
+                ),
               ),
             ),
           )

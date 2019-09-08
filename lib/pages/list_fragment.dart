@@ -114,6 +114,7 @@ class _ListState extends State<ListScreen> {
               }));
         },
       ),
+      /*
       IconButton(
         icon: Icon(Icons.refresh),
         tooltip: 'Refresh list',
@@ -121,12 +122,15 @@ class _ListState extends State<ListScreen> {
           _updateSongs().then((s)=> this.songs = s);
         },
       ),
+      */
     ];
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: makeAppBar(), body: makeBody());
+    //return Scaffold(appBar: makeAppBar(), body: makeBody());
+    return makeBody();
+
   }
 }
 
@@ -164,7 +168,7 @@ class SongSearch extends SearchDelegate<Song> {
   @override
   Widget buildResults(BuildContext context) {
     // show results based on selection
-    return null;
+    return buildSuggestions(context);
   }
 
   @override
