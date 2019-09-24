@@ -81,6 +81,12 @@ class Instance {
     });
   }
 
+  String transposeTo(String tone) {
+    Chord toChord = new Chord(tone);
+    Chord chord = new Chord(this.tone);
+    return this.transpose(chord.semiTonesDiferentWith(toChord));
+  }
+
   static Future<Map<String, Instance>> getForMass(Mass mass) async {
     Map<String, Instance> _songs = new Map<String, Instance>();
     for (String key in mass.songs.keys) {

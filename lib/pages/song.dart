@@ -46,17 +46,19 @@ class _SongScreenState extends State<SongScreen> {
   }
 
   Future<List<Instance>> _retrieveInstances(Song song) async {
-    InstanceDatabase db = new InstanceDatabase();
-    List<Instance> instances = await db.fetchInstancesForSong(song.id);
-    if ((instances == null) || (instances.length == 0)) {
+    //InstanceDatabase db = new InstanceDatabase();
+    //List<Instance> instances = await db.fetchInstancesForSong(song.id);
+    List<Instance> instances = new List<Instance>();
+    print("Song ${song.instances.keys.map((i)=> i)}");
+    //if ((instances == null) || (instances.length == 0) || true) {
       //Retrieve from Internet
       for(var instanceId in song.instances.keys){
         instances.add(await Instance.get(instanceId));
       }
       //Save all to db
-      instances.forEach((i)=> db.saveOrUpdateInstance(i));
-      print("Saved ${instances.map((i)=> i.song.title)}");
-    }
+      //instances.forEach((i)=> db.saveOrUpdateInstance(i));
+      //print("Saved ${instances.map((i)=> i.song.title)}");
+   // }
     return instances;
   }
 

@@ -80,6 +80,16 @@ class Chord {
     return this;
   }
 
+  int semiTonesDiferentWith(Chord b){
+    if(b.chordnum >= this.chordnum){
+      //going upwards
+      return b.chordnum - this.chordnum;
+    }else{
+      //going downwards
+      return (-1) * (this.chordnum - b.chordnum);
+    }
+  }
+
   String paint(List<String> chordset) {
     if (found){
       String printedChord = chordset[this.chordnum] + sufix;

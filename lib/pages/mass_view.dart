@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/databases/InstanceDatabase.dart';
 import 'package:csbook_app/databases/SongDatabase.dart';
+import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/model/Mass.dart';
 import 'package:csbook_app/model/Song.dart';
@@ -23,7 +24,6 @@ class MassScreen extends StatefulWidget {
 
 class _MassScreenState extends State<MassScreen> {
   Mass _mass;
-  Map<String, Instance> _instances;
 
   int _currentMoment = 0;
   int transpose = 0;
@@ -32,40 +32,35 @@ class _MassScreenState extends State<MassScreen> {
   final DateFormat formatterFullDate = new DateFormat('dd/MM/yyyy');
 
   void getInstances(Mass mass) {
-    _retrieveInstances(mass).then((Map<String, Instance> instances) {
+    mass.retrieveAllInstances().then((Mass mass) {
       setState(() {
-        _instances = instances;
-        print(instances);
+        _mass = mass;
       });
     });
   }
 
-  List<Step> _toSteps(BuildContext context, Map<String, Instance> songs) {
+  List<Step> _toSteps(BuildContext context, Mass mass) {
     List<Step> _steps = new List<Step>();
-    songs.forEach((key, value) {
+    mass.songs.forEach((key, value) {
       _steps.add(new Step(
           title: Text(
             key,
             style: TextStyle(color: Theme.of(context).primaryColor),
           ),
-          subtitle: Text(value.song.title),
+          subtitle: Text(value.getInstance().song.title),
           content: InkWell(
             onTap: _openFullScreenSong,
             child: SongText((_showChords)
-                ? value.transpose(transpose)
-                : value.removeChords()),
+                ? value.getInstance().transposeTo(value.tone)
+                : value.getInstance().removeChords()),
           )));
     });
 
     return _steps;
   }
 
-  bool _recovered() {
-    return (_instances != null && _instances.length > 0);
-  }
-
   bool _endOfSteps() {
-    return (_currentMoment >= _instances.length - 1);
+    return (_currentMoment >= _mass.songs.values.length - 1);
   }
 
   void _openFullScreenSong() {
@@ -73,7 +68,7 @@ class _MassScreenState extends State<MassScreen> {
       context,
       SongFullScreen.routeName,
       arguments: SongState(
-          transpose, 16, _instances[_instances.keys.toList()[_currentMoment]]),
+          transpose, 16, _mass.songs.values.toList()[_currentMoment].getInstance()),
     );
   }
 
@@ -130,32 +125,11 @@ class _MassScreenState extends State<MassScreen> {
     super.initState();
   }
 
-  Future<Map<String, Instance>> _retrieveInstances(Mass mass) async {
-    InstanceDatabase instancesdb = new InstanceDatabase();
-    List<String> songs_keys = mass.songs.keys.toList();
-
-    Map<String, Instance> recovered = new Map<String, Instance>();
-
-    for (String element in songs_keys) {
-      int song_id = mass.songs[element];
-      Instance instance;
-      //List<Instance> instances = (await instancesdb.fetchInstancesForSong(song_id));
-      //if (instances == null || instances.length == 0) {
-        instance = (await Instance.get(song_id));
-        //instancesdb.saveOrUpdateInstance(instance);
-      //} else {
-      //  instance = instances[0];
-      //}
-
-      recovered[element] = instance;
-    }
-
-    return recovered;
-  }
+  
 
   @override
   Widget build(BuildContext context) {
-    if (_mass == null || _instances == null) {
+    if (_mass == null || !_mass.instancesRecovered()) {
       _mass = ModalRoute.of(context).settings.arguments;
       getInstances(_mass);
     }
@@ -182,11 +156,11 @@ class _MassScreenState extends State<MassScreen> {
           ),
         ],
       ),
-      body: _recovered()
+      body: _mass.instancesRecovered()
           ? Stepper(
               //type: StepperType.horizontal,
               currentStep: _currentMoment,
-              steps: _toSteps(context, _instances),
+              steps: _toSteps(context, _mass),
               onStepTapped: (step) {
                 setState(() {
                   _currentMoment = step;
@@ -199,19 +173,19 @@ class _MassScreenState extends State<MassScreen> {
               },
             )
           : FetchingWidget(Constants.SONGS_WAITING),
-      floatingActionButton: _recovered()
+      floatingActionButton: _mass.instancesRecovered()
           ? FloatingActionButton(
               child: Icon(Icons.arrow_right),
               onPressed: () {
                 setState(() {
-                  _currentMoment = (_currentMoment + 1) % _instances.length;
+                  _currentMoment = (_currentMoment + 1) % _mass.songs.length;
                   transpose = 0;
                 });
               },
             )
           : Container(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      bottomNavigationBar: _recovered() ? _getBottomAppBar() : null,
+      bottomNavigationBar: _mass.instancesRecovered() ? _getBottomAppBar() : null,
     );
   }
 }

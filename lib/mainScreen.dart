@@ -29,6 +29,9 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
   String _currentTitle = Constants.APP_TITLE;
   List<Widget> _currentActions = [];
 
+  ListScreen _listScreen = ListScreen();
+  ParishScreen _parishScreen = ParishScreen();
+
   _MainState();
 
    @override
@@ -40,7 +43,9 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    _pages = [ListScreen(), ParishScreen()];
+    _pages = [_listScreen, _parishScreen];
+
+    _currentActions = (_pages[_tabController.index] as PageInterface).getActions(context);
 
     return Scaffold(
       appBar: AppBar(

@@ -39,7 +39,7 @@ class _ListState extends State<ListScreen> {
   Future<List<Song>> _retrieveSongs() async {
     SongDatabase db = new SongDatabase();
     List<Song> songs = await db.fetchAll();
-    if ((songs == null) || (songs.length == 0)) {
+    if ((songs == null) || (songs.length == 0) || true) {
       //Retrieve from Internet
       songs = await Song.get(0, 0);
       //Save all to db
@@ -70,11 +70,12 @@ class _ListState extends State<ListScreen> {
 
   @override
   void initState() {
-    Song.get(0, 0).then((s) {
+    _retrieveSongs().then((s) {
       setState(() {
         this.songs = s;
       });
     });
+
     super.initState();
   }
 
@@ -110,6 +111,7 @@ class _ListState extends State<ListScreen> {
           showSearch(
               context: context,
               delegate: SongSearch(songs, (song) {
+                print(song.title);
                 getInstances(context, song);
               }));
         },
@@ -175,7 +177,7 @@ class SongSearch extends SearchDelegate<Song> {
   Widget buildSuggestions(BuildContext context) {
     // We dont have any suggestion for songs... Maybe Recents...
 
-    final suggestionList = query.isEmpty
+    final List<Song> suggestionList = query.isEmpty
         ? []
         : songs
             .where((song) =>
