@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:csbook_app/Api.dart';
+import 'package:csbook_app/databases/CSDB.dart';
 import 'package:csbook_app/model/Parish.dart';
 
 import 'Instance.dart';
@@ -15,6 +16,8 @@ class Mass {
 
   bool retrieved = false;
   bool recovered = false;
+
+  CSDB _db = CSDB();
 
   Mass(this.id, this.date, this.name, this.type, this.parish, this.songs);
 
@@ -61,7 +64,12 @@ class Mass {
     if(!this.songsRecovered()) await this.retrieveAllData();
 
     for(MassSong ms in this.songs.values){
-      var instance = await Instance.get(ms.instanceId);
+      Instance instance = await _db.fetchInstance(ms.instanceId);
+      //If not found local, then check internet.
+      if (instance == null) {
+        instance = await Instance.get(ms.instanceId);
+        await _db.saveOrUpdateInstance(instance);
+      }
       ms.setInstance(instance);
     }
     this.retrieved = true;

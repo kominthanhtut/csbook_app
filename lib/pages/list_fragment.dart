@@ -1,5 +1,4 @@
 import 'package:csbook_app/Constants.dart';
-import 'package:csbook_app/databases/SongDatabase.dart';
 import 'package:csbook_app/model/Song.dart';
 import 'package:csbook_app/pages/PageInterface.dart';
 import 'package:csbook_app/pages/song.dart';
@@ -37,26 +36,7 @@ class _ListState extends State<ListScreen> {
   }
 
   Future<List<Song>> _retrieveSongs() async {
-    SongDatabase db = new SongDatabase();
-    List<Song> songs = await db.fetchAll();
-    if ((songs == null) || (songs.length == 0) || true) {
-      //Retrieve from Internet
       songs = await Song.get(0, 0);
-      //Save all to db
-      db.saveOrUpdateAll(songs);
-    }else{
-      //Update DB in Background if i get a hit on Songs in db
-      Song.get(0, 0).then(db.saveOrUpdateAll);
-    }
-    return songs;
-  }
-
-  Future<List<Song>> _updateSongs() async {
-    SongDatabase db = new SongDatabase();
-    //Retrieve from Internet
-    songs = await Song.get(0, 0);
-    //Save all to db
-    db.saveOrUpdateAll(songs);
     return songs;
   }
 

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/SongTextWidget.dart';
-import 'package:csbook_app/databases/InstanceDatabase.dart';
 import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/model/Song.dart';

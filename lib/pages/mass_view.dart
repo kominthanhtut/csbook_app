@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:csbook_app/Constants.dart';
-import 'package:csbook_app/databases/InstanceDatabase.dart';
-import 'package:csbook_app/databases/SongDatabase.dart';
 import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/model/Mass.dart';
@@ -26,7 +24,6 @@ class _MassScreenState extends State<MassScreen> {
   Mass _mass;
 
   int _currentMoment = 0;
-  int transpose = 0;
   bool _showChords = false;
 
   final DateFormat formatterFullDate = new DateFormat('dd/MM/yyyy');
@@ -49,7 +46,9 @@ class _MassScreenState extends State<MassScreen> {
           ),
           subtitle: Text(value.getInstance().song.title),
           content: InkWell(
-            onTap: _openFullScreenSong,
+            onTap: () {
+              _openFullScreenSong(value);
+            },
             child: SongText((_showChords)
                 ? value.getInstance().transposeTo(value.tone)
                 : value.getInstance().removeChords()),
@@ -63,12 +62,13 @@ class _MassScreenState extends State<MassScreen> {
     return (_currentMoment >= _mass.songs.values.length - 1);
   }
 
-  void _openFullScreenSong() {
+  void _openFullScreenSong(MassSong massSong) {
+    int transpose = Chord(massSong.getInstance().tone).semiTonesDiferentWith(Chord(massSong.tone));
     Navigator.pushNamed(
       context,
       SongFullScreen.routeName,
       arguments: SongState(
-          transpose, 16, _mass.songs.values.toList()[_currentMoment].getInstance()),
+          transpose, 16, massSong.getInstance()),
     );
   }
 
@@ -91,30 +91,6 @@ class _MassScreenState extends State<MassScreen> {
               });
             },
           ),
-          (_showChords)
-              ? IconButton(
-                  icon: Icon(Icons.remove),
-                  onPressed: () {
-                    setState(() {
-                      transpose--;
-                    });
-                  },
-                )
-              : Container(
-                  height: 1,
-                ),
-          (_showChords)
-              ? IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    setState(() {
-                      transpose++;
-                    });
-                  },
-                )
-              : Container(
-                  height: 1,
-                ),
         ],
       ),
     );
@@ -152,7 +128,7 @@ class _MassScreenState extends State<MassScreen> {
               Icons.fullscreen,
               color: Theme.of(context).primaryColor,
             ),
-            onPressed: _openFullScreenSong,
+            onPressed: (){},
           ),
         ],
       ),
@@ -164,7 +140,6 @@ class _MassScreenState extends State<MassScreen> {
               onStepTapped: (step) {
                 setState(() {
                   _currentMoment = step;
-                  transpose = 0;
                 });
               },
               controlsBuilder: (BuildContext context,
@@ -179,7 +154,6 @@ class _MassScreenState extends State<MassScreen> {
               onPressed: () {
                 setState(() {
                   _currentMoment = (_currentMoment + 1) % _mass.songs.length;
-                  transpose = 0;
                 });
               },
             )

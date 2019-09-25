@@ -13,7 +13,6 @@ class Instance {
   final String songText;
   final String capo;
   final String rithm;
-  final String choir;
   final String tone;
 
   Song song;
@@ -23,11 +22,11 @@ class Instance {
   final chordRegex = RegExp(r'\[(.*?)\]');
 
   Instance(
-      this.id, this.songText, this.capo, this.rithm, this.choir, this.tone);
+      this.id, this.songText, this.capo, this.rithm, this.tone);
 
   factory Instance.fromJson(Map<String, dynamic> json) {
     return new Instance(json['id'], json['songText'], json['capo'],
-        json['rithm'], json['choir'], json['tone']);
+        json['rithm'], json['tone']);
   }
 
   static Future<Instance> get(int instance) async {
@@ -109,7 +108,7 @@ class Instance {
     map['songText'] = this.songText;
     map['capo'] = this.capo;
     map['rithm'] = this.rithm;
-    map['choir'] = this.choir;
+    map['parish'] = this.parish.id;
     map['tone'] = this.tone;
     return map;
   }
@@ -120,7 +119,6 @@ class Instance {
         instance_map['songText'],
         instance_map['capo'],
         instance_map['rithm'],
-        instance_map['choir'],
         instance_map['tone']);
 
     retVal.setSong(song);
