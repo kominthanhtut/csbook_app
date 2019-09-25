@@ -2,17 +2,18 @@ import 'dart:async';
 
 import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/model/Chord.dart';
-import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/model/Mass.dart';
-import 'package:csbook_app/model/Song.dart';
 import 'package:csbook_app/pages/songfullscreen.dart';
 import 'package:csbook_app/widgets.dart';
 import 'package:flutter/material.dart';
 
 import 'package:csbook_app/SongTextWidget.dart';
-import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+
+import 'package:share/share.dart';
+
+import '../Api.dart';
+
 
 class MassScreen extends StatefulWidget {
   static const routeName = '/mass_view';
@@ -63,12 +64,12 @@ class _MassScreenState extends State<MassScreen> {
   }
 
   void _openFullScreenSong(MassSong massSong) {
-    int transpose = Chord(massSong.getInstance().tone).semiTonesDiferentWith(Chord(massSong.tone));
+    int transpose = Chord(massSong.getInstance().tone)
+        .semiTonesDiferentWith(Chord(massSong.tone));
     Navigator.pushNamed(
       context,
       SongFullScreen.routeName,
-      arguments: SongState(
-          transpose, 16, massSong.getInstance()),
+      arguments: SongState(transpose, 16, massSong.getInstance()),
     );
   }
 
@@ -101,7 +102,22 @@ class _MassScreenState extends State<MassScreen> {
     super.initState();
   }
 
-  
+  Widget _createSteper(BuildContext context) {
+    return Stepper(
+      //type: StepperType.horizontal,
+      currentStep: _currentMoment,
+      steps: _toSteps(context, _mass),
+      onStepTapped: (step) {
+        setState(() {
+          _currentMoment = step;
+        });
+      },
+      controlsBuilder: (BuildContext context,
+          {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
+        return Container();
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,43 +130,42 @@ class _MassScreenState extends State<MassScreen> {
       appBar: AppBar(
         title: Text(
           _mass.hasName()
-              ? Constants.MASS_VIEW_TITLE + _mass.name
+              ? _mass.name
               : Constants.MASS_VIEW_TITLE +
                   formatterFullDate.format(_mass.date),
-          style: TextStyle(color: Theme.of(context).primaryColor),
+          style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Colors.black,
         elevation: 0.0,
         automaticallyImplyLeading: false,
         actions: <Widget>[
           IconButton(
             icon: Icon(
-              Icons.fullscreen,
-              color: Theme.of(context).primaryColor,
+              Icons.share,
+              color: Colors.white,
             ),
-            onPressed: (){},
+            onPressed: () {
+              Share.share(Api.BaseUrl+"mass/view/"+_mass.id);
+            },
           ),
         ],
       ),
       body: _mass.instancesRecovered()
-          ? Stepper(
-              //type: StepperType.horizontal,
-              currentStep: _currentMoment,
-              steps: _toSteps(context, _mass),
-              onStepTapped: (step) {
-                setState(() {
-                  _currentMoment = step;
-                });
-              },
-              controlsBuilder: (BuildContext context,
-                  {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
-                return Container();
-              },
-            )
+          ? Container(
+            color: Colors.black,
+            child:Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: BorderRadius.circular(16)
+                ),
+              child:_createSteper(context)
+              )
+           )
           : FetchingWidget(Constants.SONGS_WAITING),
       floatingActionButton: _mass.instancesRecovered()
           ? FloatingActionButton(
-              child: Icon(Icons.arrow_right),
+              child: Icon(Icons.fast_forward),
+              backgroundColor: Theme.of(context).primaryColorLight,
               onPressed: () {
                 setState(() {
                   _currentMoment = (_currentMoment + 1) % _mass.songs.length;
@@ -158,8 +173,8 @@ class _MassScreenState extends State<MassScreen> {
               },
             )
           : Container(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      bottomNavigationBar: _mass.instancesRecovered() ? _getBottomAppBar() : null,
+      //floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      //bottomNavigationBar: _mass.instancesRecovered() ? _getBottomAppBar() : null,
     );
   }
 }

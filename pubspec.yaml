@@ -13,6 +13,7 @@ environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
 
 dependencies:
+  share:
   path_provider:
   sqflite:
   font_awesome_flutter: ^8.4.0
