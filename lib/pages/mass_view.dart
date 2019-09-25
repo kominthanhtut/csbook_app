@@ -150,18 +150,17 @@ class _MassScreenState extends State<MassScreen> {
           ),
         ],
       ),
-      body: _mass.instancesRecovered()
-          ? Container(
+      body:  Container(
             color: Colors.black,
             child:Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).scaffoldBackgroundColor,
                 borderRadius: BorderRadius.circular(16)
                 ),
-              child:_createSteper(context)
+              child: _mass.instancesRecovered() ? _createSteper(context) : FetchingWidget(Constants.SONGS_WAITING)
               )
            )
-          : FetchingWidget(Constants.SONGS_WAITING),
+          ,
       floatingActionButton: _mass.instancesRecovered()
           ? FloatingActionButton(
               child: Icon(Icons.fast_forward),

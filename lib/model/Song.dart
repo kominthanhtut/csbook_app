@@ -67,11 +67,24 @@ class Song {
     map['time'] = this.time;
     map['youtubeId'] = this.youtubeId;
     map['cached'] = this.cached ? 1 :0;
+
+    String instances = "";
+    this.instances.forEach((key,value){
+      instances += key.toString()+";"+value+"|";
+    });
+    map['instances'] = instances;
     return map;
   }
-  factory Song.fromDb(Map<String, dynamic> json) {
-    Song s = new Song.fromJson(json);
-    s.cached = json['cached'] == 1;
+  factory Song.fromDb(Map<String, dynamic> _json) {
+    Song s = new Song.fromJson(_json);
+    s.instances = new Map<int,String>();
+    _json['instances'].toString().split("|").forEach((pair){
+      if(pair!= ""){
+        var el = pair.split(";");
+        s.instances[int.parse(el[0])] = el[1];
+      }
+    });
+    s.cached = _json['cached'] == 1;
     return s;
   }
 

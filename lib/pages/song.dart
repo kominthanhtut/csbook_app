@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/SongTextWidget.dart';
+import 'package:csbook_app/databases/CSDB.dart';
 import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/model/Song.dart';
@@ -45,39 +46,22 @@ class _SongScreenState extends State<SongScreen> {
   }
 
   Future<List<Instance>> _retrieveInstances(Song song) async {
-    //InstanceDatabase db = new InstanceDatabase();
-    //List<Instance> instances = await db.fetchInstancesForSong(song.id);
+    CSDB db = CSDB();
     List<Instance> instances = new List<Instance>();
-    print("Song ${song.instances.keys.map((i)=> i)}");
-    //if ((instances == null) || (instances.length == 0) || true) {
-      //Retrieve from Internet
-      for(var instanceId in song.instances.keys){
-        instances.add(await Instance.get(instanceId));
+    for(int id in song.instances.keys){
+      Instance instance = await db.fetchInstance(id);
+      if (instance == null){
+        instance = await Instance.get(id);
+        db.saveOrUpdateInstance(instance);
       }
-      //Save all to db
-      //instances.forEach((i)=> db.saveOrUpdateInstance(i));
-      //print("Saved ${instances.map((i)=> i.song.title)}");
-   // }
+      instances.add(instance);
+    }
     return instances;
   }
 
   Widget getWaitingApp() {
     return Scaffold(
-        appBar: AppBar(
-          title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(song.title.toString()),
-                Text(
-                  song.author.toString(),
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.normal,
-                      fontStyle: FontStyle.italic),
-                ),
-              ]),
-        ),
+        appBar: AppBar(title: Text(Constants.APP_TITLE)),
         body: FetchingWidget(Constants.SONG_WAITING));
   }
 
@@ -99,6 +83,7 @@ class _SongScreenState extends State<SongScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(instance.song.title.toString()),
+                  instance.song.author == null ? Container():
                   Text(
                     instance.song.author.toString(),
                     style: TextStyle(

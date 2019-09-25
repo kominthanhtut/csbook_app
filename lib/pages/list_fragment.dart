@@ -1,4 +1,5 @@
 import 'package:csbook_app/Constants.dart';
+import 'package:csbook_app/databases/CSDB.dart';
 import 'package:csbook_app/model/Song.dart';
 import 'package:csbook_app/pages/PageInterface.dart';
 import 'package:csbook_app/pages/song.dart';
@@ -6,7 +7,6 @@ import 'package:csbook_app/widgets.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:async';
-
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -25,18 +25,35 @@ class ListScreen extends StatefulWidget implements PageInterface {
 }
 
 class _ListState extends State<ListScreen> {
-  List<Song> songs = new List<Song>();
+  List<Song> _songs = new List<Song>();
 
   var index = 0;
 
   _ListState() {
     _retrieveSongs().then((s) {
-      this.songs = s;
+      this._songs = s;
+      
+      _updateSongsDB().then((s) {
+        this._songs = s;
+      });
+      
     });
   }
 
   Future<List<Song>> _retrieveSongs() async {
+    CSDB db = CSDB();
+    List<Song> songs = await db.fetchAllSongs();
+    if (songs == null) {
       songs = await Song.get(0, 0);
+      db.saveOrUpdateAll(songs);
+    }
+    return songs;
+  }
+
+  Future<List<Song>> _updateSongsDB() async {
+    CSDB db = CSDB();
+    List<Song> songs = await Song.get(0, 0);
+    db.saveOrUpdateAll(songs);
     return songs;
   }
 
@@ -50,10 +67,19 @@ class _ListState extends State<ListScreen> {
 
   @override
   void initState() {
+    //We recover the songs from db
     _retrieveSongs().then((s) {
       setState(() {
-        this.songs = s;
+        this._songs = s;
       });
+      
+      //We update database from web
+      _updateSongsDB().then((s) {
+        setState(() {
+          this._songs = s;
+        });
+      });
+      
     });
 
     super.initState();
@@ -62,17 +88,17 @@ class _ListState extends State<ListScreen> {
   Widget makeAppBar() {
     return AppBar(
       title: Text(Constants.APP_TITLE),
-      actions: (this.songs.length > 0) ? getActions(context) : [],
+      actions: (this._songs.length > 0) ? getActions(context) : [],
     );
   }
 
   Widget makeBody() {
-    if (this.songs.length > 0) {
+    if (this._songs.length > 0) {
       return Scrollbar(
         child: ListView.builder(
-            itemCount: songs.length,
+            itemCount: _songs.length,
             itemBuilder: (BuildContext context, int index) {
-              return SongTile(songs[index], onTap: (song) {
+              return SongTile(_songs[index], onTap: (song) {
                 getInstances(context, song);
               });
             }),
@@ -90,7 +116,7 @@ class _ListState extends State<ListScreen> {
         onPressed: () {
           showSearch(
               context: context,
-              delegate: SongSearch(songs, (song) {
+              delegate: SongSearch(_songs, (song) {
                 print(song.title);
                 getInstances(context, song);
               }));
@@ -112,7 +138,6 @@ class _ListState extends State<ListScreen> {
   Widget build(BuildContext context) {
     //return Scaffold(appBar: makeAppBar(), body: makeBody());
     return makeBody();
-
   }
 }
 

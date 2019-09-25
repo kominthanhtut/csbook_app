@@ -67,6 +67,7 @@ class _SongFullScreenState extends State<SongFullScreen> {
                   style: TextStyle(fontSize: 32),
                   textAlign: TextAlign.center,
                 ),
+                instance.song.author == null ? Container():
                 Text(
                   instance.song.author,
                   style: TextStyle(fontSize: 24, fontStyle: FontStyle.italic),

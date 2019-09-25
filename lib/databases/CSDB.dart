@@ -33,7 +33,7 @@ class CSDB {
     Directory directory = await getApplicationDocumentsDirectory();
     String dbPath = join(directory.path, databaseName);
     var database = openDatabase(dbPath,
-        version: 1, onCreate: _onCreate, onUpgrade: _onUpgrade);
+        version: 2, onCreate: _onCreate, onUpgrade: _onUpgrade);
 
     return database;
   }
@@ -59,6 +59,7 @@ class CSDB {
       type TEXT,
       time TEXT,
       youtubeId TEXT,
+      instances TEXT,
       cached INTEGER)
   ''');
 
@@ -107,7 +108,7 @@ class CSDB {
   }
 
   Future<int> saveOrUpdateInstance(Instance instance) async {
-    await this.updateSong(instance.song.setCached());
+    await this.saveOrUpdateSong(instance.song);
     int updateResult = await updateInstance(instance);
     return (updateResult > 0) ? updateResult : await addInstance(instance);
   }
@@ -147,14 +148,10 @@ class CSDB {
     return client.delete('Songs', where: 'id = ?', whereArgs: [id]);
   }
 
-  Future<List<Song>> fetchAll() async {
+  Future<List<Song>> fetchAllSongs() async {
     var client = await db;
-    final Future<List<Map<String, dynamic>>> futureMaps = client.query('Songs');
-    var maps = await futureMaps;
-
-    final items = maps.map((i) => new Song.fromJson(i));
-
-    return items.toList();
+    List<Map<String, dynamic>> maps = await client.query('Songs');
+    return maps.map((i) => new Song.fromJson(i)).toList();
   }
 
   Future<int> saveOrUpdateSong(Song song) async {
