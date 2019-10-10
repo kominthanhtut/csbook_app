@@ -137,7 +137,7 @@ class _MassScreenState extends State<MassScreen> {
         ),
         backgroundColor: Colors.black,
         elevation: 0.0,
-        automaticallyImplyLeading: false,
+        //automaticallyImplyLeading: false,
         actions: <Widget>[
           IconButton(
             icon: Icon(

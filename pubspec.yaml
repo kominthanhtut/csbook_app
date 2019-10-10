@@ -39,9 +39,9 @@ dev_dependencies:
 
 flutter_icons:
   android: true
-  ios: false
+  ios: true
   image_path_android: assets/ic_launcher.png
-  image_path_ios: assets/icon/ios.png
+  image_path_ios: assets/ic_launcher.png
   adaptive_icon_background: assets/ic_background.png
   adaptive_icon_foreground: assets/ic_foreground.png
 
