@@ -91,6 +91,6 @@ class MassSong {
   Instance getInstance(){return this.instance;}
 
   factory MassSong.fromJson(Map<String, dynamic> json) {
-    return new MassSong(json['instanceId'], json['tone'], json['capo']);
+    return new MassSong(json['instance'], json['tone'], json['capo']);
   }
 }
