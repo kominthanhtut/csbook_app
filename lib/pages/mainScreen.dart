@@ -45,35 +45,40 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         //statusBarColor: Theme.of(context).scaffoldBackgroundColor));
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.dark));
-        
+
     _pages = [_listScreen, _parishScreen];
 
     _currentActions = _parish
         ? (_pages[1] as PageInterface).getActions(context)
         : (_pages[0] as PageInterface).getActions(context);
 
-    _currentTitle = _parish ? "Parroquias" : "Cancionero";
+    _currentTitle = _parish ? "Misas" : "Cancionero";
 
     return Scaffold(
         appBar: AppBar(
-          brightness: Brightness.light,
           centerTitle: true,
-          iconTheme: IconThemeData(color: Colors.black),
-          actionsIconTheme: IconThemeData(color: Colors.black),
           title: Text(
             _currentTitle,
-            style: TextStyle(color: Colors.black, fontSize: 24),
+            style: TextStyle(fontSize: 24),
           ),
           actions: _currentActions,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 0,
         ),
         drawer: _drawer(),
-        body: _parish ? _pages[1] : _pages[0]);
+        body: Container(
+            color: Colors.black,
+            child: Container(
+                decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(12),
+                        bottomRight: Radius.circular(12))),
+                child: _parish ? _pages[1] : _pages[0])));
   }
 
   Widget _drawer() {
@@ -84,10 +89,11 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Container(
+color: Theme.of(context).primaryColorDark,
               height: MediaQuery.of(context).padding.top,
             ),
             Container(
-              color: Colors.white,
+color: Theme.of(context).primaryColorDark,
               child: ListTile(
                 title: Text(
                   "CSBook",
@@ -97,18 +103,17 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  icon: Icon(Icons.close, color: Colors.black),
+                  icon: Icon(Icons.close),
                 ),
               ),
             ),
             Container(
-              color: Theme.of(context).primaryColorDark,
+              color: Theme.of(context).primaryColorLight,
               height: 2,
             ),
             ListTile(
               leading: new Icon(
                 FontAwesomeIcons.music,
-                color: Colors.black,
               ),
               title: new Text(
                 'Canciones',
@@ -124,7 +129,6 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
             ListTile(
               leading: new Icon(
                 FontAwesomeIcons.church,
-                color: Colors.black,
               ),
               title: new Text(
                 'Parroquias',
@@ -140,7 +144,6 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
             ListTile(
               leading: new Icon(
                 Icons.settings,
-                color: Colors.black,
               ),
               title: new Text(
                 'Ajustes',
@@ -151,10 +154,7 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
             Expanded(
               child: Container(),
             ),
-            Container(
-              color: Theme.of(context).primaryColorDark,
-              height: 2,
-            ),
+
           ],
         ),
       ),

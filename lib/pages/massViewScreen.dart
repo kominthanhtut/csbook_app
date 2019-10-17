@@ -101,23 +101,24 @@ class _MassScreenState extends State<MassScreen> {
     super.initState();
   }
 
-  Widget _createSteper(BuildContext context) {
-    return Theme(
-      data: ThemeData(accentColor: Colors.black),
-      child: Stepper(
-        //type: StepperType.horizontal,
-        currentStep: _currentMoment,
-        steps: _toSteps(context, _mass),
-        onStepTapped: (step) {
-          setState(() {
-            _currentMoment = step;
-          });
-        },
-        controlsBuilder: (BuildContext context,
-            {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
-          return Container();
-        },
-      ),
+  Widget _createListView(BuildContext context) {
+    return ListView(
+      children: _mass.songs.keys.map((String ms) {
+        return new ExpansionTile(
+          title: ListTile(
+            title: Text(ms),
+            subtitle: Text(_mass.songs[ms].getInstance().song.getTitle()),
+          ),
+          children: <Widget>[
+            InkWell(
+              child: SongText(_mass.songs[ms].getInstance().removeChords()),
+              onTap: () {
+                _openFullScreenSong(_mass.songs[ms]);
+              },
+            )
+          ],
+        );
+      }).toList(),
     );
   }
 
@@ -130,15 +131,11 @@ class _MassScreenState extends State<MassScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        brightness: Brightness.light,
-        iconTheme: IconThemeData(color: Colors.black),
-        actionsIconTheme: IconThemeData(color: Colors.black),
         title: Text(
           _mass.hasName()
               ? _mass.name
               : Constants.MASS_VIEW_TITLE +
                   formatterFullDate.format(_mass.date),
-          style: TextStyle(color: Colors.black),
         ),
         //backgroundColor: Colors.black,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -160,23 +157,12 @@ class _MassScreenState extends State<MassScreen> {
           child: Container(
               decoration: BoxDecoration(
                   color: Theme.of(context).scaffoldBackgroundColor,
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12))),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12))),
               child: _mass.instancesRecovered()
-                  ? _createSteper(context)
+                  ? _createListView(context)
                   : FetchingWidget(Constants.SONGS_WAITING))),
-      floatingActionButton: _mass.instancesRecovered()
-          ? FloatingActionButton(
-              child: Icon(Icons.fast_forward),
-              backgroundColor: Colors.black,
-              onPressed: () {
-                setState(() {
-                  _currentMoment = (_currentMoment + 1) % _mass.songs.length;
-                });
-              },
-            )
-          : Container(),
-      //floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      //bottomNavigationBar: _mass.instancesRecovered() ? _getBottomAppBar() : null,
     );
   }
 }

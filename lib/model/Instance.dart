@@ -62,7 +62,7 @@ class Instance {
   }
 
   String removeChords() {
-    return songText.replaceAll(chordRegex, "");
+    return songText.replaceAll(chordRegex, "").replaceAll("( )+", " ");
   }
 
   String getTone(List<String> chordset) {

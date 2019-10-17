@@ -16,13 +16,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'csbook',
       theme: ThemeData(
-          //brightness: Brightness.dark,
+          brightness: Brightness.dark,
           //scaffoldBackgroundColor: Colors.black,
           //primarySwatch: Colors.brown
+          accentColor: Colors.white,
           primaryColor: Color(0xff424242),
           primaryColorLight: Color(0xff6d6d6d),
           primaryColorDark: Color(0xff1b1b1b),
-          primaryTextTheme: TextTheme(body1: TextStyle(color: Colors.white)),
           //bottomAppBarColor: Colors.black
           ),
       home: MainScreen(title: 'Catholic Song Book'),
