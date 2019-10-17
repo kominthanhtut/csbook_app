@@ -3,7 +3,7 @@ import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/model/Mass.dart';
 import 'package:csbook_app/model/Song.dart';
 
-class Parish {
+class Parish  {
   final int id;
   final String name;
   final List<String> timetable;
@@ -22,4 +22,11 @@ factory Parish.fromJson(Map<String, dynamic> json) {
   factory Parish.fromSimpleJson(Map<String, dynamic> json) {
     return new Parish(json['id'], json['name'],null, "", "");
   }
+
+  bool operator == (dynamic other) {
+    if(!other is Parish) return false;
+    return (other as Parish).name == name;
+  }
+
+  
 }

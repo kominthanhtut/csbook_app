@@ -1,14 +1,12 @@
 import 'package:csbook_app/Constants.dart';
+import 'package:csbook_app/Pages/PageInterface.dart';
+import 'package:csbook_app/Pages/songScreen.dart';
 import 'package:csbook_app/databases/CSDB.dart';
-import 'package:csbook_app/model/Song.dart';
-import 'package:csbook_app/pages/PageInterface.dart';
-import 'package:csbook_app/pages/song.dart';
-import 'package:csbook_app/widgets.dart';
+import 'package:csbook_app/Model/Song.dart';
+import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:async';
-
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ListScreen extends StatefulWidget implements PageInterface {
   static const routeName = '/song_list';
@@ -30,13 +28,14 @@ class _ListState extends State<ListScreen> {
   var index = 0;
 
   _ListState() {
-    _retrieveSongs().then((s) {
+    Song.get(0, 0).then((s) {
       this._songs = s;
       
+      /*
       _updateSongsDB().then((s) {
         this._songs = s;
       });
-      
+      */
     });
   }
 
@@ -68,18 +67,19 @@ class _ListState extends State<ListScreen> {
   @override
   void initState() {
     //We recover the songs from db
-    _retrieveSongs().then((s) {
+    Song.get(0, 0).then((s) {
       setState(() {
         this._songs = s;
       });
       
+      /*
       //We update database from web
       _updateSongsDB().then((s) {
         setState(() {
           this._songs = s;
         });
       });
-      
+      */
     });
 
     super.initState();

@@ -1,16 +1,17 @@
 import 'package:csbook_app/Constants.dart';
-import 'package:csbook_app/model/Mass.dart';
-import 'package:csbook_app/pages/PageInterface.dart';
-import 'package:csbook_app/pages/mass_view.dart';
-import 'package:csbook_app/widgets.dart';
+import 'package:csbook_app/Model/Mass.dart';
+import 'package:csbook_app/Model/Parish.dart';
+import 'package:csbook_app/Pages/PageInterface.dart';
+import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:async';
 
 import 'package:intl/intl.dart';
 
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sticky_headers/sticky_headers.dart';
+
+import 'massViewScreen.dart';
 
 class ParishScreen extends StatefulWidget implements PageInterface {
   @override
@@ -25,6 +26,7 @@ class ParishScreen extends StatefulWidget implements PageInterface {
 class _ParishScreenState extends State<ParishScreen> {
   List<Mass> _masses;
   List<Mass> _filteredMases;
+  List<String> _parishes;
 
   DateTime _date = DateTime.now();
   bool _picked = false;
@@ -34,13 +36,19 @@ class _ParishScreenState extends State<ParishScreen> {
 
   final DateFormat formatterFullDate = new DateFormat('dd/MM/yyyy');
 
+  String _selectedParish;
+
   initState() {
     _picked = false;
     Mass.get(0, 0).then((masses) {
       setState(() {
         _picked = false;
         _masses = masses;
-        _filteredMases = masses;
+        _parishes = _getParish(masses);
+        _filteredMases = _masses.where((Mass m) {
+          return m.parish.name == _parishes[0];
+        }).toList();
+        _selectedParish = _parishes[0];
       });
     });
     super.initState();
@@ -77,6 +85,15 @@ class _ParishScreenState extends State<ParishScreen> {
     */
   }
 
+  List<String> _getParish(List<Mass> filteredMases) {
+    List<String> parishes = [];
+    for (Mass mass in filteredMases) {
+      String parish = mass.parish.name;
+      if (!parishes.contains(parish)) parishes.add(parish);
+    }
+    return parishes;
+  }
+
   Future<DateTime> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
@@ -92,13 +109,22 @@ class _ParishScreenState extends State<ParishScreen> {
         itemCount: _filteredMases != null ? mapped.keys.length : 0,
         itemBuilder: (context, index) {
           return new StickyHeader(
-            header: new Container(
-              color: Theme.of(context).primaryColorLight,
-              padding: new EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-              alignment: Alignment.centerLeft,
-              child: new Text(
-                "Parroquia de " + mapped.keys.elementAt(index),
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            header: Opacity(
+              opacity: 0.8,
+              child: new Container(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                padding:
+                    new EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                alignment: Alignment.centerRight,
+                child: new Text(
+                  "Parroquia de " + mapped.keys.elementAt(index),
+                  textAlign: TextAlign.end,
+                  style: const TextStyle(
+                      color: Color.fromARGB(200, 0, 0, 0),
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic,
+                      fontSize: 20),
+                ),
               ),
             ),
             content: new Container(
@@ -122,7 +148,7 @@ class _ParishScreenState extends State<ParishScreen> {
 
   Widget makeBody() {
     return ListView.builder(
-        itemCount: _filteredMases != null ? _filteredMases.length : 0,
+        itemCount: (_filteredMases != null ? _filteredMases.length : 0),
         itemBuilder: (BuildContext context, int position) {
           return MassTile(
             _filteredMases[position],
@@ -150,8 +176,46 @@ class _ParishScreenState extends State<ParishScreen> {
           ),
           */
       body: (_filteredMases != null)
-          ? makeBodyHeaders()
+          ? makeBody()
           : FetchingWidget(Constants.PARISH_WAITING),
+      bottomNavigationBar: (_selectedParish == null)
+          ? Container()
+          : BottomAppBar(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                child: FlatButton(
+                  child: Text((_selectedParish == null)
+                      ? "Seleccionar Parroquia"
+                      : _selectedParish,
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        child: AlertDialog(
+                          title: Text("Parroquias"),
+                          content: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: _parishes.length,
+                            itemBuilder: (context, position) {
+                              return ListTile(
+                                title: Text(_parishes[position]),
+                                onTap: () {
+                                  setState(() {
+                                    Navigator.of(context).pop();
+                                    _selectedParish = _parishes[position];
+                                    _filteredMases = _masses.where((Mass m) {
+                                      return m.parish.name == _parishes[position];
+                                    }).toList();
+                                  });
+                                },
+                              );
+                            },
+                          ),
+                        ));
+                  },
+                ),
+              ),
+            ),
     );
   }
 

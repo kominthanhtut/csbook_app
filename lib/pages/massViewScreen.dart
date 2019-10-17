@@ -1,19 +1,18 @@
 import 'dart:async';
 
 import 'package:csbook_app/Constants.dart';
-import 'package:csbook_app/model/Chord.dart';
-import 'package:csbook_app/model/Mass.dart';
-import 'package:csbook_app/pages/songfullscreen.dart';
-import 'package:csbook_app/widgets.dart';
+import 'package:csbook_app/Model/Chord.dart';
+import 'package:csbook_app/Model/Mass.dart';
+import 'package:csbook_app/Pages/songfullscreen.dart';
+import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
-import 'package:csbook_app/SongTextWidget.dart';
+import 'package:csbook_app/Widgets/SongTextWidget.dart';
 import 'package:intl/intl.dart';
 
 import 'package:share/share.dart';
 
 import '../Api.dart';
-
 
 class MassScreen extends StatefulWidget {
   static const routeName = '/mass_view';
@@ -103,19 +102,22 @@ class _MassScreenState extends State<MassScreen> {
   }
 
   Widget _createSteper(BuildContext context) {
-    return Stepper(
-      //type: StepperType.horizontal,
-      currentStep: _currentMoment,
-      steps: _toSteps(context, _mass),
-      onStepTapped: (step) {
-        setState(() {
-          _currentMoment = step;
-        });
-      },
-      controlsBuilder: (BuildContext context,
-          {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
-        return Container();
-      },
+    return Theme(
+      data: ThemeData(accentColor: Colors.black),
+      child: Stepper(
+        //type: StepperType.horizontal,
+        currentStep: _currentMoment,
+        steps: _toSteps(context, _mass),
+        onStepTapped: (step) {
+          setState(() {
+            _currentMoment = step;
+          });
+        },
+        controlsBuilder: (BuildContext context,
+            {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
+          return Container();
+        },
+      ),
     );
   }
 
@@ -128,43 +130,44 @@ class _MassScreenState extends State<MassScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        brightness: Brightness.light,
+        iconTheme: IconThemeData(color: Colors.black),
+        actionsIconTheme: IconThemeData(color: Colors.black),
         title: Text(
           _mass.hasName()
               ? _mass.name
               : Constants.MASS_VIEW_TITLE +
                   formatterFullDate.format(_mass.date),
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
-        backgroundColor: Colors.black,
+        //backgroundColor: Colors.black,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0.0,
         //automaticallyImplyLeading: false,
         actions: <Widget>[
           IconButton(
             icon: Icon(
               Icons.share,
-              color: Colors.white,
             ),
             onPressed: () {
-              Share.share(Api.BaseUrl+"mass/view/"+_mass.id);
+              Share.share(Api.BaseUrl + "mass/view/" + _mass.id);
             },
           ),
         ],
       ),
-      body:  Container(
-            color: Colors.black,
-            child:Container(
+      body: Container(
+          color: Colors.black,
+          child: Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                borderRadius: BorderRadius.circular(16)
-                ),
-              child: _mass.instancesRecovered() ? _createSteper(context) : FetchingWidget(Constants.SONGS_WAITING)
-              )
-           )
-          ,
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12))),
+              child: _mass.instancesRecovered()
+                  ? _createSteper(context)
+                  : FetchingWidget(Constants.SONGS_WAITING))),
       floatingActionButton: _mass.instancesRecovered()
           ? FloatingActionButton(
               child: Icon(Icons.fast_forward),
-              backgroundColor: Theme.of(context).primaryColorLight,
+              backgroundColor: Colors.black,
               onPressed: () {
                 setState(() {
                   _currentMoment = (_currentMoment + 1) % _mass.songs.length;

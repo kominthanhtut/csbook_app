@@ -1,12 +1,7 @@
-import 'package:csbook_app/SongTextWidget.dart';
-import 'package:csbook_app/model/Chord.dart';
-import 'package:csbook_app/model/Instance.dart';
-import 'package:csbook_app/model/Song.dart';
-import 'package:csbook_app/widgets.dart';
+import 'package:csbook_app/Widgets/SongTextWidget.dart';
+import 'package:csbook_app/Model/Instance.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:screen/screen.dart';
 
 class SongFullScreen extends StatefulWidget {

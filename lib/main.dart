@@ -1,7 +1,7 @@
-import 'package:csbook_app/mainScreen.dart';
-import 'package:csbook_app/pages/mass_view.dart';
-import 'package:csbook_app/pages/song.dart';
-import 'package:csbook_app/pages/songfullscreen.dart';
+import 'package:csbook_app/Pages/mainScreen.dart';
+import 'package:csbook_app/Pages/massViewScreen.dart';
+import 'package:csbook_app/Pages/songScreen.dart';
+import 'package:csbook_app/Pages/songfullscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
