@@ -163,7 +163,9 @@ class _ParishScreenState extends State<ParishScreen> {
                   border: Border(bottom: BorderSide(color: Colors.white))),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Text("Parroquias" ,textAlign: TextAlign.center,),
+                child: Text("Parroquias" ,
+                //textAlign: TextAlign.center, 
+                style: TextStyle(fontWeight: FontWeight.bold),),
               )),
           content: ListView.builder(
             shrinkWrap: true,
