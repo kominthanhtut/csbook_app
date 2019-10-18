@@ -155,7 +155,16 @@ class _ParishScreenState extends State<ParishScreen> {
     showDialog(
         context: context,
         child: AlertDialog(
-          title: Text("Parroquias"),
+          contentPadding: EdgeInsets.all(0.0),
+          titlePadding: EdgeInsets.zero,
+          title: Container(
+              decoration: BoxDecoration(
+                  color: Colors.black,
+                  border: Border(bottom: BorderSide(color: Colors.white))),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text("Parroquias" ,textAlign: TextAlign.center,),
+              )),
           content: ListView.builder(
             shrinkWrap: true,
             itemCount: _parishes.length,
