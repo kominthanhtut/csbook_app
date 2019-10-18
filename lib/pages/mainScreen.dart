@@ -76,8 +76,8 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
                 decoration: BoxDecoration(
                     color: Theme.of(context).scaffoldBackgroundColor,
                     borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(12),
-                        bottomRight: Radius.circular(12))),
+                        bottomLeft: Radius.circular(Constants.APP_RADIUS),
+                        bottomRight: Radius.circular(Constants.APP_RADIUS))),
                 child: _parish ? _pages[1] : _pages[0])));
   }
 
@@ -87,17 +87,23 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
         color: Theme.of(context).scaffoldBackgroundColor,
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
+            Expanded(
+              child: Container(
+                color: Theme.of(context).primaryColorDark,
+              ),
+            ),
             Container(
-color: Theme.of(context).primaryColorDark,
+              color: Theme.of(context).primaryColorDark,
               height: MediaQuery.of(context).padding.top,
             ),
             Container(
-color: Theme.of(context).primaryColorDark,
+              color: Theme.of(context).primaryColorDark,
               child: ListTile(
                 title: Text(
                   "CSBook",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
                 ),
                 trailing: IconButton(
                   onPressed: () {
@@ -112,13 +118,13 @@ color: Theme.of(context).primaryColorDark,
               height: 2,
             ),
             ListTile(
-              leading: new Icon(
+              leading: Icon(
                 FontAwesomeIcons.music,
               ),
               title: new Text(
                 'Canciones',
-                style: TextStyle(fontSize: 20),
               ),
+              
               onTap: () {
                 Navigator.of(context).pop();
                 setState(() {
@@ -132,7 +138,6 @@ color: Theme.of(context).primaryColorDark,
               ),
               title: new Text(
                 'Parroquias',
-                style: TextStyle(fontSize: 20),
               ),
               onTap: () {
                 Navigator.of(context).pop();
@@ -147,14 +152,21 @@ color: Theme.of(context).primaryColorDark,
               ),
               title: new Text(
                 'Ajustes',
-                style: TextStyle(fontSize: 20),
               ),
               onTap: () {},
             ),
-            Expanded(
-              child: Container(),
+            Container(
+              height: 64,
             ),
-
+            Padding(
+              child: Opacity(
+                  opacity: 0.4,
+                  child: Text(
+                    "hkfuertes",
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                  )),
+              padding: EdgeInsets.all(16),
+            )
           ],
         ),
       ),

@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
           //scaffoldBackgroundColor: Colors.black,
           //primarySwatch: Colors.brown
-          accentColor: Colors.white,
+          accentColor: Colors.black,
           primaryColor: Color(0xff424242),
           primaryColorLight: Color(0xff6d6d6d),
           primaryColorDark: Color(0xff1b1b1b),

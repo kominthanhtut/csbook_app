@@ -8,6 +8,7 @@ import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 import 'package:csbook_app/Widgets/SongTextWidget.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
 import 'package:share/share.dart';
@@ -102,23 +103,30 @@ class _MassScreenState extends State<MassScreen> {
   }
 
   Widget _createListView(BuildContext context) {
-    return ListView(
-      children: _mass.songs.keys.map((String ms) {
-        return new ExpansionTile(
-          title: ListTile(
-            title: Text(ms),
-            subtitle: Text(_mass.songs[ms].getInstance().song.getTitle()),
-          ),
-          children: <Widget>[
-            InkWell(
-              child: SongText(_mass.songs[ms].getInstance().removeChords()),
-              onTap: () {
-                _openFullScreenSong(_mass.songs[ms]);
-              },
-            )
-          ],
-        );
-      }).toList(),
+    return Theme(
+      data: Theme.of(context).copyWith(accentColor: Colors.white),
+      child: ListView(
+        children: _mass.songs.keys.map((String ms) {
+          return ExpansionTile(
+            title: ListTile(
+              title: Text(ms, style: TextStyle(fontWeight: FontWeight.bold),),
+              subtitle: Text(_mass.songs[ms].getInstance().song.getTitle(), style: TextStyle(fontStyle: FontStyle.italic),),
+            ),
+            trailing: IconButton(icon: Icon(Icons.fullscreen), onPressed: (){
+              _openFullScreenSong(_mass.songs[ms]);
+            },),
+            //leading: Icon(Icons.arrow_drop_down_circle),
+            children: <Widget>[
+              InkWell(
+                child: SongText(_mass.songs[ms].getInstance().removeChords()),
+                onTap: () {
+                  _openFullScreenSong(_mass.songs[ms]);
+                },
+              )
+            ],
+          );
+        }).toList(),
+      ),
     );
   }
 
@@ -158,8 +166,8 @@ class _MassScreenState extends State<MassScreen> {
               decoration: BoxDecoration(
                   color: Theme.of(context).scaffoldBackgroundColor,
                   borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(12),
-                      bottomRight: Radius.circular(12))),
+                      bottomLeft: Radius.circular(Constants.APP_RADIUS),
+                      bottomRight: Radius.circular(Constants.APP_RADIUS))),
               child: _mass.instancesRecovered()
                   ? _createListView(context)
                   : FetchingWidget(Constants.SONGS_WAITING))),

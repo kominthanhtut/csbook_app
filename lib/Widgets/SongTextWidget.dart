@@ -9,11 +9,14 @@ class SongText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: createWidgetList(songText),
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: createWidgetList(songText),
+        ),
       ),
     );
   }
@@ -53,13 +56,11 @@ class SongText extends StatelessWidget {
 
     //if (parts[0] == "") parts.removeAt(0);
     if (parts.length == 1) {
-      widgets.add(Wrap(children: [
-        Text(parts[0],
-            style: TextStyle(
-              fontSize: textSize,
-              fontWeight: chorus ? FontWeight.bold : FontWeight.normal,
-            ))
-      ]));
+      widgets.add(Text(parts[0],
+          style: TextStyle(
+            fontSize: textSize,
+            fontWeight: chorus ? FontWeight.bold : FontWeight.normal,
+          )));
     } else {
       for (var i = 0; i < parts.length; i++) {
         String currentChord;

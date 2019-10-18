@@ -30,7 +30,7 @@ class _ListState extends State<ListScreen> {
   _ListState() {
     Song.get(0, 0).then((s) {
       this._songs = s;
-      
+
       /*
       _updateSongsDB().then((s) {
         this._songs = s;
@@ -71,7 +71,7 @@ class _ListState extends State<ListScreen> {
       setState(() {
         this._songs = s;
       });
-      
+
       /*
       //We update database from web
       _updateSongsDB().then((s) {
@@ -148,10 +148,18 @@ class SongSearch extends SearchDelegate<Song> {
   SongSearch(this.songs, this.callBack);
 
   @override
+  ThemeData appBarTheme(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return theme;
+  }
+
+  @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: Icon(
+          Icons.clear,
+        ),
         onPressed: () {
           query = "";
         },
