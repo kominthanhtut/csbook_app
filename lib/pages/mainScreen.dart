@@ -60,6 +60,7 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
 
     return Scaffold(
         appBar: AppBar(
+          
           centerTitle: true,
           title: Text(
             _currentTitle,
@@ -69,7 +70,8 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 0,
         ),
-        drawer: _drawer(),
+        drawer: _drawer(false),
+        endDrawer: _drawer(true),
         body: Container(
             color: Colors.black,
             child: Container(
@@ -81,19 +83,22 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
                 child: _parish ? _pages[1] : _pages[0])));
   }
 
-  Widget _drawer() {
+  Widget _drawer(bool end) {
     return Drawer(
       child: Container(
         color: Theme.of(context).scaffoldBackgroundColor,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment:
+              end ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: <Widget>[
-            Expanded(
-              child: Container(
-                color: Theme.of(context).primaryColorDark,
-              ),
-            ),
+            end
+                ? Expanded(
+                    child: Container(
+                      color: Theme.of(context).primaryColorDark,
+                    ),
+                  )
+                : Container(),
             Container(
               color: Theme.of(context).primaryColorDark,
               height: MediaQuery.of(context).padding.top,
@@ -124,7 +129,6 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
               title: new Text(
                 'Canciones',
               ),
-              
               onTap: () {
                 Navigator.of(context).pop();
                 setState(() {
@@ -156,9 +160,14 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
               ),
               onTap: () {},
             ),*/
-            Container(
-              height: 64,
-            ),
+
+            end
+                ? Container(
+                    height: 64,
+                  )
+                : Expanded(
+                    child: Container(),
+                  ),
             Padding(
               child: Opacity(
                   opacity: 0.4,

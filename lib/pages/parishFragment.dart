@@ -55,34 +55,9 @@ class _ParishScreenState extends State<ParishScreen> {
   }
 
   List<Widget> getActions(BuildContext context) {
-    return [];
-    /*
-    return [
-      (!_picked)
-          ? IconButton(
-              icon: Icon(FontAwesomeIcons.calendarAlt),
-              onPressed: () {
-                _selectDate(context).then((_newDate) {
-                  setState(() {
-                    _date = _newDate;
-                    _picked = true;
-                    _filteredMases = _masses.where((m) {
-                      return m.date == _newDate;
-                    }).toList();
-                  });
-                });
-              },
-            )
-          : IconButton(
-              icon: Icon(Icons.clear),
-              onPressed: () {
-                setState(() {
-                  _picked = false;
-                  _filteredMases = _masses;
-                });
-              })
-    ];
-    */
+    return [Builder(
+              builder: (context) => Container())];
+   
   }
 
   List<String> _getParish(List<Mass> filteredMases) {
