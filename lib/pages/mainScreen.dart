@@ -146,6 +146,7 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
                 });
               },
             ),
+            /*
             ListTile(
               leading: new Icon(
                 Icons.settings,
@@ -154,7 +155,7 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
                 'Ajustes',
               ),
               onTap: () {},
-            ),
+            ),*/
             Container(
               height: 64,
             ),
