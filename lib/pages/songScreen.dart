@@ -10,7 +10,6 @@ import 'package:csbook_app/Pages/songfullscreen.dart';
 import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SongScreen extends StatefulWidget {
@@ -33,6 +32,8 @@ class _SongScreenState extends State<SongScreen> {
 
   var searchBar;
 
+  bool _controlDisplayed = false;
+
   _SongScreenState(Song song);
 
   void getInstances(Song song) {
@@ -46,9 +47,9 @@ class _SongScreenState extends State<SongScreen> {
   Future<List<Instance>> _retrieveInstances(Song song) async {
     CSDB db = CSDB();
     List<Instance> instances = new List<Instance>();
-    for(int id in song.instances.keys){
+    for (int id in song.instances.keys) {
       Instance instance = await db.fetchInstance(id);
-      if (instance == null){
+      if (instance == null) {
         instance = await Instance.get(id);
         db.saveOrUpdateInstance(instance);
       }
@@ -64,94 +65,133 @@ class _SongScreenState extends State<SongScreen> {
   }
 
   Widget getNormalApp(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          Navigator.pushNamed(
-            context,
-            SongFullScreen.routeName,
-            arguments: SongState(transpose, fontSize, instance),
-          );
-        });
-      },
-      child: Scaffold(
-          appBar: AppBar(
-            title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(instance.song.title.toString()),
-                  instance.song.author == null ? Container():
-                  Text(
-                    instance.song.author.toString(),
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.normal,
-                        fontStyle: FontStyle.italic),
-                  ),
-                ]),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(FontAwesomeIcons.minusSquare),
-                onPressed: () {
-                  setState(() {
-                    fontSize--;
-                  });
-                },
-              ),
-              IconButton(
-                icon: Icon(FontAwesomeIcons.plusSquare),
-                onPressed: () {
-                  setState(() {
-                    fontSize++;
-                  });
-                },
-              ),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(instance.song.title.toString()),
+              instance.song.author == null
+                  ? Container()
+                  : Text(
+                      instance.song.author.toString(),
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                          fontStyle: FontStyle.italic),
+                    ),
+            ]),
+        actions: <Widget>[
+          Opacity(
+            opacity: 0.8,
+            child: IconButton(
+              icon: Icon(FontAwesomeIcons.searchMinus),
+              onPressed: () {
+                setState(() {
+                  fontSize--;
+                });
+              },
+            ),
           ),
-          body: Row(children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: SongText(
+          Opacity(
+            opacity: 0.8,
+            child: IconButton(
+              icon: Icon(FontAwesomeIcons.searchPlus),
+              onPressed: () {
+                setState(() {
+                  fontSize++;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+      body: GestureDetector(
+        onTap: () {
+          setState(() {
+            Navigator.pushNamed(
+              context,
+              SongFullScreen.routeName,
+              arguments: SongState(transpose, fontSize, instance),
+            );
+          });
+        },
+        child: Row(children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(children: <Widget>[
+                SongText(
                   instance.transpose(transpose),
                   textSize: fontSize,
                 ),
+                Container(
+                  height: 32,
+                )
+              ]),
+            ),
+          ),
+        ]),
+      ),
+      floatingActionButtonLocation: _controlDisplayed
+          ? FloatingActionButtonLocation.endFloat
+          : FloatingActionButtonLocation.endFloat,
+      floatingActionButton: !_controlDisplayed
+          ? FloatingActionButton(
+              backgroundColor: Colors.black,
+              child: Icon(Icons.settings),
+              onPressed: () {
+                setState(() {
+                  _controlDisplayed = true;
+                });
+              },
+            )
+          : FloatingActionButton.extended(
+              backgroundColor: Colors.black,
+              label: Row(
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.remove),
+                    onPressed: () {
+                      setState(() {
+                        transpose--;
+                      });
+                    },
+                  ),
+                  FlatButton(
+                    child: Text(
+                      //"Original " +
+                      instance.getTone(Chord.CHORD_SET_SPANISH),
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        transpose = 0;
+                      });
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.add),
+                    onPressed: () {
+                      setState(() {
+                        transpose++;
+                      });
+                    },
+                  ),
+                  IconButton(
+                      icon: Icon(Icons.arrow_right),
+                      onPressed: () {
+                        setState(() {
+                          setState(() {
+                            _controlDisplayed = false;
+                          });
+                        });
+                      }),
+                ],
               ),
+              onPressed: () {},
             ),
-          ]),
-          bottomNavigationBar: BottomAppBar(
-            child: new Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.remove),
-                  onPressed: () {
-                    setState(() {
-                      transpose--;
-                    });
-                  },
-                ),
-                FlatButton(
-                  child: Text(
-                      "Original " + instance.getTone(Chord.CHORD_SET_SPANISH)),
-                  onPressed: () {
-                    setState(() {
-                      transpose = 0;
-                    });
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    setState(() {
-                      transpose++;
-                    });
-                  },
-                ),
-              ],
-            ),
-          )),
     );
   }
 
@@ -162,10 +202,11 @@ class _SongScreenState extends State<SongScreen> {
       song = ModalRoute.of(context).settings.arguments;
       getInstances(song);
     }
-    if (instance == null)
-      return getWaitingApp();
-    else {
-      return getNormalApp(context);
-    }
+    return Theme(
+      data: ThemeData(
+          appBarTheme: Theme.of(context).appBarTheme.copyWith(
+              color: Theme.of(context).scaffoldBackgroundColor, elevation: 0)),
+      child: (instance == null) ? getWaitingApp() : getNormalApp(context),
+    );
   }
 }

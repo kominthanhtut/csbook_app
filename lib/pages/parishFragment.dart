@@ -100,15 +100,7 @@ class _ParishScreenState extends State<ParishScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: (_filteredMases != null)
-          ? Container(
-              color: Colors.black,
-              child: Container(
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(Constants.APP_RADIUS),
-                          bottomRight: Radius.circular(Constants.APP_RADIUS))),
-                  child: makeBody()))
+          ?  makeBody()
           : FetchingWidget(Constants.PARISH_WAITING),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
@@ -132,16 +124,12 @@ class _ParishScreenState extends State<ParishScreen> {
         child: AlertDialog(
           contentPadding: EdgeInsets.all(0.0),
           titlePadding: EdgeInsets.zero,
-          title: Container(
-              decoration: BoxDecoration(
-                  color: Colors.black,
-                  border: Border(bottom: BorderSide(color: Colors.white))),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text("Parroquias" ,
-                //textAlign: TextAlign.center, 
-                style: TextStyle(fontWeight: FontWeight.bold),),
-              )),
+          title: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text("Parroquias" ,
+            //textAlign: TextAlign.center, 
+            style: TextStyle(fontWeight: FontWeight.bold),),
+          ),
           content: ListView.builder(
             shrinkWrap: true,
             itemCount: _parishes.length,

@@ -104,17 +104,29 @@ class _MassScreenState extends State<MassScreen> {
 
   Widget _createListView(BuildContext context) {
     return Theme(
-      data: Theme.of(context).copyWith(accentColor: Colors.white),
+      data: Theme.of(context).copyWith(
+          accentColor: (Theme.of(context).brightness == Brightness.dark)
+              ? Colors.white
+              : Colors.black),
       child: ListView(
         children: _mass.songs.keys.map((String ms) {
           return ExpansionTile(
             title: ListTile(
-              title: Text(ms, style: TextStyle(fontWeight: FontWeight.bold),),
-              subtitle: Text(_mass.songs[ms].getInstance().song.getTitle(), style: TextStyle(fontStyle: FontStyle.italic),),
+              title: Text(
+                ms,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(
+                _mass.songs[ms].getInstance().song.getTitle(),
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
             ),
-            trailing: IconButton(icon: Icon(Icons.fullscreen), onPressed: (){
-              _openFullScreenSong(_mass.songs[ms]);
-            },),
+            trailing: IconButton(
+              icon: Icon(Icons.fullscreen),
+              onPressed: () {
+                _openFullScreenSong(_mass.songs[ms]);
+              },
+            ),
             //leading: Icon(Icons.arrow_drop_down_circle),
             children: <Widget>[
               InkWell(
@@ -145,10 +157,8 @@ class _MassScreenState extends State<MassScreen> {
               : Constants.MASS_VIEW_TITLE +
                   formatterFullDate.format(_mass.date),
         ),
-        //backgroundColor: Colors.black,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0.0,
-        //automaticallyImplyLeading: false,
         actions: <Widget>[
           IconButton(
             icon: Icon(
@@ -160,17 +170,9 @@ class _MassScreenState extends State<MassScreen> {
           ),
         ],
       ),
-      body: Container(
-          color: Colors.black,
-          child: Container(
-              decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(Constants.APP_RADIUS),
-                      bottomRight: Radius.circular(Constants.APP_RADIUS))),
-              child: _mass.instancesRecovered()
-                  ? _createListView(context)
-                  : FetchingWidget(Constants.SONGS_WAITING))),
+      body: _mass.instancesRecovered()
+          ? _createListView(context)
+          : FetchingWidget(Constants.SONGS_WAITING),
     );
   }
 }

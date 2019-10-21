@@ -46,7 +46,8 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        //statusBarColor: Theme.of(context).scaffoldBackgroundColor));
+        //systemNavigationBarIconBrightness:  (Theme.of(context).brightness == Brightness.dark) ? Brightness.light: Brightness.dark,
+        //systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor,
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.dark));
 
@@ -60,7 +61,6 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
 
     return Scaffold(
         appBar: AppBar(
-          
           centerTitle: true,
           title: Text(
             _currentTitle,
@@ -72,15 +72,7 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
         ),
         drawer: _drawer(false),
         endDrawer: _drawer(true),
-        body: Container(
-            color: Colors.black,
-            child: Container(
-                decoration: BoxDecoration(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(Constants.APP_RADIUS),
-                        bottomRight: Radius.circular(Constants.APP_RADIUS))),
-                child: _parish ? _pages[1] : _pages[0])));
+        body: _parish ? _pages[1] : _pages[0]);
   }
 
   Widget _drawer(bool end) {
@@ -108,13 +100,13 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
               child: ListTile(
                 title: Text(
                   "CSBook",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
+                  style: Theme.of(context).textTheme.title.copyWith(fontSize: 32, color: Colors.white),
                 ),
                 trailing: IconButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  icon: Icon(Icons.close),
+                  icon: Icon(Icons.close, color: Colors.white,),
                 ),
               ),
             ),
