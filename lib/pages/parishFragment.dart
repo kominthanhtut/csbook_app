@@ -55,9 +55,7 @@ class _ParishScreenState extends State<ParishScreen> {
   }
 
   List<Widget> getActions(BuildContext context) {
-    return [Builder(
-              builder: (context) => Container())];
-   
+    return [Builder(builder: (context) => Container())];
   }
 
   List<String> _getParish(List<Mass> filteredMases) {
@@ -99,9 +97,14 @@ class _ParishScreenState extends State<ParishScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: (_filteredMases != null)
-          ?  makeBody()
-          : FetchingWidget(Constants.PARISH_WAITING),
+      body: RoundedBlackContainer(
+        child: (_filteredMases != null)
+            ? makeBody()
+            : FetchingWidget(Constants.PARISH_WAITING),
+        bottomOnly: true,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        radius: Constants.APP_RADIUS,
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         label: AutoSizeText(
@@ -126,9 +129,11 @@ class _ParishScreenState extends State<ParishScreen> {
           titlePadding: EdgeInsets.zero,
           title: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text("Parroquias" ,
-            //textAlign: TextAlign.center, 
-            style: TextStyle(fontWeight: FontWeight.bold),),
+            child: Text(
+              "Parroquias",
+              //textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
           content: ListView.builder(
             shrinkWrap: true,

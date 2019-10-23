@@ -150,29 +150,33 @@ class _MassScreenState extends State<MassScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          _mass.hasName()
-              ? _mass.name
-              : Constants.MASS_VIEW_TITLE +
-                  formatterFullDate.format(_mass.date),
-        ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0.0,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.share,
-            ),
-            onPressed: () {
-              Share.share(Api.BaseUrl + "mass/view/" + _mass.id);
-            },
+        appBar: AppBar(
+          title: Text(
+            _mass.hasName()
+                ? _mass.name
+                : Constants.MASS_VIEW_TITLE +
+                    formatterFullDate.format(_mass.date),
           ),
-        ],
-      ),
-      body: _mass.instancesRecovered()
-          ? _createListView(context)
-          : FetchingWidget(Constants.SONGS_WAITING),
-    );
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          elevation: 0.0,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.share,
+              ),
+              onPressed: () {
+                Share.share(Api.BaseUrl + "mass/view/" + _mass.id);
+              },
+            ),
+          ],
+        ),
+        body: RoundedBlackContainer(
+          child: _mass.instancesRecovered()
+              ? _createListView(context)
+              : FetchingWidget(Constants.SONGS_WAITING),
+          bottomOnly: true,
+          radius: Constants.APP_RADIUS,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        ));
   }
 }

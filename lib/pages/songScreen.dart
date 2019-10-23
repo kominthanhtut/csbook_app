@@ -23,8 +23,8 @@ class SongScreen extends StatefulWidget {
 }
 
 class _SongScreenState extends State<SongScreen> {
-  Song song;
-  Instance instance;
+  Song _song;
+  Instance _instance;
 
   int transpose = 0;
   double defaultFontSize = 16;
@@ -34,14 +34,19 @@ class _SongScreenState extends State<SongScreen> {
 
   bool _controlDisplayed = false;
 
-  _SongScreenState(Song song);
+  _SongScreenState(this._song);
 
   void getInstances(Song song) {
     _retrieveInstances(song).then((List<Instance> instances) {
       setState(() {
-        instance = instances[0];
+        _instance = instances[0];
       });
     });
+  }
+
+  void initState() {
+    super.initState();
+    getInstances(_song);
   }
 
   Future<List<Instance>> _retrieveInstances(Song song) async {
@@ -58,155 +63,161 @@ class _SongScreenState extends State<SongScreen> {
     return instances;
   }
 
-  Widget getWaitingApp() {
-    return Scaffold(
-        appBar: AppBar(title: Text(Constants.APP_TITLE)),
-        body: FetchingWidget(Constants.SONG_WAITING));
+  Widget _loadedBody() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          Navigator.pushNamed(
+            context,
+            SongFullScreen.routeName,
+            arguments: SongState(transpose, fontSize, _instance),
+          );
+        });
+      },
+      child: SingleChildScrollView(
+        child: SongText(
+          _instance.transpose(transpose),
+          textSize: fontSize,
+        ),
+      ),
+    );
   }
 
-  Widget getNormalApp(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(instance.song.title.toString()),
-              instance.song.author == null
-                  ? Container()
-                  : Text(
-                      instance.song.author.toString(),
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.normal,
-                          fontStyle: FontStyle.italic),
-                    ),
-            ]),
-        actions: <Widget>[
-          Opacity(
-            opacity: 0.8,
-            child: IconButton(
-              icon: Icon(FontAwesomeIcons.searchMinus),
+  Widget _loadingAppBar() {
+    return AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        title: Text(Constants.APP_TITLE));
+  }
+
+  Widget _loadedAppBar() {
+    return AppBar(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      elevation: 0,
+      title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(_instance.song.title.toString()),
+            _instance.song.author == null
+                ? Container()
+                : Text(
+                    _instance.song.author.toString(),
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.normal,
+                        fontStyle: FontStyle.italic),
+                  ),
+          ]),
+      actions: <Widget>[
+        Opacity(
+          opacity: 0.8,
+          child: IconButton(
+            icon: Icon(FontAwesomeIcons.searchMinus),
+            onPressed: () {
+              setState(() {
+                fontSize--;
+              });
+            },
+          ),
+        ),
+        Opacity(
+          opacity: 0.8,
+          child: IconButton(
+            icon: Icon(FontAwesomeIcons.searchPlus),
+            onPressed: () {
+              setState(() {
+                fontSize++;
+              });
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _floatingActionButtonExtended() {
+    return FloatingActionButton.extended(
+      backgroundColor: Colors.black,
+      label: Row(
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.remove),
+            onPressed: () {
+              setState(() {
+                transpose--;
+              });
+            },
+          ),
+          FlatButton(
+            child: Text(
+              //"Original " +
+              _instance.getTone(Chord.CHORD_SET_SPANISH),
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            onPressed: () {
+              setState(() {
+                transpose = 0;
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              setState(() {
+                transpose++;
+              });
+            },
+          ),
+          IconButton(
+              icon: Icon(Icons.arrow_right),
               onPressed: () {
                 setState(() {
-                  fontSize--;
+                  setState(() {
+                    _controlDisplayed = false;
+                  });
                 });
-              },
-            ),
-          ),
-          Opacity(
-            opacity: 0.8,
-            child: IconButton(
-              icon: Icon(FontAwesomeIcons.searchPlus),
-              onPressed: () {
-                setState(() {
-                  fontSize++;
-                });
-              },
-            ),
-          ),
+              }),
         ],
       ),
-      body: GestureDetector(
-        onTap: () {
-          setState(() {
-            Navigator.pushNamed(
-              context,
-              SongFullScreen.routeName,
-              arguments: SongState(transpose, fontSize, instance),
-            );
-          });
-        },
-        child: Row(children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(children: <Widget>[
-                SongText(
-                  instance.transpose(transpose),
-                  textSize: fontSize,
-                ),
-                Container(
-                  height: 32,
-                )
-              ]),
-            ),
-          ),
-        ]),
-      ),
-      floatingActionButtonLocation: _controlDisplayed
-          ? FloatingActionButtonLocation.endFloat
-          : FloatingActionButtonLocation.endFloat,
-      floatingActionButton: !_controlDisplayed
-          ? FloatingActionButton(
-              backgroundColor: Colors.black,
-              child: Icon(Icons.settings),
-              onPressed: () {
-                setState(() {
-                  _controlDisplayed = true;
-                });
-              },
-            )
-          : FloatingActionButton.extended(
-              backgroundColor: Colors.black,
-              label: Row(
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.remove),
-                    onPressed: () {
-                      setState(() {
-                        transpose--;
-                      });
-                    },
-                  ),
-                  FlatButton(
-                    child: Text(
-                      //"Original " +
-                      instance.getTone(Chord.CHORD_SET_SPANISH),
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        transpose = 0;
-                      });
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () {
-                      setState(() {
-                        transpose++;
-                      });
-                    },
-                  ),
-                  IconButton(
-                      icon: Icon(Icons.arrow_right),
-                      onPressed: () {
-                        setState(() {
-                          setState(() {
-                            _controlDisplayed = false;
-                          });
-                        });
-                      }),
-                ],
-              ),
-              onPressed: () {},
-            ),
+      onPressed: () {},
     );
   }
 
   @override
   Widget build(BuildContext context) {
     //SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-    if (song == null) {
-      song = ModalRoute.of(context).settings.arguments;
-      getInstances(song);
-    }
-    return Theme(
-      data: ThemeData(
-          appBarTheme: Theme.of(context).appBarTheme.copyWith(
-              color: Theme.of(context).scaffoldBackgroundColor, elevation: 0)),
-      child: (instance == null) ? getWaitingApp() : getNormalApp(context),
+    return Scaffold(
+      appBar: (_instance == null) ? _loadingAppBar() : _loadedAppBar(),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: RoundedBlackContainer(
+              child: (_instance == null)
+                  ? FetchingWidget(Constants.SONG_WAITING)
+                  : _loadedBody(),
+              bottomOnly: true,
+              radius: Constants.APP_RADIUS,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            ),
+          ),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: (_instance == null)
+          ? Container()
+          : !_controlDisplayed
+              ? FloatingActionButton(
+                  backgroundColor: Colors.black,
+                  child: Icon(Icons.settings),
+                  onPressed: () {
+                    setState(() {
+                      _controlDisplayed = true;
+                    });
+                  },
+                )
+              : _floatingActionButtonExtended(),
     );
   }
 }

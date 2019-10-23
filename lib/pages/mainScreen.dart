@@ -2,9 +2,12 @@ import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/Model/Song.dart';
 import 'package:csbook_app/Pages/listFragment.dart';
 import 'package:csbook_app/Pages/parishFragment.dart';
+import 'package:csbook_app/Widgets/widgets.dart';
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'PageInterface.dart';
 
@@ -72,7 +75,12 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
         ),
         drawer: _drawer(false),
         endDrawer: _drawer(true),
-        body: _parish ? _pages[1] : _pages[0]);
+        body: RoundedBlackContainer(
+          child: _parish ? _pages[1] : _pages[0],
+          bottomOnly: true,
+          radius: Constants.APP_RADIUS,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        ));
   }
 
   Widget _drawer(bool end) {
@@ -87,26 +95,35 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
             end
                 ? Expanded(
                     child: Container(
-                      color: Theme.of(context).primaryColorDark,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Theme.of(context).primaryColorDark
+                          : Theme.of(context).backgroundColor,
                     ),
                   )
                 : Container(),
             Container(
-              color: Theme.of(context).primaryColorDark,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).primaryColorDark
+                  : Theme.of(context).backgroundColor,
               height: MediaQuery.of(context).padding.top,
             ),
             Container(
-              color: Theme.of(context).primaryColorDark,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).primaryColorDark
+                  : Theme.of(context).backgroundColor,
               child: ListTile(
                 title: Text(
                   "CSBook",
-                  style: Theme.of(context).textTheme.title.copyWith(fontSize: 32, color: Colors.white),
+                  style:
+                      Theme.of(context).textTheme.title.copyWith(fontSize: 32),
                 ),
                 trailing: IconButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  icon: Icon(Icons.close, color: Colors.white,),
+                  icon: Icon(
+                    Icons.close,
+                  ),
                 ),
               ),
             ),
@@ -142,17 +159,25 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
                 });
               },
             ),
-            /*
             ListTile(
-              leading: new Icon(
-                Icons.settings,
-              ),
+              leading: Icon(FontAwesomeIcons.paintBrush),
+              trailing: Switch(
+                  activeColor: Colors.white,
+                  activeTrackColor: Theme.of(context).primaryColorLight,
+                  onChanged: (value) {
+                    SharedPreferences.getInstance().then((sp) {
+                      sp.setBool(Constants.IS_DARK_TOKEN, value);
+                      DynamicTheme.of(context).setBrightness(
+                          (value) ? Brightness.dark : Brightness.light);
+                    });
+                  },
+                  value:
+                      DynamicTheme.of(context).brightness == Brightness.dark),
               title: new Text(
-                'Ajustes',
+                'Tema oscuro',
               ),
               onTap: () {},
-            ),*/
-
+            ),
             end
                 ? Container(
                     height: 64,

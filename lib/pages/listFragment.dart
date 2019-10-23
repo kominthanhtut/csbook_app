@@ -57,11 +57,7 @@ class _ListState extends State<ListScreen> {
   }
 
   void getInstances(BuildContext context, Song song) {
-    Navigator.pushNamed(
-      context,
-      SongScreen.routeName,
-      arguments: song,
-    );
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SongScreen(key: Key("0"), song: song,)));
   }
 
   @override

@@ -14,7 +14,7 @@ class SongTile extends StatelessWidget {
   Widget build(BuildContext context) {
     if (song.hasAuthor()) {
       return new ListTile(
-        trailing: song.cached ? Icon(Icons.cached): null,
+        trailing: song.cached ? Icon(Icons.cached) : null,
         title: new Text(song.getTitle()),
         subtitle: new Text(song.getAuthor()),
         onTap: () {
@@ -23,7 +23,7 @@ class SongTile extends StatelessWidget {
       );
     } else {
       return new ListTile(
-        trailing: song.cached ? Icon(Icons.cached): null,
+        trailing: song.cached ? Icon(Icons.cached) : null,
         title: new Text(song.getTitle()),
         onTap: () {
           if (onTap != null) onTap(song);
@@ -54,7 +54,7 @@ class MassTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return new ListTile(
       title: new Text(
-          mass.hasName() ? mass.name : weekDays[mass.date.weekday-1]),
+          mass.hasName() ? mass.name : weekDays[mass.date.weekday - 1]),
       subtitle: new Text(formatterFullDate.format(mass.date)),
       onTap: () {
         if (onTap != null) onTap(mass);
@@ -96,5 +96,31 @@ class FetchingWidget extends StatelessWidget {
             ),
           )
         ]);
+  }
+}
+
+class RoundedBlackContainer extends StatelessWidget {
+  final Widget child;
+  final bool bottomOnly;
+  final double radius;
+  final Color backgroundColor;
+
+  RoundedBlackContainer({this.child, this.bottomOnly, this.radius, this.backgroundColor});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black,
+      child: Container(
+        child: child,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+            borderRadius: (bottomOnly)
+                ? BorderRadius.only(
+                    bottomLeft: Radius.circular(radius),
+                    bottomRight: Radius.circular(radius))
+                : BorderRadius.circular(radius)),
+      ),
+    );
   }
 }

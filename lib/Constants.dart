@@ -12,6 +12,8 @@ static final String PARISH_WAITING = "misas y canciones";
 static final String FILTERING_TEXT = "Filtrando: ";
 static final String FETCHING_TEXT = "Recuperando ";
 
-static final double APP_RADIUS = 16;
+static final double APP_RADIUS = 12;
+
+  static String IS_DARK_TOKEN = "isDark";
 
 }

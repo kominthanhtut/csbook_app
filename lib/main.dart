@@ -2,17 +2,31 @@ import 'package:csbook_app/Pages/mainScreen.dart';
 import 'package:csbook_app/Pages/massViewScreen.dart';
 import 'package:csbook_app/Pages/songScreen.dart';
 import 'package:csbook_app/Pages/songfullscreen.dart';
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(MyApp());
+import 'Constants.dart';
+
+void main() async{
+  Brightness brightness;
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  brightness = (prefs.getBool(Constants.IS_DARK_TOKEN) ?? false) ? Brightness.dark: Brightness.light;
+  runApp(MyApp(brightness));
+} 
 
 class MyApp extends StatelessWidget {
+
+  Brightness brightness;
+
+  MyApp(this.brightness) : super();
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
 
-    bool BLACK_THEME = false;
+    bool BLACK_THEME = true;
 
     ThemeData blackTheme = ThemeData(
       brightness: Brightness.dark,
@@ -42,18 +56,24 @@ class MyApp extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 24))),
     );
+
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'csbook',
-      theme: (BLACK_THEME)? blackTheme: whiteTheme,
-      home: MainScreen(title: 'Catholic Song Book'),
-      routes: {
-        SongScreen.routeName: (context) => SongScreen(),
-        MainScreen.routeName: (context) => MainScreen(),
-        MassScreen.routeName: (context) => MassScreen(),
-        SongFullScreen.routeName: (context) => SongFullScreen()
-      },
+
+    return DynamicTheme(
+      defaultBrightness: Brightness.light,
+      data: (brigthness) => (Brightness.dark == brigthness)? blackTheme : whiteTheme,
+      themedWidgetBuilder: (context, theme) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'csbook',
+        theme:theme,
+        home: MainScreen(title: 'Catholic Song Book'),
+        routes: {
+          SongScreen.routeName: (context) => SongScreen(),
+          MainScreen.routeName: (context) => MainScreen(),
+          MassScreen.routeName: (context) => MassScreen(),
+          SongFullScreen.routeName: (context) => SongFullScreen()
+        },
+      ),
     );
   }
 }

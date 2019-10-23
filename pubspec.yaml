@@ -14,7 +14,9 @@ environment:
 
 dependencies:
   share:
+  dynamic_theme:
   auto_size_text:
+  shared_preferences:
   path_provider:
   sqflite:
   font_awesome_flutter: ^8.4.0
