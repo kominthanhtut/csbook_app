@@ -4,9 +4,9 @@ Simple Flutter App (tested on Android only for now) to access the songs of the O
 
 ## Screenshots 
 ![Main Screen](screens/main.png)
-![Navigation Drawer](screens/drawer.png)
+![Navigation Drawer](screens/drawer.PNG)
 ![Song Screen](screens/song.png)
 ![Song Fullscreen](screens/songfullscreen.png)
-![Parish Screen](screens/parish.png)
-![Mass Screen](screens/mass.png)
-![Theming](screens/theme.png)
+![Parish Screen](screens/parish.PNG)
+![Mass Screen](screens/mass.PNG)
+![Theming](screens/theme.PNG)
