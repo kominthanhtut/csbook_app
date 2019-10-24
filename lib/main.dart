@@ -9,15 +9,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Constants.dart';
 
-void main() async{
+void main() async {
   Brightness brightness;
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  brightness = (prefs.getBool(Constants.IS_DARK_TOKEN) ?? false) ? Brightness.dark: Brightness.light;
+  brightness = (prefs.getBool(Constants.IS_DARK_TOKEN) ?? false)
+      ? Brightness.dark
+      : Brightness.light;
   runApp(MyApp(brightness));
-} 
+}
 
 class MyApp extends StatelessWidget {
-
   Brightness brightness;
 
   MyApp(this.brightness) : super();
@@ -25,7 +26,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     bool BLACK_THEME = true;
 
     ThemeData blackTheme = ThemeData(
@@ -34,6 +34,11 @@ class MyApp extends StatelessWidget {
       primaryColor: Color(0xff424242),
       primaryColorLight: Color(0xff6d6d6d),
       primaryColorDark: Color(0xff1b1b1b),
+      appBarTheme: AppBarTheme(
+          textTheme: TextTheme(
+              title: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24))),
       //backgroundColor: Colors.black,
     );
 
@@ -46,34 +51,37 @@ class MyApp extends StatelessWidget {
       backgroundColor: Colors.white,
       textTheme: TextTheme(title: TextStyle(color: Colors.black)),
       appBarTheme: AppBarTheme(
-        brightness: Brightness.light,
+          brightness: Brightness.light,
           iconTheme: IconThemeData(color: Colors.black),
           actionsIconTheme: IconThemeData(color: Colors.black),
           textTheme: TextTheme(
-            subhead: TextStyle(color: Colors.black),
+              subhead: TextStyle(color: Colors.black),
               title: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 24))),
     );
 
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
     return DynamicTheme(
-      defaultBrightness: Brightness.light,
-      data: (brigthness) => (Brightness.dark == brigthness)? blackTheme : whiteTheme,
-      themedWidgetBuilder: (context, theme) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'csbook',
-        theme:theme,
-        home: MainScreen(title: 'Catholic Song Book'),
-        routes: {
-          SongScreen.routeName: (context) => SongScreen(),
-          MainScreen.routeName: (context) => MainScreen(),
-          MassScreen.routeName: (context) => MassScreen(),
-          SongFullScreen.routeName: (context) => SongFullScreen()
-        },
-      ),
-    );
+        defaultBrightness: Brightness.light,
+        data: (brigthness) =>
+            (Brightness.dark == brigthness) ? blackTheme : whiteTheme,
+        themedWidgetBuilder: (context, theme) {
+          Constants.systemBarsSetup(theme).then((_){});
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'csbook',
+            theme: theme,
+            home: MainScreen(title: 'Catholic Song Book'),
+            routes: {
+              SongScreen.routeName: (context) => SongScreen(),
+              MainScreen.routeName: (context) => MainScreen(),
+              MassScreen.routeName: (context) => MassScreen(),
+              SongFullScreen.routeName: (context) => SongFullScreen()
+            },
+          );
+        });
   }
+
+  
 }

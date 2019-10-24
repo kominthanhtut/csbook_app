@@ -117,7 +117,7 @@ class _ListState extends State<ListScreen> {
                 getInstances(context, song);
               }));
         },
-      ),
+      )
       /*
       IconButton(
         icon: Icon(Icons.refresh),

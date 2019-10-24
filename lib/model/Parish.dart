@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:csbook_app/Api.dart';
 import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/model/Mass.dart';
@@ -26,6 +28,15 @@ factory Parish.fromJson(Map<String, dynamic> json) {
   bool operator == (dynamic other) {
     if(!other is Parish) return false;
     return (other as Parish).name == name;
+  }
+
+  static Future<List<Parish>> getAll() async {
+    var response = await Api.get('api/v1/parishes');
+
+    final responseJson = json.decode(response.body);
+    final items = (responseJson as List).map((i) => new Parish.fromSimpleJson(i));
+
+    return items.toList();
   }
 
   

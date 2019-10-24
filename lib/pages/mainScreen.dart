@@ -2,6 +2,7 @@ import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/Model/Song.dart';
 import 'package:csbook_app/Pages/listFragment.dart';
 import 'package:csbook_app/Pages/parishFragment.dart';
+import 'package:csbook_app/Pages/settingsScreen.dart';
 import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
@@ -48,11 +49,6 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        //systemNavigationBarIconBrightness:  (Theme.of(context).brightness == Brightness.dark) ? Brightness.light: Brightness.dark,
-        //systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor,
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark));
 
     _pages = [_listScreen, _parishScreen];
 
@@ -147,10 +143,10 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
             ),
             ListTile(
               leading: new Icon(
-                FontAwesomeIcons.church,
+                FontAwesomeIcons.bible,
               ),
               title: new Text(
-                'Parroquias',
+                'Misas',
               ),
               onTap: () {
                 Navigator.of(context).pop();
@@ -160,23 +156,16 @@ class _MainState extends State<MainScreen> with TickerProviderStateMixin {
               },
             ),
             ListTile(
-              leading: Icon(FontAwesomeIcons.paintBrush),
-              trailing: Switch(
-                  activeColor: Colors.white,
-                  activeTrackColor: Theme.of(context).primaryColorLight,
-                  onChanged: (value) {
-                    SharedPreferences.getInstance().then((sp) {
-                      sp.setBool(Constants.IS_DARK_TOKEN, value);
-                      DynamicTheme.of(context).setBrightness(
-                          (value) ? Brightness.dark : Brightness.light);
-                    });
-                  },
-                  value:
-                      DynamicTheme.of(context).brightness == Brightness.dark),
-              title: new Text(
-                'Tema oscuro',
+              leading: new Icon(
+                Icons.settings,
               ),
-              onTap: () {},
+              title: new Text(
+                'Ajustes',
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsScreen()));
+              },
             ),
             end
                 ? Container(

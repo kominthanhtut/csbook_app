@@ -10,6 +10,7 @@ import 'dart:async';
 import 'package:intl/intl.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'massViewScreen.dart';
 
@@ -38,34 +39,34 @@ class _ParishScreenState extends State<ParishScreen> {
 
   String _selectedParish;
 
-  initState() {
+  Parish _parish;
+
+  @override
+  void initState() {
     _picked = false;
-    Mass.get(0, 0).then((masses) {
-      setState(() {
-        _picked = false;
-        _masses = masses;
-        _parishes = _getParish(masses);
-        _filteredMases = _masses.where((Mass m) {
-          return m.parish.name == _parishes[0];
-        }).toList();
-        _selectedParish = _parishes[0];
-      });
-    });
     super.initState();
+    SharedPreferences.getInstance().then((sp) {
+      _parish = Parish(sp.get(Constants.PARISH_ID),
+          sp.get(Constants.PARISH_NAME), null, null, null);
+      _parish = (_parish.id != null) ? _parish : null;
+      if (_parish != null) {
+        Mass.get(0, 0).then((masses) {
+          setState(() {
+            _picked = false;
+            _masses = masses;
+            _filteredMases = _masses.where((Mass m) {
+              return m.parish.name == _parish.name;
+            }).toList();
+          });
+        });
+      }
+    });
   }
 
   List<Widget> getActions(BuildContext context) {
     return [Builder(builder: (context) => Container())];
   }
 
-  List<String> _getParish(List<Mass> filteredMases) {
-    List<String> parishes = [];
-    for (Mass mass in filteredMases) {
-      String parish = mass.parish.name;
-      if (!parishes.contains(parish)) parishes.add(parish);
-    }
-    return parishes;
-  }
 
   Future<DateTime> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -105,55 +106,8 @@ class _ParishScreenState extends State<ParishScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         radius: Constants.APP_RADIUS,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        label: AutoSizeText(
-          (_selectedParish == null) ? "Seleccionar Parroquia" : _selectedParish,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
-        onPressed: () {
-          _selectParish();
-        },
-      ),
+     
     );
-  }
-
-  void _selectParish() {
-    showDialog(
-        context: context,
-        child: AlertDialog(
-          contentPadding: EdgeInsets.all(0.0),
-          titlePadding: EdgeInsets.zero,
-          title: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              "Parroquias",
-              //textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          content: ListView.builder(
-            shrinkWrap: true,
-            itemCount: _parishes.length,
-            itemBuilder: (context, position) {
-              return ListTile(
-                title: Text(_parishes[position]),
-                onTap: () {
-                  setState(() {
-                    Navigator.of(context).pop();
-                    _selectedParish = _parishes[position];
-                    _filteredMases = _masses.where((Mass m) {
-                      return m.parish.name == _parishes[position];
-                    }).toList();
-                  });
-                },
-              );
-            },
-          ),
-        ));
   }
 
   Map<String, List<Mass>> _sortMasses(List<Mass> filteredMases) {

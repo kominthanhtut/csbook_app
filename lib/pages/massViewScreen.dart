@@ -105,6 +105,7 @@ class _MassScreenState extends State<MassScreen> {
   Widget _createListView(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
+        
           accentColor: (Theme.of(context).brightness == Brightness.dark)
               ? Colors.white
               : Colors.black),
