@@ -6,5 +6,5 @@ Simple Flutter App (tested on Android only for now) to access the songs of the O
 
 |       | Songs | Song | Masses | Mass | FullScreen | Settings | Drawer |
 |-------|-------|------|--------|------|------------|----------|--------|
-| **Light** | ![Songs Light](screens/songs.png)|![Song Light](screens/song.png)|![Masses Screen](screens/masses.png)|![Mass Screen](screens/mass.png)|![Full Screen](screens/fullscreensong.png)|![Settings Screen](screens/notation.png)|![Drawer](screens/drawer.png)|
+| **Light** | ![Songs Light](screens/songs.png)|![Song Light](screens/song.png)|![Masses Screen](screens/masses.png)|![Mass Screen](screens/mass.PNG)|![Full Screen](screens/fullscreensong.png)|![Settings Screen](screens/notation.png)|![Drawer](screens/drawer.PNG)|
 | **Dark** | ![Songs Dark](screens/songs_black.png)|![Song Dark](screens/song_black.png)|![Masses Screen](screens/masses_black.png)|![Mass Screen](screens/mass_black.png)|![Full Screen](screens/songfullscreen.png)|![Settings Screen](screens/black_theme.png)|![Drawer](screens/drawer_black.png)|
