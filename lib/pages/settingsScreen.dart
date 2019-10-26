@@ -1,3 +1,4 @@
+import 'package:csbook_app/Api.dart';
 import 'package:csbook_app/Model/Parish.dart';
 import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
@@ -15,6 +16,8 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   Parish _parish;
 
+  int _notation = Constants.NOTATION_SPANISH;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -24,6 +27,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         _parish = Parish(sp.get(Constants.PARISH_ID),
             sp.get(Constants.PARISH_NAME), null, null, null);
         _parish = (_parish.id != null) ? _parish : null;
+        var savedNotation = sp.get(Constants.NOTATION_TOKEN);
+        if (savedNotation != null && savedNotation is int)
+          _notation = savedNotation;
       });
     });
   }
@@ -36,10 +42,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
       ),
-      body: RoundedBlackContainer(bottomOnly: true, radius: Constants.APP_RADIUS,
+      body: RoundedBlackContainer(
+        bottomOnly: true,
+        radius: Constants.APP_RADIUS,
         child: ListView(
           children: <Widget>[
-            Divider(),
+            //Divider(),
             ListTile(
               leading: Icon(FontAwesomeIcons.paintBrush),
               trailing: Switch(
@@ -52,13 +60,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           (value) ? Brightness.dark : Brightness.light);
                     });
                   },
-                  value: DynamicTheme.of(context).brightness == Brightness.dark),
+                  value:
+                      DynamicTheme.of(context).brightness == Brightness.dark),
               title: new Text(
                 'Tema oscuro',
               ),
-              onTap: () {},
+              onTap: () {
+                bool value = !(DynamicTheme.of(context).brightness == Brightness.dark);
+                SharedPreferences.getInstance().then((sp) {
+                      sp.setBool(Constants.IS_DARK_TOKEN, value);
+                      DynamicTheme.of(context).setBrightness(
+                          (value) ? Brightness.dark : Brightness.light);
+                    });
+              },
             ),
-            Divider(),
+            //Divider(),
             ListTile(
               title: Text("Parroquia"),
               subtitle:
@@ -69,7 +85,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   _selectParish(parishes);
                 });
               },
-            )
+            ),
+            //Divider(),
+            ListTile(
+              title: Text("Notación"),
+              subtitle: Text((_notation == Constants.NOTATION_SPANISH)
+                  ? "Española"
+                  : "Inglesa"),
+              leading: Icon(FontAwesomeIcons.music),
+              onTap: () {
+                _selectNotation();
+              },
+            ),
+            Divider(),
+            ListTile(
+              dense: false,
+              title: Text("Direccion"),
+              subtitle: Text(Api.BaseUrl),
+              leading: Icon(FontAwesomeIcons.globe),
+            ),
           ],
         ),
       ),
@@ -111,5 +145,56 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
         ));
+  }
+
+  void _selectNotation() {
+    showDialog(
+        context: context,
+        child: AlertDialog(
+            contentPadding: EdgeInsets.all(0.0),
+            titlePadding: EdgeInsets.zero,
+            title: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                "Notacion",
+                //textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            content: ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                RadioListTile(
+                  groupValue: _notation,
+                  value: Constants.NOTATION_ENGLISH,
+                  title: Text("Inglesa"),
+                  subtitle: Text("A, B, C, D, E, F, G"),
+                  onChanged: (value) {
+                    setState(() {
+                      _notation = value;
+                      SharedPreferences.getInstance().then((sp) {
+                        sp.setInt(Constants.NOTATION_TOKEN, value);
+                        Navigator.of(context).pop();
+                      });
+                    });
+                  },
+                ),
+                RadioListTile(
+                  groupValue: _notation,
+                  value: Constants.NOTATION_SPANISH,
+                  title: Text("Española"),
+                  subtitle: Text("La, Si, Do, Re, Mi, Fa, Sol"),
+                  onChanged: (value) {
+                    setState(() {
+                      _notation = value;
+                      SharedPreferences.getInstance().then((sp) {
+                        sp.setInt(Constants.NOTATION_TOKEN, value);
+                        Navigator.of(context).pop();
+                      });
+                    });
+                  },
+                ),
+              ],
+            )));
   }
 }

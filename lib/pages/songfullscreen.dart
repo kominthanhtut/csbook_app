@@ -10,6 +10,8 @@ import 'package:screen/screen.dart';
 
 import 'dart:async';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class SongFullScreen extends StatefulWidget {
   static const routeName = '/song_view_fs';
 
@@ -33,6 +35,8 @@ class _SongFullScreenState extends State<SongFullScreen> {
   double defaultFontSize = 16;
   double initfontSize, fontSize = 16;
 
+  int _notation = Constants.NOTATION_SPANISH;
+
   _SongFullScreenState();
 
   @override
@@ -40,6 +44,13 @@ class _SongFullScreenState extends State<SongFullScreen> {
     // Prevent screen from going into sleep mode:
     Screen.keepOn(true);
     super.initState();
+     SharedPreferences.getInstance().then((sp){
+      setState(() {
+        var savedNotation = sp.get(Constants.NOTATION_TOKEN);
+        if (savedNotation != null && savedNotation is int)
+          _notation = savedNotation;
+      });
+    });
   }
 
   Future<bool> _prepareExit() {
@@ -98,6 +109,7 @@ class _SongFullScreenState extends State<SongFullScreen> {
                             child: SongText(
                               instance.transpose(transpose),
                               textSize: fontSize,
+                              notation: _notation,
                             ),
                           ),
                         ]),

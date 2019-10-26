@@ -21,6 +21,10 @@ class Constants {
   static const PARISH_ID = "parish_id";
   static const PARISH_NAME = "parish_name";
 
+  static const NOTATION_TOKEN = "notation_token";
+  static const NOTATION_SPANISH = 0x01;
+  static const NOTATION_ENGLISH = 0x02;
+
   static Future<void> systemBarsSetup(ThemeData theme) async {
     await statusBarsSetupByColor(theme.brightness, Colors.transparent);
   }

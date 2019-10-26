@@ -11,6 +11,7 @@ import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SongScreen extends StatefulWidget {
   static const routeName = '/song_view';
@@ -30,6 +31,8 @@ class _SongScreenState extends State<SongScreen> {
   double defaultFontSize = 16;
   double initfontSize, fontSize = 16;
 
+  int _notation = Constants.NOTATION_SPANISH;
+
   var searchBar;
 
   bool _controlDisplayed = false;
@@ -47,6 +50,13 @@ class _SongScreenState extends State<SongScreen> {
   void initState() {
     super.initState();
     getInstances(_song);
+    SharedPreferences.getInstance().then((sp){
+      setState(() {
+        var savedNotation = sp.get(Constants.NOTATION_TOKEN);
+        if (savedNotation != null && savedNotation is int)
+          _notation = savedNotation;
+      });
+    });
   }
 
   Future<List<Instance>> _retrieveInstances(Song song) async {
@@ -78,6 +88,7 @@ class _SongScreenState extends State<SongScreen> {
         child: SongText(
           _instance.transpose(transpose),
           textSize: fontSize,
+          notation: _notation
         ),
       ),
     );
