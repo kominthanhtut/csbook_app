@@ -50,7 +50,7 @@ class _SongScreenState extends State<SongScreen> {
   void initState() {
     super.initState();
     getInstances(_song);
-    SharedPreferences.getInstance().then((sp){
+    SharedPreferences.getInstance().then((sp) {
       setState(() {
         var savedNotation = sp.get(Constants.NOTATION_TOKEN);
         if (savedNotation != null && savedNotation is int)
@@ -59,12 +59,12 @@ class _SongScreenState extends State<SongScreen> {
     });
   }
 
-  Future<List<Instance>> _retrieveInstances(Song song) async {
+  Future<List<Instance>> _retrieveInstances(Song song, {bool forceOnline = false}) async {
     CSDB db = CSDB();
     List<Instance> instances = new List<Instance>();
     for (int id in song.instances.keys) {
       Instance instance = await db.fetchInstance(id);
-      if (instance == null) {
+      if (instance == null || forceOnline) {
         instance = await Instance.get(id);
         db.saveOrUpdateInstance(instance);
       }
@@ -85,11 +85,8 @@ class _SongScreenState extends State<SongScreen> {
         });
       },
       child: SingleChildScrollView(
-        child: SongText(
-          _instance.transpose(transpose),
-          textSize: fontSize,
-          notation: _notation
-        ),
+        child: SongText(_instance.transpose(transpose),
+            textSize: fontSize, notation: _notation),
       ),
     );
   }
@@ -153,6 +150,16 @@ class _SongScreenState extends State<SongScreen> {
       label: Row(
         children: <Widget>[
           IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: () {
+              _retrieveInstances(_song, forceOnline: true).then((List<Instance> instances) {
+                setState(() {
+                  _instance = instances[0];
+                });
+              });
+            },
+          ),
+          IconButton(
             icon: Icon(Icons.remove),
             onPressed: () {
               setState(() {
@@ -163,7 +170,7 @@ class _SongScreenState extends State<SongScreen> {
           FlatButton(
             child: Text(
               //"Original " +
-              _instance.getTone(Chord.CHORD_SET_SPANISH),
+              _instance.getTone(_notation == Constants.NOTATION_SPANISH ? Chord.CHORD_SET_SPANISH: Chord.CHORD_SET_ENGLISH),
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
@@ -198,8 +205,6 @@ class _SongScreenState extends State<SongScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    
     return Scaffold(
       appBar: (_instance == null) ? _loadingAppBar() : _loadedAppBar(),
       body: Column(
