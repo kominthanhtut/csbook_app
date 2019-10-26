@@ -103,18 +103,29 @@ class RoundedBlackContainer extends StatelessWidget {
   final Widget child;
   final bool bottomOnly;
   final double radius;
-  final Color backgroundColor;
 
-  RoundedBlackContainer({this.child, this.bottomOnly, this.radius, this.backgroundColor});
+  RoundedBlackContainer({this.child, this.bottomOnly, this.radius});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.black,
       child: Container(
-        child: child,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 4.0),
+          child: Container(
+            child: child,
+            decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: (bottomOnly)
+                    ? BorderRadius.only(
+                        bottomLeft: Radius.circular(radius),
+                        bottomRight: Radius.circular(radius))
+                    : BorderRadius.circular(radius)),
+          ),
+        ),
         decoration: BoxDecoration(
-          color: backgroundColor,
+            color: Theme.of(context).primaryColorLight,
             borderRadius: (bottomOnly)
                 ? BorderRadius.only(
                     bottomLeft: Radius.circular(radius),

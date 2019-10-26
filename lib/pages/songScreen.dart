@@ -187,7 +187,9 @@ class _SongScreenState extends State<SongScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+
+    //Constants.systemBarsSetup(Theme.of(context));
+    
     return Scaffold(
       appBar: (_instance == null) ? _loadingAppBar() : _loadedAppBar(),
       body: Column(
@@ -199,7 +201,6 @@ class _SongScreenState extends State<SongScreen> {
                   : _loadedBody(),
               bottomOnly: true,
               radius: Constants.APP_RADIUS,
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             ),
           ),
         ],

@@ -1,13 +1,16 @@
+import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/Widgets/SongTextWidget.dart';
 import 'package:csbook_app/Model/Instance.dart';
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:screen/screen.dart';
 
+import 'dart:async';
+
 class SongFullScreen extends StatefulWidget {
   static const routeName = '/song_view_fs';
-
-  SongFullScreen({Key key}) : super(key: key);
 
   @override
   _SongFullScreenState createState() => _SongFullScreenState();
@@ -38,69 +41,87 @@ class _SongFullScreenState extends State<SongFullScreen> {
     super.initState();
   }
 
+  Future<bool> _prepareExit() {
+    Screen.keepOn(false);
+    //Constants.systemBarsSetup(Theme.of(context));
+    return Future.value(true);
+  }
 
   Widget getFullscreenApp(BuildContext context) {
-
-
-    return GestureDetector(
-      onTap: () {
-        Screen.keepOn(false);
-        Navigator.of(context).pop();
-      },
-      child: Theme(
+    return Theme(
         data: Theme.of(context).copyWith(
-            //brightness: Brightness.dark,
-            scaffoldBackgroundColor: Colors.black,
             textTheme: TextTheme(body1: TextStyle(color: Colors.white))),
-        child: Scaffold(
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 32, left: 10, right: 10),
-              child: Column(children: [
-                Text(
-                  instance.song.title,
-                  style: TextStyle(fontSize: 32),
-                  textAlign: TextAlign.center,
-                ),
-                instance.song.author == null ? Container():
-                Text(
-                  instance.song.author,
-                  style: TextStyle(fontSize: 24, fontStyle: FontStyle.italic),
-                  textAlign: TextAlign.center,
-                ),
-                (instance.song.subtitle != null &&
-                        instance.song.subtitle != "")
-                    ? Text(
-                        "(" + instance.song.subtitle + ")",
-                        style: TextStyle(fontStyle: FontStyle.italic),
-                        textAlign: TextAlign.center,
-                      )
-                    : Container(),
-                Row(children: [
-                  Expanded(
-                    child: SongText(
-                      instance.transpose(transpose),
-                      textSize: fontSize,
+        child: WillPopScope(
+          onWillPop: _prepareExit,
+          child: Scaffold(
+            body: GestureDetector(
+              onTap: () {
+                Screen.keepOn(false);
+                Navigator.of(context).pop();
+              },
+              child: Stack(
+                children: <Widget>[ 
+                  
+                  Container(
+                  color: Colors.black,
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).padding.top,
+                          left: 10,
+                          right: 10),
+                      child: Column(children: [
+                        Text(
+                          instance.song.title,
+                          style: TextStyle(fontSize: 32),
+                          textAlign: TextAlign.center,
+                        ),
+                        instance.song.author == null
+                            ? Container()
+                            : Text(
+                                instance.song.author,
+                                style: TextStyle(
+                                    fontSize: 24, fontStyle: FontStyle.italic),
+                                textAlign: TextAlign.center,
+                              ),
+                        (instance.song.subtitle != null &&
+                                instance.song.subtitle != "")
+                            ? Text(
+                                "(" + instance.song.subtitle + ")",
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                                textAlign: TextAlign.center,
+                              )
+                            : Container(),
+                        Row(children: [
+                          Expanded(
+                            child: SongText(
+                              instance.transpose(transpose),
+                              textSize: fontSize,
+                            ),
+                          ),
+                        ]),
+                      ]),
                     ),
                   ),
-                ]),
-              ]),
+                ),
+                Container(height: MediaQuery.of(context).padding.top, color: Colors.black,),
+                ],
+              ),
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
-    //SystemChrome.setEnabledSystemUIOverlays([]);
     if (songState == null) {
       songState = ModalRoute.of(context).settings.arguments;
       instance = songState.instance;
       transpose = songState.transpose;
       fontSize = songState.fontsize;
     }
+    // Constants.systemBarsSetupByColor(Brightness.dark, Colors.black).then((_){});
+
     return getFullscreenApp(context);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:csbook_app/Model/Parish.dart';
+import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -35,40 +36,42 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
       ),
-      body: ListView(
-        children: <Widget>[
-          Divider(),
-          ListTile(
-            leading: Icon(FontAwesomeIcons.paintBrush),
-            trailing: Switch(
-                activeColor: Colors.white,
-                activeTrackColor: Theme.of(context).primaryColorLight,
-                onChanged: (value) {
-                  SharedPreferences.getInstance().then((sp) {
-                    sp.setBool(Constants.IS_DARK_TOKEN, value);
-                    DynamicTheme.of(context).setBrightness(
-                        (value) ? Brightness.dark : Brightness.light);
-                  });
-                },
-                value: DynamicTheme.of(context).brightness == Brightness.dark),
-            title: new Text(
-              'Tema oscuro',
+      body: RoundedBlackContainer(bottomOnly: true, radius: Constants.APP_RADIUS,
+        child: ListView(
+          children: <Widget>[
+            Divider(),
+            ListTile(
+              leading: Icon(FontAwesomeIcons.paintBrush),
+              trailing: Switch(
+                  activeColor: Colors.white,
+                  activeTrackColor: Theme.of(context).primaryColorLight,
+                  onChanged: (value) {
+                    SharedPreferences.getInstance().then((sp) {
+                      sp.setBool(Constants.IS_DARK_TOKEN, value);
+                      DynamicTheme.of(context).setBrightness(
+                          (value) ? Brightness.dark : Brightness.light);
+                    });
+                  },
+                  value: DynamicTheme.of(context).brightness == Brightness.dark),
+              title: new Text(
+                'Tema oscuro',
+              ),
+              onTap: () {},
             ),
-            onTap: () {},
-          ),
-          Divider(),
-          ListTile(
-            title: Text("Parroquia"),
-            subtitle:
-                Text((_parish == null) ? "No seleccionado" : _parish.name),
-            leading: Icon(FontAwesomeIcons.church),
-            onTap: () {
-              Parish.getAll().then((parishes) {
-                _selectParish(parishes);
-              });
-            },
-          )
-        ],
+            Divider(),
+            ListTile(
+              title: Text("Parroquia"),
+              subtitle:
+                  Text((_parish == null) ? "No seleccionado" : _parish.name),
+              leading: Icon(FontAwesomeIcons.church),
+              onTap: () {
+                Parish.getAll().then((parishes) {
+                  _selectParish(parishes);
+                });
+              },
+            )
+          ],
+        ),
       ),
     );
   }

@@ -1,30 +1,23 @@
 import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/Model/Mass.dart';
 import 'package:csbook_app/Model/Parish.dart';
-import 'package:csbook_app/Pages/PageInterface.dart';
+import 'package:csbook_app/Widgets/NavigationDrawer.dart';
 import 'package:csbook_app/Widgets/widgets.dart';
+import 'package:csbook_app/pages/MassScreen.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:async';
 
 import 'package:intl/intl.dart';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'massViewScreen.dart';
-
-class ParishScreen extends StatefulWidget implements PageInterface {
+class ParishPage extends StatefulWidget {
   @override
-  _ParishScreenState createState() => _ParishScreenState();
-
-  @override
-  List<Widget> getActions(BuildContext context) {
-    return _ParishScreenState().getActions(context);
-  }
+  _ParishPageState createState() => _ParishPageState();
 }
 
-class _ParishScreenState extends State<ParishScreen> {
+class _ParishPageState extends State<ParishPage> {
   List<Mass> _masses;
   List<Mass> _filteredMases;
   List<String> _parishes;
@@ -67,7 +60,6 @@ class _ParishScreenState extends State<ParishScreen> {
     return [Builder(builder: (context) => Container())];
   }
 
-
   Future<DateTime> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
@@ -97,16 +89,26 @@ class _ParishScreenState extends State<ParishScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //Constants.systemBarsSetup(Theme.of(context));
+
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Misas"),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        actions: getActions(context),
+      ),
       body: RoundedBlackContainer(
+        bottomOnly: true,
+        radius: Constants.APP_RADIUS,
         child: (_filteredMases != null)
             ? makeBody()
             : FetchingWidget(Constants.PARISH_WAITING),
-        bottomOnly: true,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        radius: Constants.APP_RADIUS,
       ),
-     
+      drawer: NavigationDrawer.drawer(context,
+          end: false, currentPage: NavigationDrawer.PARISH_PAGE),
+      endDrawer: NavigationDrawer.drawer(context,
+          end: true, currentPage: NavigationDrawer.PARISH_PAGE),
     );
   }
 

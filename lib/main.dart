@@ -1,7 +1,8 @@
 import 'package:csbook_app/Pages/mainScreen.dart';
-import 'package:csbook_app/Pages/massViewScreen.dart';
 import 'package:csbook_app/Pages/songScreen.dart';
 import 'package:csbook_app/Pages/songfullscreen.dart';
+import 'package:csbook_app/Widgets/widgets.dart';
+import 'package:csbook_app/pages/MassScreen.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
               title: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 24))),
-      //backgroundColor: Colors.black,
+      backgroundColor: Color(0xff1b1b1b),
     );
 
     ThemeData whiteTheme = ThemeData(
@@ -67,12 +68,12 @@ class MyApp extends StatelessWidget {
         data: (brigthness) =>
             (Brightness.dark == brigthness) ? blackTheme : whiteTheme,
         themedWidgetBuilder: (context, theme) {
-          Constants.systemBarsSetup(theme).then((_){});
+          Constants.systemBarsSetup(theme);
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'csbook',
             theme: theme,
-            home: MainScreen(title: 'Catholic Song Book'),
+            home: MainScreen(),
             routes: {
               SongScreen.routeName: (context) => SongScreen(),
               MainScreen.routeName: (context) => MainScreen(),
