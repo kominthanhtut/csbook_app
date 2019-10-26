@@ -188,7 +188,7 @@ class _SongScreenState extends State<SongScreen> {
   @override
   Widget build(BuildContext context) {
 
-    //Constants.systemBarsSetup(Theme.of(context));
+    Constants.systemBarsSetup(Theme.of(context));
     
     return Scaffold(
       appBar: (_instance == null) ? _loadingAppBar() : _loadedAppBar(),

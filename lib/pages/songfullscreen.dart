@@ -50,6 +50,8 @@ class _SongFullScreenState extends State<SongFullScreen> {
   Widget getFullscreenApp(BuildContext context) {
     return Theme(
         data: Theme.of(context).copyWith(
+          //brightness: Brightness.dark,
+          scaffoldBackgroundColor: Colors.black,
             textTheme: TextTheme(body1: TextStyle(color: Colors.white))),
         child: WillPopScope(
           onWillPop: _prepareExit,
@@ -57,14 +59,12 @@ class _SongFullScreenState extends State<SongFullScreen> {
             body: GestureDetector(
               onTap: () {
                 Screen.keepOn(false);
+                //Constants.systemBarsSetup(Theme.of(context));
                 Navigator.of(context).pop();
               },
               child: Stack(
                 children: <Widget>[ 
-                  
-                  Container(
-                  color: Colors.black,
-                  child: SingleChildScrollView(
+                  SingleChildScrollView(
                     child: Padding(
                       padding: EdgeInsets.only(
                           top: MediaQuery.of(context).padding.top,
@@ -103,7 +103,6 @@ class _SongFullScreenState extends State<SongFullScreen> {
                       ]),
                     ),
                   ),
-                ),
                 Container(height: MediaQuery.of(context).padding.top, color: Colors.black,),
                 ],
               ),
@@ -120,7 +119,7 @@ class _SongFullScreenState extends State<SongFullScreen> {
       transpose = songState.transpose;
       fontSize = songState.fontsize;
     }
-    // Constants.systemBarsSetupByColor(Brightness.dark, Colors.black).then((_){});
+    Constants.systemBarsSetupByColor(Brightness.dark, Colors.black).then((_){});
 
     return getFullscreenApp(context);
   }
