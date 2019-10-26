@@ -1,6 +1,7 @@
 import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/Widgets/SongTextWidget.dart';
 import 'package:csbook_app/Model/Instance.dart';
+import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -67,7 +68,7 @@ class _SongFullScreenState extends State<SongFullScreen> {
                   SingleChildScrollView(
                     child: Padding(
                       padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).padding.top,
+                          top: MediaQuery.of(context).padding.top + 8,
                           left: 10,
                           right: 10),
                       child: Column(children: [
@@ -103,7 +104,14 @@ class _SongFullScreenState extends State<SongFullScreen> {
                       ]),
                     ),
                   ),
-                Container(height: MediaQuery.of(context).padding.top, color: Colors.black,),
+                Opacity(
+                  opacity: 0.7,
+                  child: RoundedBlackContainer(
+                    bottomOnly: true,
+                    radius: 0,
+                    child: Container(height: MediaQuery.of(context).padding.top, color: Theme.of(context).scaffoldBackgroundColor,),
+                  ),
+                ),
                 ],
               ),
             ),
@@ -119,7 +127,6 @@ class _SongFullScreenState extends State<SongFullScreen> {
       transpose = songState.transpose;
       fontSize = songState.fontsize;
     }
-    Constants.systemBarsSetupByColor(Brightness.dark, Colors.black).then((_){});
 
     return getFullscreenApp(context);
   }

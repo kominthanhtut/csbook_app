@@ -105,7 +105,6 @@ class _MassScreenState extends State<MassScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Constants.systemBarsSetup(Theme.of(context));
 
     if (_mass == null || !_mass.instancesRecovered()) {
       _mass = ModalRoute.of(context).settings.arguments;
