@@ -4,7 +4,9 @@ import 'package:csbook_app/Model/Parish.dart';
 import 'package:csbook_app/Widgets/NavigationDrawer.dart';
 import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:csbook_app/pages/MassScreen.dart';
+import 'package:csbook_app/pages/SettingsScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'dart:async';
 
@@ -87,6 +89,73 @@ class _ParishPageState extends State<ParishPage> {
         });
   }
 
+  Widget _selectParishWidget(BuildContext context) {
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(
+            FontAwesomeIcons.download,
+            size: 128,
+            color: Theme.of(context).primaryColorLight,
+          ),
+          Container(
+            height: 32,
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                Constants.FETCHING_TEXT + Constants.PARISH_WAITING + " ...",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Theme.of(context).primaryColorLight,
+                ),
+              ),
+            ),
+          ),
+          FlatButton(
+            child: Text("Seleccionar parroquia",
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  fontSize: 16,
+                  color: Theme.of(context).primaryColorLight,
+                )),
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => SettingsScreen()));
+            },
+          ),
+          FlatButton(
+            child: Text("Refrescar",
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  fontSize: 16,
+                  color: Theme.of(context).primaryColorLight,
+                )),
+            onPressed: () {
+              SharedPreferences.getInstance().then((sp) {
+                _parish = Parish(sp.get(Constants.PARISH_ID),
+                    sp.get(Constants.PARISH_NAME), null, null, null);
+                _parish = (_parish.id != null) ? _parish : null;
+                if (_parish != null) {
+                  Mass.get(0, 0).then((masses) {
+                    setState(() {
+                      _picked = false;
+                      _masses = masses;
+                      _filteredMases = _masses.where((Mass m) {
+                        return m.parish.name == _parish.name;
+                      }).toList();
+                    });
+                  });
+                }
+              });
+            },
+          )
+        ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     //Constants.systemBarsSetup(Theme.of(context));
@@ -103,7 +172,7 @@ class _ParishPageState extends State<ParishPage> {
         radius: Constants.APP_RADIUS,
         child: (_filteredMases != null)
             ? makeBody()
-            : FetchingWidget(Constants.PARISH_WAITING),
+            : _selectParishWidget(context),
       ),
       drawer: NavigationDrawer.drawer(context,
           end: false, currentPage: NavigationDrawer.PARISH_PAGE),

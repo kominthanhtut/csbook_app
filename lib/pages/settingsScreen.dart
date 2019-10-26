@@ -66,12 +66,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 'Tema oscuro',
               ),
               onTap: () {
-                bool value = !(DynamicTheme.of(context).brightness == Brightness.dark);
+                bool value =
+                    !(DynamicTheme.of(context).brightness == Brightness.dark);
                 SharedPreferences.getInstance().then((sp) {
-                      sp.setBool(Constants.IS_DARK_TOKEN, value);
-                      DynamicTheme.of(context).setBrightness(
-                          (value) ? Brightness.dark : Brightness.light);
-                    });
+                  sp.setBool(Constants.IS_DARK_TOKEN, value);
+                  DynamicTheme.of(context).setBrightness(
+                      (value) ? Brightness.dark : Brightness.light);
+                });
               },
             ),
             //Divider(),
@@ -112,89 +113,84 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _selectParish(List<Parish> parishes) {
     showDialog(
-        context: context,
-        child: AlertDialog(
-          contentPadding: EdgeInsets.all(0.0),
-          titlePadding: EdgeInsets.zero,
-          title: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              "Parroquias",
-              //textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+      context: context,
+      builder: (context) => SimpleDialog(
+        contentPadding: EdgeInsets.all(0.0),
+        titlePadding: EdgeInsets.zero,
+        title: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            "Parroquias",
+            //textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          content: ListView.builder(
-            shrinkWrap: true,
-            itemCount: parishes.length,
-            itemBuilder: (context, position) {
-              return ListTile(
-                title: Text(parishes[position].name),
-                onTap: () {
-                  SharedPreferences.getInstance().then((sp) {
-                    sp.setInt(Constants.PARISH_ID, parishes[position].id);
-                    sp.setString(
-                        Constants.PARISH_NAME, parishes[position].name);
-                    setState(() {
-                      _parish = parishes[position];
+        ),
+        children: parishes
+            .map((parish) => ListTile(
+                  title: Text(parish.name),
+                  onTap: () {
+                    SharedPreferences.getInstance().then((sp) {
+                      sp.setInt(Constants.PARISH_ID, parish.id);
+                      sp.setString(Constants.PARISH_NAME, parish.name);
+                      setState(() {
+                        _parish = parish;
+                      });
+                      Navigator.of(context).pop();
                     });
-                    Navigator.of(context).pop();
-                  });
-                },
-              );
-            },
-          ),
-        ));
+                  },
+                ))
+            .toList(),
+      ),
+    );
   }
 
   void _selectNotation() {
     showDialog(
-        context: context,
-        child: AlertDialog(
-            contentPadding: EdgeInsets.all(0.0),
-            titlePadding: EdgeInsets.zero,
-            title: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                "Notacion",
-                //textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-            content: ListView(
-              shrinkWrap: true,
-              children: <Widget>[
-                RadioListTile(
-                  groupValue: _notation,
-                  value: Constants.NOTATION_ENGLISH,
-                  title: Text("Inglesa"),
-                  subtitle: Text("A, B, C, D, E, F, G"),
-                  onChanged: (value) {
-                    setState(() {
-                      _notation = value;
-                      SharedPreferences.getInstance().then((sp) {
-                        sp.setInt(Constants.NOTATION_TOKEN, value);
-                        Navigator.of(context).pop();
-                      });
-                    });
-                  },
-                ),
-                RadioListTile(
-                  groupValue: _notation,
-                  value: Constants.NOTATION_SPANISH,
-                  title: Text("Española"),
-                  subtitle: Text("La, Si, Do, Re, Mi, Fa, Sol"),
-                  onChanged: (value) {
-                    setState(() {
-                      _notation = value;
-                      SharedPreferences.getInstance().then((sp) {
-                        sp.setInt(Constants.NOTATION_TOKEN, value);
-                        Navigator.of(context).pop();
-                      });
-                    });
-                  },
-                ),
-              ],
-            )));
+      context: context,
+      builder: (context) => SimpleDialog(
+        contentPadding: EdgeInsets.all(0.0),
+        titlePadding: EdgeInsets.zero,
+        title: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            "Notacion",
+            //textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        children: [
+          RadioListTile(
+            groupValue: _notation,
+            value: Constants.NOTATION_ENGLISH,
+            title: Text("Inglesa"),
+            subtitle: Text("A, B, C, D, E, F, G"),
+            onChanged: (value) {
+              setState(() {
+                _notation = value;
+                SharedPreferences.getInstance().then((sp) {
+                  sp.setInt(Constants.NOTATION_TOKEN, value);
+                  Navigator.of(context).pop();
+                });
+              });
+            },
+          ),
+          RadioListTile(
+            groupValue: _notation,
+            value: Constants.NOTATION_SPANISH,
+            title: Text("Española"),
+            subtitle: Text("La, Si, Do, Re, Mi, Fa, Sol"),
+            onChanged: (value) {
+              setState(() {
+                _notation = value;
+                SharedPreferences.getInstance().then((sp) {
+                  sp.setInt(Constants.NOTATION_TOKEN, value);
+                  Navigator.of(context).pop();
+                });
+              });
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
