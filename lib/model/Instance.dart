@@ -85,21 +85,6 @@ class Instance {
     return this.transpose(chord.semiTonesDiferentWith(toChord));
   }
 
-  static Future<Map<String, Instance>> getForMass(Mass mass) async {
-    Map<String, Instance> _songs = new Map<String, Instance>();
-    for (String key in mass.songs.keys) {
-      var response = await Api.get('api/v1/song/' + mass.songs[key].toString());
-      final responseJson = json.decode(response.body);
-      Instance current =
-          Instance.fromJson((responseJson['instances'] as List)[0]);
-      current.song = Song.fromJson(responseJson['song']);
-      _songs.putIfAbsent(key, () => current);
-    }
-    ;
-
-    return _songs;
-  }
-
   Map<String, dynamic> toMapForDb() {
     var map = Map<String, dynamic>();
     map['id'] = this.id;

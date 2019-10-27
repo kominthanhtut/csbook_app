@@ -3,6 +3,8 @@ import 'package:csbook_app/Model/Chord.dart';
 import 'package:csbook_app/Model/Mass.dart';
 import 'package:csbook_app/Pages/songfullscreen.dart';
 import 'package:csbook_app/Widgets/widgets.dart';
+import 'package:csbook_app/pages/MassSongFullScreen.dart';
+import 'package:csbook_app/pages/SongScreen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:csbook_app/Widgets/SongTextWidget.dart';
@@ -34,14 +36,14 @@ class _MassScreenState extends State<MassScreen> {
     });
   }
 
-  void _openFullScreenSong(MassSong massSong) {
+  void _openFullScreenMass() {
+    /*
     int transpose = Chord(massSong.getInstance().tone)
         .semiTonesDiferentWith(Chord(massSong.tone));
-    Navigator.pushNamed(
-      context,
-      SongFullScreen.routeName,
-      arguments: SongState(transpose, 16, massSong.getInstance()),
-    );
+    */
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => MassSongFullScreen(),
+        settings: RouteSettings(arguments: _mass)));
   }
 
   Widget _createListView(BuildContext context) {
@@ -51,49 +53,39 @@ class _MassScreenState extends State<MassScreen> {
               ? Colors.white
               : Colors.black),
       child: ListView(
-        children: _mass.songs.keys.map((String ms) {
+        children: _mass.songs.map((MassSong ms) {
           return ExpansionTile(
             title: ListTile(
               title: Text(
-                ms,
+                ms.moment,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
-                _mass.songs[ms].getInstance().song.getTitle(),
+                ms.getInstance().song.getTitle(),
                 style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
-            trailing: IconButton(
-              icon: Icon(Icons.fullscreen),
-              onPressed: () {
-                _openFullScreenSong(_mass.songs[ms]);
-              },
-            ),
+
             //leading: Icon(Icons.arrow_drop_down_circle),
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      boxShadow: [
-                         BoxShadow(
-                          color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
-                        ),
-                         BoxShadow(
-                          color: Theme.of(context).backgroundColor,
-
-                        ),
-                      ],
-                      borderRadius: BorderRadius.circular(16.0),
+                    color: Colors.transparent,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
                       ),
-                  child: InkWell(
-                    child:
-                        SongText(_mass.songs[ms].getInstance().removeChords()),
-                    onTap: () {
-                      _openFullScreenSong(_mass.songs[ms]);
-                    },
+                      BoxShadow(
+                        color: Theme.of(context).backgroundColor,
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(6.0),
                   ),
+                  child: SongText(ms.getInstance().removeChords()),
                 ),
               )
             ],
@@ -105,7 +97,6 @@ class _MassScreenState extends State<MassScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     if (_mass == null || !_mass.instancesRecovered()) {
       _mass = ModalRoute.of(context).settings.arguments;
       getInstances(_mass);
@@ -130,6 +121,12 @@ class _MassScreenState extends State<MassScreen> {
                 Share.share(Api.BaseUrl + "mass/view/" + _mass.id);
               },
             ),
+            IconButton(
+              icon: Icon(Icons.play_arrow),
+              onPressed: () {
+                _openFullScreenMass();
+              },
+            )
           ],
         ),
         body: RoundedBlackContainer(

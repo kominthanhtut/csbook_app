@@ -1,0 +1,172 @@
+import 'package:csbook_app/Constants.dart';
+import 'package:csbook_app/Model/Mass.dart';
+import 'package:csbook_app/Widgets/SongTextWidget.dart';
+import 'package:csbook_app/Model/Instance.dart';
+import 'package:csbook_app/model/Chord.dart';
+import 'package:flutter/material.dart';
+import 'package:screen/screen.dart';
+
+import 'dart:async';
+
+import 'package:shared_preferences/shared_preferences.dart';
+
+class MassSongFullScreen extends StatefulWidget {
+  static const routeName = '/song_view_fs';
+
+  @override
+  _MassSongFullScreenState createState() => _MassSongFullScreenState();
+}
+
+class _MassSongFullScreenState extends State<MassSongFullScreen> {
+  Instance _instance;
+
+  int _transpose = 0;
+  double defaultFontSize = 16;
+  double initfontSize, fontSize = 16;
+
+  int _notation = Constants.NOTATION_SPANISH;
+
+  Mass _mass;
+
+  int _currentSong = 0;
+
+  _MassSongFullScreenState();
+
+  @override
+  void initState() {
+    // Prevent screen from going into sleep mode:
+    Screen.keepOn(true);
+    super.initState();
+    SharedPreferences.getInstance().then((sp) {
+      setState(() {
+        var savedNotation = sp.get(Constants.NOTATION_TOKEN);
+        if (savedNotation != null && savedNotation is int)
+          _notation = savedNotation;
+      });
+    });
+  }
+
+  Future<bool> _prepareExit() {
+    Screen.keepOn(false);
+    //Constants.systemBarsSetup(Theme.of(context));
+    return Future.value(true);
+  }
+
+  Widget getFullscreenApp(BuildContext context) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+          //brightness: Brightness.dark,
+          scaffoldBackgroundColor: Colors.black,
+          appBarTheme: AppBarTheme(),
+          textTheme: TextTheme(
+            body1: TextStyle(color: Colors.white),
+          )),
+      child: WillPopScope(
+        onWillPop: _prepareExit,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(_instance.song.title.toString()),
+                  _instance.song.author == null
+                      ? Container()
+                      : Text(
+                          _instance.song.author.toString(),
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.normal,
+                              fontStyle: FontStyle.italic),
+                        ),
+                ]),
+            backgroundColor: Colors.black,
+            elevation: 0,
+            automaticallyImplyLeading: false,
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Screen.keepOn(false);
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          ),
+          bottomNavigationBar: Opacity(
+            opacity: 0.8,
+            child: BottomAppBar(
+              color: Colors.black,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: new Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _currentSong--;
+                          _currentSong = (_currentSong <= 0)
+                              ? _mass.songs.length - 1
+                              : _currentSong;
+                        });
+                      },
+                    ),
+                    Text(
+                      _mass.songs[_currentSong].moment,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      //textAlign: TextAlign.center,
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.arrow_forward,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _currentSong++;
+                          _currentSong = (_currentSong >= _mass.songs.length)
+                              ? 0
+                              : _currentSong;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(left: 10, right: 10),
+              child: SongText(
+                _instance.transpose(_transpose),
+                textSize: fontSize,
+                notation: _notation,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_mass == null) {
+      _mass = ModalRoute.of(context).settings.arguments;
+      _currentSong = 0;
+    }
+
+    _instance = _mass.songs[_currentSong].getInstance();
+    _transpose = Chord(_instance.tone).semiTonesDiferentWith(Chord(_mass.songs[_currentSong].tone));
+
+    return getFullscreenApp(context);
+  }
+}

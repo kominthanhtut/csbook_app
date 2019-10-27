@@ -5,14 +5,13 @@ import 'package:csbook_app/Model/Instance.dart';
 import 'package:csbook_app/databases/CSDB.dart';
 import 'package:csbook_app/Model/Parish.dart';
 
-
 class Mass {
   final String id;
   final DateTime date;
   final String name;
   final String type;
   final Parish parish;
-  Map<String, MassSong> songs;
+  List<MassSong> songs;
 
   bool retrieved = false;
   bool recovered = false;
@@ -25,7 +24,7 @@ class Mass {
     return new Mass(json['id'], DateTime.parse(json['date']), json['name'],
         json['type'], Parish.fromSimpleJson(json['parish']),
         //Map<String,int>.from(json['songs'])
-        {});
+        []);
   }
 
   static Future<List<Mass>> get(int skip, int take) async {
@@ -53,20 +52,22 @@ class Mass {
     var response = await Api.get('api/v1/mass/' + id);
     final responseJson = json.decode(response.body);
 
-    this.songs = (responseJson['songs'] as Map).map((key, value) =>
-        new MapEntry<String, MassSong>(key, MassSong.fromJson(value)));
+    var songs = (responseJson['songs'] as List);
+    songs.forEach((song) {
+      this.songs.add(MassSong.fromJson(song));
+    });
 
     this.recovered = true;
     return this;
   }
 
-  Future<Mass> retrieveAllInstances() async{
-    if(!this.songsRecovered()) await this.retrieveAllData();
+  Future<Mass> retrieveAllInstances({bool forceOnline = false}) async {
+    if (!this.songsRecovered()) await this.retrieveAllData();
 
-    for(MassSong ms in this.songs.values){
+    for (MassSong ms in this.songs) {
       Instance instance = await _db.fetchInstance(ms.instanceId);
       //If not found local, then check internet.
-      if (instance == null) {
+      if (instance == null || forceOnline) {
         instance = await Instance.get(ms.instanceId);
         await _db.saveOrUpdateInstance(instance);
       }
@@ -75,22 +76,28 @@ class Mass {
     this.retrieved = true;
     return this;
   }
-
 }
 
 class MassSong {
   final int instanceId;
   final String tone;
   final int capo;
+  final String moment;
 
   Instance instance;
 
-  MassSong(this.instanceId, this.tone, this.capo);
+  MassSong(this.moment, this.instanceId, this.tone, this.capo);
 
-  void setInstance(Instance instance){this.instance = instance;}
-  Instance getInstance(){return this.instance;}
+  void setInstance(Instance instance) {
+    this.instance = instance;
+  }
+
+  Instance getInstance() {
+    return this.instance;
+  }
 
   factory MassSong.fromJson(Map<String, dynamic> json) {
-    return new MassSong(json['instance'], json['tone'], json['capo']);
+    return new MassSong(
+        json['moment'], json['instance'], json['tone'], json['capo']);
   }
 }

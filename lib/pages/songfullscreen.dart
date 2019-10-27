@@ -44,7 +44,7 @@ class _SongFullScreenState extends State<SongFullScreen> {
     // Prevent screen from going into sleep mode:
     Screen.keepOn(true);
     super.initState();
-     SharedPreferences.getInstance().then((sp){
+    SharedPreferences.getInstance().then((sp) {
       setState(() {
         var savedNotation = sp.get(Constants.NOTATION_TOKEN);
         if (savedNotation != null && savedNotation is int)
@@ -62,69 +62,52 @@ class _SongFullScreenState extends State<SongFullScreen> {
   Widget getFullscreenApp(BuildContext context) {
     return Theme(
         data: Theme.of(context).copyWith(
-          //brightness: Brightness.dark,
-          scaffoldBackgroundColor: Colors.black,
-            textTheme: TextTheme(body1: TextStyle(color: Colors.white))),
+            //brightness: Brightness.dark,
+            scaffoldBackgroundColor: Colors.black,
+            appBarTheme: AppBarTheme(),
+            textTheme: TextTheme(
+              body1: TextStyle(color: Colors.white),
+            )),
         child: WillPopScope(
           onWillPop: _prepareExit,
           child: Scaffold(
-            body: GestureDetector(
-              onTap: () {
-                Screen.keepOn(false);
-                //Constants.systemBarsSetup(Theme.of(context));
-                Navigator.of(context).pop();
-              },
-              child: Stack(
-                children: <Widget>[ 
-                  SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).padding.top + 8,
-                          left: 10,
-                          right: 10),
-                      child: Column(children: [
-                        Text(
-                          instance.song.title,
-                          style: TextStyle(fontSize: 32),
-                          textAlign: TextAlign.center,
-                        ),
-                        instance.song.author == null
-                            ? Container()
-                            : Text(
-                                instance.song.author,
-                                style: TextStyle(
-                                    fontSize: 24, fontStyle: FontStyle.italic),
-                                textAlign: TextAlign.center,
-                              ),
-                        (instance.song.subtitle != null &&
-                                instance.song.subtitle != "")
-                            ? Text(
-                                "(" + instance.song.subtitle + ")",
-                                style: TextStyle(fontStyle: FontStyle.italic),
-                                textAlign: TextAlign.center,
-                              )
-                            : Container(),
-                        Row(children: [
-                          Expanded(
-                            child: SongText(
-                              instance.transpose(transpose),
-                              textSize: fontSize,
-                              notation: _notation,
-                            ),
+            appBar: AppBar(
+              title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(instance.song.title.toString()),
+                    instance.song.author == null
+                        ? Container()
+                        : Text(
+                            instance.song.author.toString(),
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.normal,
+                                fontStyle: FontStyle.italic),
                           ),
-                        ]),
-                      ]),
-                    ),
-                  ),
-                Opacity(
-                  opacity: 0.7,
-                  child: RoundedBlackContainer(
-                    bottomOnly: true,
-                    radius: 0,
-                    child: Container(height: MediaQuery.of(context).padding.top, color: Theme.of(context).scaffoldBackgroundColor,),
-                  ),
+                  ]),
+              backgroundColor: Colors.black,
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    Screen.keepOn(false);
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: SongText(
+                  instance.transpose(transpose),
+                  textSize: fontSize,
+                  notation: _notation,
                 ),
-                ],
               ),
             ),
           ),
