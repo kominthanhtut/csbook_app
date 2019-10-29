@@ -30,6 +30,8 @@ class _MassSongFullScreenState extends State<MassSongFullScreen> {
 
   int _currentSong = 0;
 
+  PageController _pageController = PageController();
+
   _MassSongFullScreenState();
 
   @override
@@ -69,11 +71,11 @@ class _MassSongFullScreenState extends State<MassSongFullScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(_instance.song.title.toString()),
-                  _instance.song.author == null
+                  Text(_mass.songs[_currentSong].instance.song.title.toString()),
+                  _mass.songs[_currentSong].instance.song.author == null
                       ? Container()
                       : Text(
-                          _instance.song.author.toString(),
+                          _mass.songs[_currentSong].instance.song.author.toString(),
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.normal,
@@ -110,10 +112,7 @@ class _MassSongFullScreenState extends State<MassSongFullScreen> {
                       ),
                       onPressed: () {
                         setState(() {
-                          _currentSong--;
-                          _currentSong = (_currentSong <= 0)
-                              ? _mass.songs.length - 1
-                              : _currentSong;
+                          _pageController.previousPage(duration: Duration(milliseconds: 500), curve: ElasticOutCurve());
                         });
                       },
                     ),
@@ -130,10 +129,7 @@ class _MassSongFullScreenState extends State<MassSongFullScreen> {
                       ),
                       onPressed: () {
                         setState(() {
-                          _currentSong++;
-                          _currentSong = (_currentSong >= _mass.songs.length)
-                              ? 0
-                              : _currentSong;
+                          _pageController.nextPage(duration: Duration(milliseconds: 500), curve: ElasticOutCurve());
                         });
                       },
                     ),
@@ -142,19 +138,33 @@ class _MassSongFullScreenState extends State<MassSongFullScreen> {
               ),
             ),
           ),
-          body: SingleChildScrollView(
+          body: PageView(
+            controller: _pageController,
+            onPageChanged: (pageNum){
+              setState(() {
+                _currentSong = pageNum;
+              });
+            },
+            key: Key(_mass.id),
+            children: _mass.songs.map((ms) => _createPage(ms)).toList(),)
+        ),
+      ),
+    );
+  }
+
+  Widget _createPage(MassSong ms){
+    var instance = ms.getInstance();
+    var transpose = Chord(instance.tone).semiTonesDiferentWith(Chord(ms.tone));
+    return SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.only(left: 10, right: 10),
               child: SongText(
-                _instance.transpose(_transpose),
+                instance.transpose(transpose),
                 textSize: fontSize,
                 notation: _notation,
               ),
             ),
-          ),
-        ),
-      ),
-    );
+          );
   }
 
   @override
@@ -164,9 +174,6 @@ class _MassSongFullScreenState extends State<MassSongFullScreen> {
       _currentSong = 0;
     }
 
-    _instance = _mass.songs[_currentSong].getInstance();
-    _transpose = Chord(_instance.tone).semiTonesDiferentWith(Chord(_mass.songs[_currentSong].tone));
-
-    return getFullscreenApp(context);
+    return _mass != null ? getFullscreenApp(context): Container();
   }
 }
