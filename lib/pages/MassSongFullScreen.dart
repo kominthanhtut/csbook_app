@@ -4,6 +4,7 @@ import 'package:csbook_app/Widgets/SongTextWidget.dart';
 import 'package:csbook_app/Model/Instance.dart';
 import 'package:csbook_app/model/Chord.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:screen/screen.dart';
 
 import 'dart:async';
@@ -68,7 +69,7 @@ class _MassSongFullScreenState extends State<MassSongFullScreen> {
         child: Scaffold(
           appBar: AppBar(
             title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(_mass.songs[_currentSong].instance.song.title.toString()),
@@ -116,12 +117,22 @@ class _MassSongFullScreenState extends State<MassSongFullScreen> {
                         });
                       },
                     ),
+                    IconButton(icon: Icon(FontAwesomeIcons.searchMinus), onPressed: (){
+                      setState(() {
+                        fontSize -= 2;
+                      });
+                      },),
                     Text(
                       _mass.songs[_currentSong].moment,
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       //textAlign: TextAlign.center,
                     ),
+                    IconButton(icon: Icon(FontAwesomeIcons.searchPlus), onPressed: (){
+                      setState(() {
+                        fontSize += 2;
+                      });
+                      },),
                     IconButton(
                       icon: Icon(
                         Icons.arrow_forward,
