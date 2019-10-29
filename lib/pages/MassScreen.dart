@@ -121,12 +121,13 @@ class _MassScreenState extends State<MassScreen> {
                 Share.share(Api.BaseUrl + "mass/view/" + _mass.id);
               },
             ),
+            _mass.instancesRecovered() ?
             IconButton(
               icon: Icon(Icons.play_arrow),
               onPressed: () {
                 _openFullScreenMass();
               },
-            )
+            ):Container()
           ],
         ),
         body: RoundedBlackContainer(

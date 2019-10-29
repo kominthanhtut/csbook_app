@@ -112,7 +112,7 @@ class _MassSongFullScreenState extends State<MassSongFullScreen> {
                       ),
                       onPressed: () {
                         setState(() {
-                          _pageController.previousPage(duration: Duration(milliseconds: 500), curve: ElasticOutCurve());
+                          _pageController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.ease);
                         });
                       },
                     ),
@@ -129,7 +129,7 @@ class _MassSongFullScreenState extends State<MassSongFullScreen> {
                       ),
                       onPressed: () {
                         setState(() {
-                          _pageController.nextPage(duration: Duration(milliseconds: 500), curve: ElasticOutCurve());
+                          _pageController.nextPage(duration: Duration(milliseconds: 500), curve: Curves.ease);
                         });
                       },
                     ),
