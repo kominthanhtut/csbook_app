@@ -5,10 +5,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SongText extends StatelessWidget {
   SongText(this.songText,
-      {this.textSize = 16, this.notation = Constants.NOTATION_SPANISH});
+      {this.textSize = 16, this.notation = Constants.NOTATION_SPANISH, this.alignment = CrossAxisAlignment.start});
   final String songText;
   final double textSize;
   final int notation;
+  final CrossAxisAlignment alignment;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class SongText extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: alignment,
           children: createWidgetList(songText),
         ),
       ),
