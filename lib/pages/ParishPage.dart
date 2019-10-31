@@ -79,10 +79,9 @@ class _ParishPageState extends State<ParishPage> {
             _filteredMases[position],
             onTap: (mass) {
               print(mass.songs);
-              Navigator.pushNamed(
+              Navigator.push(
                 context,
-                MassScreen.routeName,
-                arguments: mass,
+                MaterialPageRoute(builder: (context) => MassScreen(mass))
               );
             },
           );

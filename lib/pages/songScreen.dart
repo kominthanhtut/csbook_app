@@ -17,14 +17,16 @@ class SongScreen extends StatefulWidget {
   static const routeName = '/song_view';
 
   Song song;
-  SongScreen({Key key, this.song}) : super(key: key);
+  final bool standAlone;
+  SongScreen({Key key, this.song, this.standAlone = true}) : super(key: key);
 
   @override
-  _SongScreenState createState() => _SongScreenState(song);
+  _SongScreenState createState() => _SongScreenState(song, standAlone);
 }
 
 class _SongScreenState extends State<SongScreen> {
   Song _song;
+  final bool _standAlone;
   Instance _instance;
 
   int transpose = 0;
@@ -37,7 +39,7 @@ class _SongScreenState extends State<SongScreen> {
 
   bool _controlDisplayed = false;
 
-  _SongScreenState(this._song);
+  _SongScreenState(this._song, this._standAlone);
 
   void getInstances(Song song) {
     _retrieveInstances(song).then((List<Instance> instances) {
@@ -95,6 +97,7 @@ class _SongScreenState extends State<SongScreen> {
     return AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
+        automaticallyImplyLeading: _standAlone,
         title: Text(Constants.APP_TITLE));
   }
 
@@ -102,6 +105,7 @@ class _SongScreenState extends State<SongScreen> {
     return AppBar(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       elevation: 0,
+      automaticallyImplyLeading: _standAlone,
       title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -216,6 +220,7 @@ class _SongScreenState extends State<SongScreen> {
                   : _loadedBody(),
               bottomOnly: true,
               radius: Constants.APP_RADIUS,
+              displayBorder: _standAlone,
             ),
           ),
         ],

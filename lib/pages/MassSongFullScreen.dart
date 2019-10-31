@@ -57,13 +57,7 @@ class _MassSongFullScreenState extends State<MassSongFullScreen> {
 
   Widget getFullscreenApp(BuildContext context) {
     return Theme(
-      data: Theme.of(context).copyWith(
-          //brightness: Brightness.dark,
-          scaffoldBackgroundColor: Colors.black,
-          appBarTheme: AppBarTheme(),
-          textTheme: TextTheme(
-            body1: TextStyle(color: Colors.white),
-          )),
+      data: Constants.getBlackTheme(context),
       child: WillPopScope(
         onWillPop: _prepareExit,
         child: Scaffold(

@@ -103,12 +103,13 @@ class RoundedBlackContainer extends StatelessWidget {
   final Widget child;
   final bool bottomOnly;
   final double radius;
+    final bool displayBorder;
 
-  RoundedBlackContainer({this.child, this.bottomOnly, this.radius});
+  RoundedBlackContainer({this.child, this.bottomOnly, this.radius, this.displayBorder = true});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return displayBorder ? Container(
       color: Colors.black,
       child: Container(
         child: Padding(
@@ -132,6 +133,6 @@ class RoundedBlackContainer extends StatelessWidget {
                     bottomRight: Radius.circular(radius))
                 : BorderRadius.circular(radius)),
       ),
-    );
+    ):child;
   }
 }

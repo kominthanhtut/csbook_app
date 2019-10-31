@@ -42,4 +42,14 @@ class Constants {
             : Brightness.dark,
         statusBarColor: backgroundColor));
   }
+
+  static ThemeData getBlackTheme(BuildContext context) {
+    return Theme.of(context).copyWith(
+        //brightness: Brightness.dark,
+        scaffoldBackgroundColor: Colors.black,
+        appBarTheme: AppBarTheme(color: Colors.black, ),
+        textTheme: TextTheme(
+          body1: TextStyle(color: Colors.white),
+        ));
+  }
 }

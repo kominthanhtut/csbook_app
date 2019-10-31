@@ -1,8 +1,6 @@
-import 'package:csbook_app/Pages/mainScreen.dart';
+import 'package:csbook_app/mainScreen.dart';
 import 'package:csbook_app/Pages/songScreen.dart';
 import 'package:csbook_app/Pages/songfullscreen.dart';
-import 'package:csbook_app/ResetSystemBarsRoute.dart';
-import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:csbook_app/pages/MassScreen.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
@@ -75,12 +73,6 @@ class MyApp extends StatelessWidget {
             title: 'csbook',
             theme: theme,
             home: MainScreen(),
-            routes: {
-              SongScreen.routeName: (context) => SongScreen(),
-              MainScreen.routeName: (context) => MainScreen(),
-              MassScreen.routeName: (context) => MassScreen(),
-              SongFullScreen.routeName: (context) => SongFullScreen()
-            },
           );
         });
   }

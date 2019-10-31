@@ -11,6 +11,7 @@ class SongText extends StatelessWidget {
   final int notation;
   final CrossAxisAlignment alignment;
 
+
   @override
   Widget build(BuildContext context) {
     return Align(
