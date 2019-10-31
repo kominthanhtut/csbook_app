@@ -68,6 +68,12 @@ class _MassSongFullScreenState extends State<MassSongFullScreen> {
         onWillPop: _prepareExit,
         child: Scaffold(
           appBar: AppBar(
+            leading: 
+            Center(
+              child: (_mass.songs[_currentSong].capo != 0)?
+              Text("Cej "+_mass.songs[_currentSong].capo.toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 16),textAlign: TextAlign.center,)
+              :Container(),
+            ),
             title: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -123,7 +129,9 @@ class _MassSongFullScreenState extends State<MassSongFullScreen> {
                       });
                       },),
                     Text(
+                      
                       _mass.songs[_currentSong].moment,
+                      overflow: TextOverflow.ellipsis,
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       //textAlign: TextAlign.center,

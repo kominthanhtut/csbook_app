@@ -72,6 +72,12 @@ class _SongFullScreenState extends State<SongFullScreen> {
           onWillPop: _prepareExit,
           child: Scaffold(
             appBar: AppBar(
+              leading: 
+            Center(
+              child: (int.parse(instance.capo) != 0)?
+              Text("Cej "+instance.capo, style: TextStyle(fontStyle: FontStyle.italic, fontSize: 16),textAlign: TextAlign.center,)
+              :Container(),
+            ),
               title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
