@@ -66,7 +66,7 @@ class _MassSongFullScreenState extends State<MassSongFullScreen> {
             leading: 
             Center(
               child: (_mass.songs[_currentSong].capo != 0)?
-              Text("Cej "+_mass.songs[_currentSong].capo.toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 16),textAlign: TextAlign.center,)
+              Text("C"+_mass.songs[_currentSong].capo.toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 16),textAlign: TextAlign.center,)
               :Container(),
             ),
             title: Column(

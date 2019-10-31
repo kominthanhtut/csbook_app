@@ -122,8 +122,11 @@ class _TabletListPageState extends State<TabletListPage> {
                     showSearch(
                         context: context,
                         delegate: SongSearch(_songs, (song) {
-                          print(song.title);
-                          getInstances(context, song);
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => SongScreen(
+                                    key: Key(song.id.toString()),
+                                    song: song,
+                                  )));
                         }));
                   },
                 )
@@ -139,17 +142,16 @@ class _TabletListPageState extends State<TabletListPage> {
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           Container(
               decoration: BoxDecoration(
-                  border: Border(
-                      right: BorderSide(
-                          color: Theme.of(context).primaryColorLight, width: 0)),
-                  ),
+                border: Border(
+                    right: BorderSide(
+                        color: Theme.of(context).primaryColorLight, width: 0)),
+              ),
               width: MediaQuery.of(context).size.width * 0.35,
               child: Scaffold(
                 appBar: makeAppBar(_scaffoldKey),
                 body: makeBody(),
               )),
           Container(
-            
               width: MediaQuery.of(context).size.width * 0.65,
               child: _selectedSong)
         ]),

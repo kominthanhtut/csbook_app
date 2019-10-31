@@ -8,26 +8,29 @@ import 'package:csbook_app/Model/Instance.dart';
 import 'package:csbook_app/Model/Song.dart';
 import 'package:csbook_app/Pages/songfullscreen.dart';
 import 'package:csbook_app/Widgets/widgets.dart';
+import 'package:csbook_app/pages/SongFullScreen.dart' as prefix0;
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SongScreen extends StatefulWidget {
-  static const routeName = '/song_view';
 
-  Song song;
+  final Song song;
   final bool standAlone;
-  SongScreen({Key key, this.song, this.standAlone = true}) : super(key: key);
+  final Instance instance;
+  final int transpose;
+  SongScreen({Key key, this.song, this.standAlone = true, this.instance, this.transpose = 0}) : super(key: key);
 
   @override
-  _SongScreenState createState() => _SongScreenState(song, standAlone);
+  _SongScreenState createState() => _SongScreenState(song, standAlone, instance: instance, transpose: transpose);
 }
 
 class _SongScreenState extends State<SongScreen> {
   Song _song;
   final bool _standAlone;
   Instance _instance;
+  final Instance instance;
 
   int transpose = 0;
   double defaultFontSize = 16;
@@ -39,7 +42,7 @@ class _SongScreenState extends State<SongScreen> {
 
   bool _controlDisplayed = false;
 
-  _SongScreenState(this._song, this._standAlone);
+  _SongScreenState(this._song, this._standAlone, {this.instance, this.transpose});
 
   void getInstances(Song song) {
     _retrieveInstances(song).then((List<Instance> instances) {
@@ -51,6 +54,10 @@ class _SongScreenState extends State<SongScreen> {
 
   void initState() {
     super.initState();
+    if(instance != null){
+      _instance = instance;
+      return;
+    }
     getInstances(_song);
     SharedPreferences.getInstance().then((sp) {
       setState(() {
@@ -79,10 +86,9 @@ class _SongScreenState extends State<SongScreen> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          Navigator.pushNamed(
+          Navigator.push(
             context,
-            SongFullScreen.routeName,
-            arguments: SongState(transpose, fontSize, _instance),
+            MaterialPageRoute(builder: (_) => SongFullScreen(SongState(transpose, fontSize, _instance)))
           );
         });
       },

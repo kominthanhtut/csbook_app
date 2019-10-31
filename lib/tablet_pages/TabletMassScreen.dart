@@ -1,6 +1,7 @@
 import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/Model/Mass.dart';
 import 'package:csbook_app/Widgets/widgets.dart';
+import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/pages/MassSongFullScreen.dart';
 import 'package:csbook_app/pages/SongScreen.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,6 @@ class _TabletMassScreenState extends State<TabletMassScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getInstances(_mass);
   }
@@ -77,6 +77,8 @@ class _TabletMassScreenState extends State<TabletMassScreen> {
                 _selectedSong = SongScreen(
                     key: Key(ms.getInstance().song.id.toString()),
                     song: ms.getInstance().song,
+                    instance: ms.getInstance(),
+                    transpose: Chord(ms.getInstance().tone).semiTonesDiferentWith(Chord(ms.tone)),
                     standAlone: false);
               });
             },

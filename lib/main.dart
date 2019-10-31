@@ -1,3 +1,4 @@
+import 'package:csbook_app/TabletDetector.dart';
 import 'package:csbook_app/mainScreen.dart';
 import 'package:csbook_app/Pages/songScreen.dart';
 import 'package:csbook_app/Pages/songfullscreen.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    
     bool BLACK_THEME = true;
 
     ThemeData blackTheme = ThemeData(
@@ -36,9 +38,7 @@ class MyApp extends StatelessWidget {
       primaryColorDark: Color(0xff1b1b1b),
       appBarTheme: AppBarTheme(
           textTheme: TextTheme(
-              title: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24))),
+              title: TextStyle(fontWeight: FontWeight.bold, fontSize: 24))),
       backgroundColor: Color(0xff1b1b1b),
     );
 
@@ -76,6 +76,4 @@ class MyApp extends StatelessWidget {
           );
         });
   }
-
-  
 }

@@ -16,12 +16,24 @@ import '../Api.dart';
 
 class PhoneMassScreen extends StatefulWidget {
   static const routeName = '/mass_view';
+
+  Mass mass;
+  PhoneMassScreen(this.mass);
+
   @override
-  _PhoneMassScreenState createState() => _PhoneMassScreenState();
+  _PhoneMassScreenState createState() => _PhoneMassScreenState(mass);
 }
 
 class _PhoneMassScreenState extends State<PhoneMassScreen> {
   Mass _mass;
+
+  _PhoneMassScreenState(this._mass);
+
+   @override
+  void initState() {
+    super.initState();
+    getInstances(_mass);
+  }
 
   int _currentMoment = 0;
   bool _showChords = false;

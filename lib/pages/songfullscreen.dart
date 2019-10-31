@@ -15,8 +15,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SongFullScreen extends StatefulWidget {
   static const routeName = '/song_view_fs';
 
+  final SongState songState;
+  SongFullScreen(this.songState);
+
   @override
-  _SongFullScreenState createState() => _SongFullScreenState();
+  _SongFullScreenState createState() => _SongFullScreenState(songState);
 }
 
 class SongState {
@@ -37,7 +40,7 @@ class _SongFullScreenState extends State<SongFullScreen> {
 
   int _notation = Constants.NOTATION_SPANISH;
 
-  _SongFullScreenState();
+  _SongFullScreenState(this.songState);
 
   @override
   void initState() {
@@ -71,29 +74,28 @@ class _SongFullScreenState extends State<SongFullScreen> {
         child: WillPopScope(
           onWillPop: _prepareExit,
           child: Scaffold(
-            appBar: AppBar(
-              centerTitle: true,
-              leading: 
+             appBar: AppBar(
+            centerTitle: true,
+            leading: 
             Center(
               child: (int.parse(instance.capo) != 0)?
-              Text("Cej "+instance.capo, style: TextStyle(fontStyle: FontStyle.italic, fontSize: 16),textAlign: TextAlign.center,)
+              Text("C"+instance.capo.toString(), style: TextStyle(fontStyle: FontStyle.italic, fontSize: 16),textAlign: TextAlign.center,)
               :Container(),
             ),
-              title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(instance.song.title.toString()),
-                    instance.song.author == null
-                        ? Container()
-                        : Text(
-                            instance.song.author.toString(),
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.normal,
-                                fontStyle: FontStyle.italic),
-                          ),
-                  ]),
+            title: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(instance.song.title.toString()),
+                  instance.song.author == null
+                      ? Container()
+                      : Text(
+                          instance.song.author.toString(),
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.normal,
+                              fontStyle: FontStyle.italic),
+                 ),]),
               backgroundColor: Colors.black,
               elevation: 0,
               automaticallyImplyLeading: false,
@@ -123,12 +125,9 @@ class _SongFullScreenState extends State<SongFullScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (songState == null) {
-      songState = ModalRoute.of(context).settings.arguments;
-      instance = songState.instance;
-      transpose = songState.transpose;
-      fontSize = songState.fontsize;
-    }
+    instance = songState.instance;
+    transpose = songState.transpose;
+    fontSize = songState.fontsize;
 
     return getFullscreenApp(context);
   }
