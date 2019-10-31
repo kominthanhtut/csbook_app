@@ -68,6 +68,7 @@ class _MassSongFullScreenState extends State<MassSongFullScreen> {
         onWillPop: _prepareExit,
         child: Scaffold(
           appBar: AppBar(
+            centerTitle: true,
             leading: 
             Center(
               child: (_mass.songs[_currentSong].capo != 0)?

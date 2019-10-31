@@ -72,6 +72,7 @@ class _SongFullScreenState extends State<SongFullScreen> {
           onWillPop: _prepareExit,
           child: Scaffold(
             appBar: AppBar(
+              centerTitle: true,
               leading: 
             Center(
               child: (int.parse(instance.capo) != 0)?
