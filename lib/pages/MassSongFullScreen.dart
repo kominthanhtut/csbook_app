@@ -87,103 +87,111 @@ class _MassSongFullScreenState extends State<MassSongFullScreen> {
                               fontSize: 12,
                               fontWeight: FontWeight.normal,
                               fontStyle: FontStyle.italic),
+                 ),]),
+              backgroundColor: Colors.black,
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    Screen.keepOn(false);
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ),
+            bottomNavigationBar: Opacity(
+              opacity: 0.8,
+              child: BottomAppBar(
+                color: Colors.black,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: new Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
                         ),
-                ]),
-            backgroundColor: Colors.black,
-            elevation: 0,
-            automaticallyImplyLeading: false,
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  Screen.keepOn(false);
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          ),
-          bottomNavigationBar: Opacity(
-            opacity: 0.8,
-            child: BottomAppBar(
-              color: Colors.black,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 16.0),
-                child: new Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
+                        onPressed: () {
+                          setState(() {
+                            _pageController.previousPage(
+                                duration: Duration(milliseconds: 500),
+                                curve: Curves.ease);
+                          });
+                        },
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _pageController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.ease);
-                        });
-                      },
-                    ),
-                    IconButton(icon: Icon(FontAwesomeIcons.searchMinus), onPressed: (){
-                      setState(() {
-                        fontSize -= 2;
-                      });
-                      },),
-                    Text(
-                      
-                      _mass.songs[_currentSong].moment,
-                      overflow: TextOverflow.ellipsis,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      //textAlign: TextAlign.center,
-                    ),
-                    IconButton(icon: Icon(FontAwesomeIcons.searchPlus), onPressed: (){
-                      setState(() {
-                        fontSize += 2;
-                      });
-                      },),
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_forward,
-                        color: Colors.white,
+                      IconButton(
+                        icon: Icon(FontAwesomeIcons.searchMinus),
+                        onPressed: () {
+                          setState(() {
+                            fontSize -= 2;
+                          });
+                        },
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _pageController.nextPage(duration: Duration(milliseconds: 500), curve: Curves.ease);
-                        });
-                      },
-                    ),
-                  ],
+                      Text(
+                        _mass.songs[_currentSong].moment,
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                        //textAlign: TextAlign.center,
+                      ),
+                      IconButton(
+                        icon: Icon(FontAwesomeIcons.searchPlus),
+                        onPressed: () {
+                          setState(() {
+                            fontSize += 2;
+                          });
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.arrow_forward,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _pageController.nextPage(
+                                duration: Duration(milliseconds: 500),
+                                curve: Curves.ease);
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          body: PageView(
-            controller: _pageController,
-            onPageChanged: (pageNum){
-              setState(() {
-                _currentSong = pageNum;
-              });
-            },
-            key: Key(_mass.id),
-            children: _mass.songs.map((ms) => _createPage(ms)).toList(),)
-        ),
+            body: PageView(
+              controller: _pageController,
+              onPageChanged: (pageNum) {
+                setState(() {
+                  _currentSong = pageNum;
+                });
+              },
+              key: Key(_mass.id),
+              children: _mass.songs.map((ms) => _createPage(ms)).toList(),
+            )),
       ),
     );
   }
 
-  Widget _createPage(MassSong ms){
+  Widget _createPage(MassSong ms) {
     var instance = ms.getInstance();
     var transpose = Chord(instance.tone).semiTonesDiferentWith(Chord(ms.tone));
     return SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.only(left: 10, right: 10),
-              child: SongText(
-                instance.transpose(transpose),
-                textSize: fontSize,
-                notation: _notation,
-              ),
-            ),
-          );
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: SongText(
+          instance.transpose(transpose),
+          textSize: fontSize,
+          notation: _notation,
+          //alignment: CrossAxisAlignment.center,
+        ),
+      ),
+    );
   }
 
   @override
@@ -193,6 +201,6 @@ class _MassSongFullScreenState extends State<MassSongFullScreen> {
       _currentSong = 0;
     }
 
-    return _mass != null ? getFullscreenApp(context): Container();
+    return _mass != null ? getFullscreenApp(context) : Container();
   }
 }
