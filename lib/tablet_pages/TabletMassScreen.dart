@@ -1,5 +1,5 @@
 import 'package:csbook_app/Constants.dart';
-import 'package:csbook_app/Model/Mass.dart';
+import 'package:csbook_app/model/Mass.dart';
 import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/pages/MassSongFullScreen.dart';

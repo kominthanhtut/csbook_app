@@ -1,7 +1,7 @@
 import 'package:csbook_app/NoAnimationRoute.dart';
 import 'package:csbook_app/pages/ListPage.dart';
 import 'package:csbook_app/pages/ParishPage.dart';
-import 'package:csbook_app/pages/settingsScreen.dart';
+import 'package:csbook_app/pages/SettingsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:core';
 
 import 'package:csbook_app/Api.dart';
-import 'package:csbook_app/Model/Chord.dart';
-import 'package:csbook_app/Model/Mass.dart';
-import 'package:csbook_app/Model/Parish.dart';
-import 'package:csbook_app/Model/Song.dart';
+import 'package:csbook_app/model/Chord.dart';
+import 'package:csbook_app/model/Mass.dart';
+import 'package:csbook_app/model/Parish.dart';
+import 'package:csbook_app/model/Song.dart';
 
 class Instance {
   final int id;

@@ -2,7 +2,7 @@
 import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
-import 'package:csbook_app/Model/Song.dart';
+import 'package:csbook_app/model/Song.dart';
 
 class SongSearch extends SearchDelegate<Song> {
   final List<Song> songs;

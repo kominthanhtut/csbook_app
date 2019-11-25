@@ -1,6 +1,6 @@
 import 'package:csbook_app/Constants.dart';
-import 'package:csbook_app/Model/Mass.dart';
-import 'package:csbook_app/Model/Song.dart';
+import 'package:csbook_app/model/Mass.dart';
+import 'package:csbook_app/model/Song.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';

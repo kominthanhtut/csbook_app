@@ -1,4 +1,4 @@
-import 'package:csbook_app/Model/Mass.dart';
+import 'package:csbook_app/model/Mass.dart';
 import 'package:csbook_app/TabletDetector.dart';
 import 'package:csbook_app/phone_pages/PhoneMassScreen.dart';
 import 'package:csbook_app/tablet_pages/TabletMassScreen.dart';

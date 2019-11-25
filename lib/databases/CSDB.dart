@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:csbook_app/Model/Instance.dart';
-import 'package:csbook_app/Model/Song.dart';
+import 'package:csbook_app/model/Instance.dart';
+import 'package:csbook_app/model/Song.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:csbook_app/Api.dart';
-import 'package:csbook_app/Model/Instance.dart';
+import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/databases/CSDB.dart';
-import 'package:csbook_app/Model/Parish.dart';
+import 'package:csbook_app/model/Parish.dart';
 
 class Mass {
   final String id;

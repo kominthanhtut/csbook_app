@@ -3,12 +3,11 @@ import 'dart:async';
 import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/Widgets/SongTextWidget.dart';
 import 'package:csbook_app/databases/CSDB.dart';
-import 'package:csbook_app/Model/Chord.dart';
-import 'package:csbook_app/Model/Instance.dart';
-import 'package:csbook_app/Model/Song.dart';
-import 'package:csbook_app/Pages/songfullscreen.dart';
+import 'package:csbook_app/model/Chord.dart';
+import 'package:csbook_app/model/Instance.dart';
+import 'package:csbook_app/model/Song.dart';
+import 'package:csbook_app/pages/songfullscreen.dart';
 import 'package:csbook_app/Widgets/widgets.dart';
-import 'package:csbook_app/pages/SongFullScreen.dart' as prefix0;
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

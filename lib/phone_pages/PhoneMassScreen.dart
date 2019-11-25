@@ -1,7 +1,7 @@
 import 'package:csbook_app/Constants.dart';
-import 'package:csbook_app/Model/Chord.dart';
-import 'package:csbook_app/Model/Mass.dart';
-import 'package:csbook_app/Pages/songfullscreen.dart';
+import 'package:csbook_app/model/Chord.dart';
+import 'package:csbook_app/model/Mass.dart';
+import 'package:csbook_app/pages/songfullscreen.dart';
 import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:csbook_app/pages/MassSongFullScreen.dart';
 import 'package:csbook_app/pages/SongScreen.dart';

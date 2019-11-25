@@ -1,9 +1,9 @@
 import 'package:csbook_app/Constants.dart';
-import 'package:csbook_app/Pages/songScreen.dart';
+import 'package:csbook_app/pages/SongScreen.dart';
 import 'package:csbook_app/SongSearch.dart';
 import 'package:csbook_app/Widgets/NavigationDrawer.dart';
 import 'package:csbook_app/databases/CSDB.dart';
-import 'package:csbook_app/Model/Song.dart';
+import 'package:csbook_app/model/Song.dart';
 import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:flutter/material.dart';
 

@@ -1,5 +1,5 @@
 import 'package:csbook_app/Api.dart';
-import 'package:csbook_app/Model/Parish.dart';
+import 'package:csbook_app/model/Parish.dart';
 import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';

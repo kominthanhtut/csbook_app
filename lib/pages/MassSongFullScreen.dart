@@ -1,7 +1,7 @@
 import 'package:csbook_app/Constants.dart';
-import 'package:csbook_app/Model/Mass.dart';
+import 'package:csbook_app/model/Mass.dart';
 import 'package:csbook_app/Widgets/SongTextWidget.dart';
-import 'package:csbook_app/Model/Instance.dart';
+import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/model/Chord.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

@@ -1,6 +1,6 @@
 import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/Widgets/SongTextWidget.dart';
-import 'package:csbook_app/Model/Instance.dart';
+import 'package:csbook_app/model/Instance.dart';
 import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
