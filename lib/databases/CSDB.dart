@@ -4,7 +4,6 @@ import 'package:csbook_app/Model/Instance.dart';
 import 'package:csbook_app/Model/Song.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'dart:io';
 
@@ -30,8 +29,8 @@ class CSDB {
   }
 
   Future<Database> init() async {
-    Directory directory = await getApplicationDocumentsDirectory();
-    String dbPath = join(directory.path, databaseName);
+    String directory = await getDatabasesPath();
+    String dbPath = join(directory, databaseName);
     var database = openDatabase(dbPath,
         version: 2, onCreate: _onCreate, onUpgrade: _onUpgrade);
 

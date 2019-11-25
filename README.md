@@ -1,10 +1,16 @@
-# Catholic Song Book
+# csbook_app_x
 
-Simple Flutter App (tested on Android only for now) to access the songs of the Online Catholic SongBook (right now hosted on https://parroquias.csbook.es)
+A new Flutter project.
 
-## Screenshots 
+## Getting Started
 
-|       | Songs | Song | Masses | Mass | FullScreen | Settings | Drawer |
-|-------|-------|------|--------|------|------------|----------|--------|
-| **Light** | ![Songs Light](screens/songs.png)|![Song Light](screens/song.png)|![Masses Screen](screens/masses.png)|![Mass Screen](screens/mass.PNG)|![Full Screen](screens/fullscreensong.png)|![Settings Screen](screens/notation.png)|![Drawer](screens/drawer.PNG)|
-| **Dark** | ![Songs Dark](screens/songs_black.png)|![Song Dark](screens/song_black.png)|![Masses Screen](screens/masses_black.png)|![Mass Screen](screens/mass_black.png)|![Full Screen](screens/songfullscreen.png)|![Settings Screen](screens/black_theme.png)|![Drawer](screens/drawer_black.png)|
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+
+For help getting started with Flutter, view our
+[online documentation](https://flutter.dev/docs), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.

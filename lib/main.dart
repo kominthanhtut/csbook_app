@@ -1,8 +1,4 @@
-import 'package:csbook_app/TabletDetector.dart';
 import 'package:csbook_app/mainScreen.dart';
-import 'package:csbook_app/Pages/songScreen.dart';
-import 'package:csbook_app/Pages/songfullscreen.dart';
-import 'package:csbook_app/pages/MassScreen.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'Constants.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   Brightness brightness;
   SharedPreferences prefs = await SharedPreferences.getInstance();
   brightness = (prefs.getBool(Constants.IS_DARK_TOKEN) ?? false)
