@@ -12,6 +12,7 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   //Create/Instanciate settings object and fill the preferences in.
   Settings _settings = Settings.instance;
+  _settings.setDefaults();
   _settings.fill(prefs);
   //Run the app with the proper brightness
   //runApp(MyApp(_settings.getBrightness()));
@@ -65,7 +66,7 @@ class MyApp extends StatelessWidget {
         return  MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'csbook',
-              theme: settings.darkTheme ? blackTheme : whiteTheme,
+              theme: ( settings?.darkTheme ?? true) ? blackTheme : whiteTheme,
               home: MainScreen(),
             );
           });

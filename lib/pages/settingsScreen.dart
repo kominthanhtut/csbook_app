@@ -39,14 +39,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     activeColor: Colors.white,
                     activeTrackColor: Theme.of(context).primaryColorLight,
                     onChanged: (value) {
-                      settings.setDarkTheme(value);
+                      settings?.setDarkTheme(value);
                     },
-                    value: settings.darkTheme),
+                    value: settings.darkTheme ?? false),
                 title: new Text(
                   'Tema oscuro',
                 ),
                 onTap: () {
-                  settings.setDarkTheme(!settings.darkTheme);
+                  settings?.setDarkTheme(!settings.darkTheme);
                 },
               ),
               //Divider(),

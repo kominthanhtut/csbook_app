@@ -14,10 +14,10 @@ class Settings extends ChangeNotifier {
   static const NOTATION_ENGLISH = 0x02;
 
   //Settings
-  bool darkTheme;
-  int parishId;
-  String parishName;
-  int notation;
+  bool darkTheme = false;
+  int parishId = -1;
+  String parishName = "";
+  int notation = NOTATION_SPANISH;
 
   static final Settings _settings = Settings._internal();
 
@@ -27,13 +27,20 @@ class Settings extends ChangeNotifier {
 
   Settings._internal();
 
+  void setDefaults(){
+    this.darkTheme = false;
+    this.parishId = -1;
+    this.parishName="";
+    this. notation = NOTATION_SPANISH;
+  }
+
   void fill(SharedPreferences sp) {
     this.notation = sp.getInt(NOTATION_TOKEN);
     this.darkTheme = sp.getBool(IS_DARK_TOKEN);
     this.parishId = sp.get(PARISH_ID);
     this.parishName = sp.getString(PARISH_NAME);
 
-    notifyListeners();
+    //notifyListeners();
   }
 
   Brightness getBrightness() {
