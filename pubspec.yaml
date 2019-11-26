@@ -15,7 +15,6 @@ environment:
 dependencies:
   provider:
   share:
-  dynamic_theme:
   auto_size_text:
   shared_preferences:
   sqflite:

@@ -1,13 +1,10 @@
 import 'package:csbook_app/MainScreen.dart';
 import 'package:csbook_app/model/Settings.dart';
-import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:provider/provider.dart';
-
-import 'Constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,8 +16,8 @@ void main() async {
   //Run the app with the proper brightness
   //runApp(MyApp(_settings.getBrightness()));
 
-  runApp(ChangeNotifierProvider<SettingsProvider>(
-      builder: (context) => SettingsProvider(_settings),
+  runApp(ChangeNotifierProvider<Settings>(
+      builder: (context) => _settings,
       child: MyApp()));
 }
 
@@ -63,22 +60,14 @@ class MyApp extends StatelessWidget {
                   fontSize: 24))),
     );
 
-    return Consumer<SettingsProvider>(
-      builder: (context, settingsProvider, _){
-        return  DynamicTheme(
-          defaultBrightness: Brightness.light,
-          data: (brigthness) =>
-              (Brightness.dark == settingsProvider.settings.getBrightness()) ? blackTheme : whiteTheme,
-          themedWidgetBuilder: (context, theme) {
-            Constants.systemBarsSetup(theme);
-            return MaterialApp(
+    return Consumer<Settings>(
+      builder: (context, settings, _){
+        return  MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'csbook',
-              theme: theme,
+              theme: settings.darkTheme ? blackTheme : whiteTheme,
               home: MainScreen(),
             );
           });
-      },
-    );
   }
 }

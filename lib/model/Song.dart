@@ -24,7 +24,7 @@ class Song {
         json['type'], json['time'], json['youtubeId']);
   }
 
-  static Future<List<Song>> get(int skip, int take) async {
+  static Future<List<Song>> get({int skip=0, int take=0}) async {
     var response = await Api.get('api/v1/songs');
 
     final responseJson = json.decode(response.body);

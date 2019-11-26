@@ -26,53 +26,17 @@ class _TabletListPageState extends State<TabletListPage> {
 
   var index = 0;
 
-  Future<List<Song>> _retrieveSongs() async {
-    CSDB db = CSDB();
-    List<Song> songs = await db.fetchAllSongs();
-    if (songs == null) {
-      songs = await Song.get(0, 0);
-      db.saveOrUpdateAll(songs);
-    }
-    return songs;
-  }
-
-  Future<List<Song>> _updateSongsDB() async {
-    CSDB db = CSDB();
-    List<Song> songs = await Song.get(0, 0);
-    db.saveOrUpdateAll(songs);
-    return songs;
-  }
 
   void getInstances(BuildContext context, Song song) {
     setState(() {
       _selectedSong = SongScreen(
         key: Key(song.id.toString()),
         song: song,
+        standAlone: false,
       );
-      _selectedSong = Container();
     });
   }
 
-  @override
-  void initState() {
-    //We recover the songs from db
-    Song.get(0, 0).then((s) {
-      setState(() {
-        this._songs = s;
-      });
-
-      /*
-      //We update database from web
-      _updateSongsDB().then((s) {
-        setState(() {
-          this._songs = s;
-        });
-      });
-      */
-    });
-
-    super.initState();
-  }
 
   Widget makeAppBar(GlobalKey<ScaffoldState> parentScaffoldKey) {
     return AppBar(
@@ -89,27 +53,29 @@ class _TabletListPageState extends State<TabletListPage> {
     );
   }
 
-  Widget makeBody() {
-    if (this._songs.length > 0) {
-      return Scrollbar(
-        child: ListView.builder(
-            itemCount: _songs.length,
-            itemBuilder: (BuildContext context, int index) {
-              return SongTile(_songs[index], onTap: (song) {
-                setState(() {
-                  _selectedSong = SongScreen(
-                    key: Key(song.id.toString()),
-                    song: song,
-                    standAlone: false,
-                  );
-                });
-              });
-            }),
-      );
-    } else {
-      return FetchingWidget(Constants.SONGS_WAITING);
-    }
+ Widget makeBody() {
+    return Scrollbar(
+      child: FutureBuilder<List<Song>>(
+          future: Song.get(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.none &&
+                snapshot.hasData == null &&
+                snapshot.data?.length == 0) {
+              return FetchingWidget(Constants.SONGS_WAITING);
+            } else {
+              return ListView.builder(
+                  itemCount: snapshot.data==null ? 0: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return SongTile(snapshot.data[index], onTap: (song) {
+                      getInstances(context, song);
+                      print(song);
+                    });
+                  });
+            }
+          }),
+    );
   }
+
 
   List<Widget> getActions(BuildContext context) {
     return [
@@ -146,13 +112,13 @@ class _TabletListPageState extends State<TabletListPage> {
                     right: BorderSide(
                         color: Theme.of(context).primaryColorLight, width: 0)),
               ),
-              width: MediaQuery.of(context).size.width * 0.35,
+              width: MediaQuery.of(context).size.width * 0.3,
               child: Scaffold(
                 appBar: makeAppBar(_scaffoldKey),
                 body: makeBody(),
               )),
           Container(
-              width: MediaQuery.of(context).size.width * 0.65,
+              width: MediaQuery.of(context).size.width * 0.7,
               child: _selectedSong)
         ]),
         bottomOnly: true,

@@ -27,8 +27,11 @@ class Mass {
         []);
   }
 
-  static Future<List<Mass>> get(int skip, int take) async {
-    var response = await Api.get('api/v1/masses');
+  static Future<List<Mass>> get(
+      {int parishId = -1, int skip = 0, int take = 0}) async {
+    var response = await Api.get((parishId == -1)
+        ? 'api/v1/masses'
+        : 'api/v1/masses?parishId=' + parishId.toString());
 
     final responseJson = json.decode(response.body);
     final items = (responseJson as List).map((i) => new Mass.fromJson(i));

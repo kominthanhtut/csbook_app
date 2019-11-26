@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Parish.dart';
 
-class Settings {
+class Settings extends ChangeNotifier {
   static const IS_DARK_TOKEN = "isDark";
 
   static const PARISH_ID = "parish_id";
@@ -17,39 +17,61 @@ class Settings {
   bool darkTheme;
   int parishId;
   String parishName;
+  int notation;
 
   static final Settings _settings = Settings._internal();
 
-  static Settings get instance { return _settings;}
+  static Settings get instance {
+    return _settings;
+  }
 
   Settings._internal();
 
-  void fill(SharedPreferences sp){
+  void fill(SharedPreferences sp) {
+    this.notation = sp.getInt(NOTATION_TOKEN);
     this.darkTheme = sp.getBool(IS_DARK_TOKEN);
     this.parishId = sp.get(PARISH_ID);
-    this.parishName = sp.get(PARISH_NAME);
-  }
+    this.parishName = sp.getString(PARISH_NAME);
 
-  Brightness getBrightness(){
-    return (this.darkTheme ?? true)
-      ? Brightness.dark
-      : Brightness.light;
-  }
-
-
-
-}
-
-class SettingsProvider extends ChangeNotifier{
-  Settings _settings;
-
-  SettingsProvider(this._settings);
-
-  set settings(Settings _settings){
-    this._settings = _settings;
     notifyListeners();
   }
 
-  get settings => _settings;
+  Brightness getBrightness() {
+    return (this.darkTheme ?? true) ? Brightness.dark : Brightness.light;
+  }
 
+  Parish getParish() {
+    return (parishId != null)
+        ? Parish(parishId, parishName, null, null, null)
+        : null;
+  }
+
+  void setDarkTheme(bool value) {
+    this.darkTheme = value;
+
+    SharedPreferences.getInstance().then((sp) {
+      sp.setBool(IS_DARK_TOKEN, value);
+
+      notifyListeners();
+    });
+  }
+
+  Parish setParish(Parish parish) {
+    SharedPreferences.getInstance().then((sp) {
+      sp.setInt(PARISH_ID, parish.id);
+      sp.setString(PARISH_NAME, parish.name);
+
+      notifyListeners();
+    });
+    return parish;
+  }
+
+  int setNotation(int notation) {
+    SharedPreferences.getInstance().then((sp) {
+      sp.setInt(NOTATION_TOKEN, notation);
+
+      notifyListeners();
+    });
+    return notation;
+  }
 }

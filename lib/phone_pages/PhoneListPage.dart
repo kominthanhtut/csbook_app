@@ -23,23 +23,6 @@ class _PhoneListPageState extends State<PhoneListPage> {
 
   var index = 0;
 
-  Future<List<Song>> _retrieveSongs() async {
-    CSDB db = CSDB();
-    List<Song> songs = await db.fetchAllSongs();
-    if (songs == null) {
-      songs = await Song.get(0, 0);
-      db.saveOrUpdateAll(songs);
-    }
-    return songs;
-  }
-
-  Future<List<Song>> _updateSongsDB() async {
-    CSDB db = CSDB();
-    List<Song> songs = await Song.get(0, 0);
-    db.saveOrUpdateAll(songs);
-    return songs;
-  }
-
   void getInstances(BuildContext context, Song song) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => SongScreen(
@@ -48,26 +31,6 @@ class _PhoneListPageState extends State<PhoneListPage> {
             )));
   }
 
-  @override
-  void initState() {
-    //We recover the songs from db
-    Song.get(0, 0).then((s) {
-      setState(() {
-        this._songs = s;
-      });
-
-      /*
-      //We update database from web
-      _updateSongsDB().then((s) {
-        setState(() {
-          this._songs = s;
-        });
-      });
-      */
-    });
-
-    super.initState();
-  }
 
   Widget makeAppBar() {
     return AppBar(
@@ -79,19 +42,25 @@ class _PhoneListPageState extends State<PhoneListPage> {
   }
 
   Widget makeBody() {
-    if (this._songs.length > 0) {
-      return Scrollbar(
-        child: ListView.builder(
-            itemCount: _songs.length,
-            itemBuilder: (BuildContext context, int index) {
-              return SongTile(_songs[index], onTap: (song) {
-                getInstances(context, song);
-              });
-            }),
-      );
-    } else {
-      return FetchingWidget(Constants.SONGS_WAITING);
-    }
+    return Scrollbar(
+      child: FutureBuilder<List<Song>>(
+          future: Song.get(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.none &&
+                snapshot.hasData == null &&
+                snapshot.data?.length == 0) {
+              return FetchingWidget(Constants.SONGS_WAITING);
+            } else {
+              return ListView.builder(
+                  itemCount: snapshot.data==null ? 0: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return SongTile(snapshot.data[index], onTap: (song) {
+                      getInstances(context, song);
+                    });
+                  });
+            }
+          }),
+    );
   }
 
   List<Widget> getActions(BuildContext context) {
