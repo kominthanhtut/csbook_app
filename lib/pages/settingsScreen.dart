@@ -53,7 +53,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ListTile(
                 title: Text("Parroquia"),
                 subtitle:
-                    Text((_parish == null) ? "No seleccionado" : _parish.name),
+                    Text((settings.parishId == null) ? "No seleccionado" : settings.parishName),
                 leading: Icon(FontAwesomeIcons.church),
                 onTap: () {
                   Parish.getAll().then((parishes) {
