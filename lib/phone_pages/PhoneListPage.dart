@@ -19,7 +19,6 @@ class PhoneListPage extends StatefulWidget {
 }
 
 class _PhoneListPageState extends State<PhoneListPage> {
-  List<Song> _songs = new List<Song>();
 
   var index = 0;
 
@@ -31,71 +30,62 @@ class _PhoneListPageState extends State<PhoneListPage> {
             )));
   }
 
-
-  Widget makeAppBar() {
+  Widget makeAppBar(List<Song> _songs) {
     return AppBar(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       elevation: 0,
       title: Text(Constants.APP_TITLE),
-      actions: getActions(context),
+      actions: getActions(context, _songs),
     );
   }
 
-  Widget makeBody() {
+  Widget makeBody(List<Song> _songs) {
     return Scrollbar(
-      child: FutureBuilder<List<Song>>(
-          future: Song.get(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.none &&
-                snapshot.hasData == null &&
-                snapshot.data?.length == 0) {
-              return FetchingWidget(Constants.SONGS_WAITING);
-            } else {
-              return ListView.builder(
-                  itemCount: snapshot.data==null ? 0: snapshot.data.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return SongTile(snapshot.data[index], onTap: (song) {
-                      getInstances(context, song);
-                    });
-                  });
-            }
-          }),
+      child: Builder(builder: (context) {
+        return ListView.builder(
+            itemCount: _songs.length,
+            itemBuilder: (BuildContext context, int index) {
+              return SongTile(_songs[index], onTap: (song) {
+                getInstances(context, song);
+              });
+            });
+      }),
     );
   }
 
-  List<Widget> getActions(BuildContext context) {
+  List<Widget> getActions(BuildContext context, List<Song> _songs) {
     return [
-      Builder(
-          builder: (context) => _songs.length > 0
-              ? IconButton(
-                  icon: Icon(Icons.search),
-                  tooltip: 'Filtrar',
-                  onPressed: () {
-                    showSearch(
-                        context: context,
-                        delegate: SongSearch(_songs, (song) {
-                          print(song.title);
-                          getInstances(context, song);
-                        }));
-                  },
-                )
-              : Container())
+      IconButton(
+        icon: Icon(Icons.search),
+        tooltip: 'Filtrar',
+        onPressed: () {
+          showSearch(
+              context: context,
+              delegate: SongSearch(_songs, (song) {
+                print(song.title);
+                getInstances(context, song);
+              }));
+        },
+      )
     ];
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: makeAppBar(),
-      body: RoundedBlackContainer(
-        child: makeBody(),
-        bottomOnly: true,
-        radius: Constants.APP_RADIUS,
-      ),
-      drawer: NavigationDrawer.drawer(context,
-          end: false, currentPage: NavigationDrawer.LIST_PAGE),
-      endDrawer: NavigationDrawer.drawer(context,
-          end: true, currentPage: NavigationDrawer.LIST_PAGE),
-    );
+    return FutureBuilder<List<Song>>(
+        future: Song.get(),
+        builder: (context, snapshot) {
+          if (snapshot.data == null) return Container();
+          return Scaffold(
+            appBar: makeAppBar(snapshot.data),
+            body: RoundedBlackContainer(
+              child: makeBody(snapshot.data),
+              bottomOnly: true,
+              radius: Constants.APP_RADIUS,
+            ),
+            drawer: NavigationDrawer.drawer(context,
+                end: false, currentPage: NavigationDrawer.LIST_PAGE),
+          );
+        });
   }
 }

@@ -97,11 +97,11 @@ class _TabletMassScreenState extends State<TabletMassScreen> {
         children: <Widget>[
           Container(
             child: _makeBody(),
-            width: MediaQuery.of(context).size.width * 0.3,
+            width: MediaQuery.of(context).size.width * 0.35,
           ),
           Container(
             child: _selectedSong,
-            width: MediaQuery.of(context).size.width * 0.7,
+            width: MediaQuery.of(context).size.width * 0.65,
           )
         ],
       ),

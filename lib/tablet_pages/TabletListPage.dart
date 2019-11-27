@@ -112,13 +112,13 @@ class _TabletListPageState extends State<TabletListPage> {
                     right: BorderSide(
                         color: Theme.of(context).primaryColorLight, width: 0)),
               ),
-              width: MediaQuery.of(context).size.width * 0.3,
+              width: MediaQuery.of(context).size.width * 0.35,
               child: Scaffold(
                 appBar: makeAppBar(_scaffoldKey),
                 body: makeBody(),
               )),
           Container(
-              width: MediaQuery.of(context).size.width * 0.7,
+              width: MediaQuery.of(context).size.width * 0.65,
               child: _selectedSong)
         ]),
         bottomOnly: true,
