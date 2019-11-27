@@ -1,10 +1,7 @@
 import 'package:csbook_app/Constants.dart';
-import 'package:csbook_app/model/Chord.dart';
 import 'package:csbook_app/model/Mass.dart';
-import 'package:csbook_app/pages/songfullscreen.dart';
 import 'package:csbook_app/Widgets/widgets.dart';
 import 'package:csbook_app/pages/MassSongFullScreen.dart';
-import 'package:csbook_app/pages/SongScreen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:csbook_app/Widgets/SongTextWidget.dart';
@@ -29,24 +26,7 @@ class _PhoneMassScreenState extends State<PhoneMassScreen> {
 
   _PhoneMassScreenState(this._mass);
 
-   @override
-  void initState() {
-    super.initState();
-    getInstances(_mass);
-  }
-
-  int _currentMoment = 0;
-  bool _showChords = false;
-
   final DateFormat formatterFullDate = new DateFormat('dd/MM/yyyy');
-
-  void getInstances(Mass mass) {
-    mass.retrieveAllInstances().then((Mass mass) {
-      setState(() {
-        _mass = mass;
-      });
-    });
-  }
 
   void _openFullScreenMass() {
     /*
@@ -58,7 +38,7 @@ class _PhoneMassScreenState extends State<PhoneMassScreen> {
         settings: RouteSettings(arguments: _mass)));
   }
 
-  Widget _createListView(BuildContext context) {
+  Widget _createListView(BuildContext context, Mass _mass) {
     return Theme(
       data: Theme.of(context).copyWith(
           accentColor: (Theme.of(context).brightness == Brightness.dark)
@@ -107,47 +87,57 @@ class _PhoneMassScreenState extends State<PhoneMassScreen> {
     );
   }
 
+  Widget _loadingScaffold(){
+    return Scaffold(body: SafeArea(child: FetchingWidget(Constants.SONGS_WAITING)),);
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (_mass == null || !_mass.instancesRecovered()) {
-      _mass = ModalRoute.of(context).settings.arguments;
-      getInstances(_mass);
-    }
-
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            _mass.hasName()
-                ? _mass.name
-                : Constants.MASS_VIEW_TITLE +
-                    formatterFullDate.format(_mass.date),
-          ),
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          elevation: 0.0,
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.share,
+    return FutureBuilder<Mass>(
+      future: _mass.retrieveAllInstances(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData == false) {
+          return _loadingScaffold();
+        } else {
+          _mass = snapshot.data;
+          return Scaffold(
+              appBar: AppBar(
+                title: Text(
+                  _mass.hasName()
+                      ? _mass.name
+                      : Constants.MASS_VIEW_TITLE +
+                          formatterFullDate.format(_mass.date),
+                ),
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                elevation: 0.0,
+                actions: <Widget>[
+                  IconButton(
+                    icon: Icon(
+                      Icons.share,
+                    ),
+                    onPressed: () {
+                      Share.share(Api.BaseUrl + "mass/view/" + _mass.id);
+                    },
+                  ),
+                  _mass.instancesRecovered()
+                      ? IconButton(
+                          icon: Icon(Icons.play_arrow),
+                          onPressed: () {
+                            _openFullScreenMass();
+                          },
+                        )
+                      : Container()
+                ],
               ),
-              onPressed: () {
-                Share.share(Api.BaseUrl + "mass/view/" + _mass.id);
-              },
-            ),
-            _mass.instancesRecovered() ?
-            IconButton(
-              icon: Icon(Icons.play_arrow),
-              onPressed: () {
-                _openFullScreenMass();
-              },
-            ):Container()
-          ],
-        ),
-        body: RoundedBlackContainer(
-          child: _mass.instancesRecovered()
-              ? _createListView(context)
-              : FetchingWidget(Constants.SONGS_WAITING),
-          bottomOnly: true,
-          radius: Constants.APP_RADIUS,
-        ));
+              body: RoundedBlackContainer(
+                child: _mass.instancesRecovered()
+                    ? _createListView(context, _mass)
+                    : FetchingWidget(Constants.SONGS_WAITING),
+                bottomOnly: true,
+                radius: Constants.APP_RADIUS,
+              ));
+        }
+      },
+    );
   }
 }

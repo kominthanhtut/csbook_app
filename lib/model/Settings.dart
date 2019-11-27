@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Parish.dart';
@@ -19,26 +20,25 @@ class Settings extends ChangeNotifier {
   String parishName = "";
   int notation = NOTATION_SPANISH;
 
-  static final Settings _settings = Settings._internal();
-
-  static Settings get instance {
-    return _settings;
-  }
-
-  Settings._internal();
-
-  void setDefaults(){
+  Settings() {
     this.darkTheme = false;
     this.parishId = -1;
-    this.parishName="";
-    this. notation = NOTATION_SPANISH;
+    this.parishName = "";
+    this.notation = NOTATION_SPANISH;
   }
 
   void fill(SharedPreferences sp) {
     this.notation = sp.getInt(NOTATION_TOKEN);
+    this.notation = (this.notation == null) ? NOTATION_SPANISH : this.notation;
+
     this.darkTheme = sp.getBool(IS_DARK_TOKEN);
+    this.darkTheme = (this.darkTheme == null) ? false : this.darkTheme;
+
     this.parishId = sp.get(PARISH_ID);
+    this.parishId = (this.parishId == null) ? -1 : this.parishId;
+
     this.parishName = sp.getString(PARISH_NAME);
+    this.parishName = (this.parishName == null) ? "" : this.parishName;
 
     //notifyListeners();
   }
@@ -56,29 +56,32 @@ class Settings extends ChangeNotifier {
   void setDarkTheme(bool value) {
     this.darkTheme = value;
 
-    SharedPreferences.getInstance().then((sp) {
-      sp.setBool(IS_DARK_TOKEN, value);
+    saveSettings().then((_) {});
+  }
 
-      notifyListeners();
-    });
+  Future<void> saveSettings() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    await sp.setInt(PARISH_ID, this.parishId);
+    await sp.setString(PARISH_NAME, this.parishName);
+    await sp.setBool(IS_DARK_TOKEN, this.darkTheme);
+    await sp.setInt(NOTATION_TOKEN, this.notation);
+
+    Fluttertoast.showToast(
+        msg: "¡Ajustes guardados!", toastLength: Toast.LENGTH_SHORT);
+
+    notifyListeners();
   }
 
   Parish setParish(Parish parish) {
-    SharedPreferences.getInstance().then((sp) {
-      sp.setInt(PARISH_ID, parish.id);
-      sp.setString(PARISH_NAME, parish.name);
-
-      notifyListeners();
-    });
+    this.parishId = parish.id;
+    this.parishName = parish.name;
+    saveSettings().then((_) {});
     return parish;
   }
 
   int setNotation(int notation) {
-    SharedPreferences.getInstance().then((sp) {
-      sp.setInt(NOTATION_TOKEN, notation);
-
-      notifyListeners();
-    });
+    this.notation = notation;
+    saveSettings().then((_) {});
     return notation;
   }
 }

@@ -218,16 +218,20 @@ class _SongScreenState extends State<SongScreen> {
               if (snapshot.connectionState == ConnectionState.none &&
                   snapshot.hasData == null &&
                   snapshot.data?.length == 0) {
-                return FetchingWidget(Constants.SONG_WAITING);
+                return _loadingScaffold();
               } else {
                 if (snapshot.data != null && snapshot.data.length > 0) {
                   instance = snapshot.data[0];
                   return _loadedScaffold(instance);
                 } else
-                  return FetchingWidget(Constants.SONG_WAITING);
+                  return _loadingScaffold();
               }
             },
           );
+  }
+
+  Widget _loadingScaffold(){
+    return Scaffold(body: SafeArea(child: FetchingWidget(Constants.SONG_WAITING)),);
   }
 
   Widget _loadedScaffold(Instance instance){

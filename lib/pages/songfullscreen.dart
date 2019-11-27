@@ -1,6 +1,7 @@
 import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/Widgets/SongTextWidget.dart';
 import 'package:csbook_app/model/Instance.dart';
+import 'package:csbook_app/model/Settings.dart';
 import 'package:flutter/material.dart';
 
 import 'package:screen/screen.dart';
@@ -35,7 +36,7 @@ class _SongFullScreenState extends State<SongFullScreen> {
   double defaultFontSize = 16;
   double initfontSize, fontSize = 16;
 
-  int _notation = Constants.NOTATION_SPANISH;
+  int _notation = Settings.NOTATION_SPANISH;
 
   _SongFullScreenState(this.songState);
 
@@ -46,7 +47,7 @@ class _SongFullScreenState extends State<SongFullScreen> {
     super.initState();
     SharedPreferences.getInstance().then((sp) {
       setState(() {
-        var savedNotation = sp.get(Constants.NOTATION_TOKEN);
+        var savedNotation = sp.get(Settings.NOTATION_TOKEN);
         if (savedNotation != null && savedNotation is int)
           _notation = savedNotation;
       });

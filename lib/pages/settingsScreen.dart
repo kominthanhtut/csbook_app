@@ -64,7 +64,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               //Divider(),
               ListTile(
                 title: Text("Notación"),
-                subtitle: Text((_notation == Constants.NOTATION_SPANISH)
+                subtitle: Text((_notation == Settings.NOTATION_SPANISH)
                     ? "Española"
                     : "Inglesa"),
                 leading: Icon(FontAwesomeIcons.music),
@@ -136,7 +136,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               RadioListTile(
                 groupValue: _notation,
-                value: Constants.NOTATION_ENGLISH,
+                value: Settings.NOTATION_ENGLISH,
                 title: Text("Inglesa"),
                 subtitle: Text("A, B, C, D, E, F, G"),
                 onChanged: (value) {
@@ -146,7 +146,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               RadioListTile(
                 groupValue: _notation,
-                value: Constants.NOTATION_SPANISH,
+                value: Settings.NOTATION_SPANISH,
                 title: Text("Española"),
                 subtitle: Text("La, Si, Do, Re, Mi, Fa, Sol"),
                 onChanged: (value) {

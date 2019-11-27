@@ -1,11 +1,10 @@
-import 'package:csbook_app/Constants.dart';
 import 'package:csbook_app/model/Chord.dart';
+import 'package:csbook_app/model/Settings.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SongText extends StatelessWidget {
   SongText(this.songText,
-      {this.textSize = 16, this.notation = Constants.NOTATION_SPANISH, this.alignment = CrossAxisAlignment.start});
+      {this.textSize = 16, this.notation = Settings.NOTATION_SPANISH, this.alignment = CrossAxisAlignment.start});
   final String songText;
   final double textSize;
   final int notation;
@@ -83,7 +82,7 @@ class SongText extends StatelessWidget {
           children: <Widget>[
             Text(
                 Chord(currentChord).paint(
-                    (notation == Constants.NOTATION_SPANISH)
+                    (notation == Settings.NOTATION_SPANISH)
                         ? Chord.CHORD_SET_SPANISH
                         : Chord.CHORD_SET_ENGLISH),
                 style: TextStyle(
