@@ -19,13 +19,11 @@ class TabletListPage extends StatefulWidget {
 }
 
 class _TabletListPageState extends State<TabletListPage> {
-  List<Song> _songs = new List<Song>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Widget _selectedSong = Container();
 
   var index = 0;
-
 
   void getInstances(BuildContext context, Song song) {
     setState(() {
@@ -37,8 +35,7 @@ class _TabletListPageState extends State<TabletListPage> {
     });
   }
 
-
-  Widget makeAppBar(GlobalKey<ScaffoldState> parentScaffoldKey) {
+  Widget makeAppBar(GlobalKey<ScaffoldState> parentScaffoldKey, List<Song> songs) {
     return AppBar(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       elevation: 0,
@@ -49,35 +46,23 @@ class _TabletListPageState extends State<TabletListPage> {
           parentScaffoldKey.currentState.openDrawer();
         },
       ),
-      actions: getActions(context),
+      actions: getActions(context, songs),
     );
   }
 
- Widget makeBody() {
+  Widget makeBody(List<Song> songs) {
     return Scrollbar(
-      child: FutureBuilder<List<Song>>(
-          future: Song.get(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.none &&
-                snapshot.hasData == null &&
-                snapshot.data?.length == 0) {
-              return FetchingWidget(Constants.SONGS_WAITING);
-            } else {
-              return ListView.builder(
-                  itemCount: snapshot.data==null ? 0: snapshot.data.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return SongTile(snapshot.data[index], onTap: (song) {
-                      getInstances(context, song);
-                      print(song);
-                    });
-                  });
-            }
-          }),
-    );
+        child: ListView.builder(
+            itemCount: songs == null ? 0 : songs.length,
+            itemBuilder: (BuildContext context, int index) {
+              return SongTile(songs[index], onTap: (song) {
+                getInstances(context, song);
+                print(song);
+              });
+            }));
   }
 
-
-  List<Widget> getActions(BuildContext context) {
+  List<Widget> getActions(BuildContext context, List<Song> _songs) {
     return [
       Builder(
           builder: (context) => _songs.length > 0
@@ -102,30 +87,38 @@ class _TabletListPageState extends State<TabletListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      body: RoundedBlackContainer(
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-          Container(
-              decoration: BoxDecoration(
-                border: Border(
-                    right: BorderSide(
-                        color: Theme.of(context).primaryColorLight, width: 0)),
+    return FutureBuilder<List<Song>>(
+        future: Song.get(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.none &&
+              snapshot.hasData == null && snapshot.data == null &&
+              snapshot.data.length >= 0) {
+            return FetchingWidget(Constants.SONGS_WAITING);
+          } else {
+            return Scaffold(
+              key: _scaffoldKey,
+              body: RoundedBlackContainer(
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                          
+                          width: MediaQuery.of(context).size.width * 0.35,
+                          child: Scaffold(
+                            appBar: makeAppBar(_scaffoldKey, snapshot.data),
+                            body: makeBody(snapshot.data),
+                          )),
+                      Container(
+                          width: MediaQuery.of(context).size.width * 0.65,
+                          child: _selectedSong)
+                    ]),
+                bottomOnly: true,
+                radius: Constants.APP_RADIUS,
               ),
-              width: MediaQuery.of(context).size.width * 0.35,
-              child: Scaffold(
-                appBar: makeAppBar(_scaffoldKey),
-                body: makeBody(),
-              )),
-          Container(
-              width: MediaQuery.of(context).size.width * 0.65,
-              child: _selectedSong)
-        ]),
-        bottomOnly: true,
-        radius: Constants.APP_RADIUS,
-      ),
-      drawer: NavigationDrawer.drawer(context,
-          end: false, currentPage: NavigationDrawer.LIST_PAGE),
-    );
+              drawer: NavigationDrawer.drawer(context,
+                  end: false, currentPage: NavigationDrawer.LIST_PAGE),
+            );
+          }
+        });
   }
 }
