@@ -19,7 +19,6 @@ class PhoneListPage extends StatefulWidget {
 }
 
 class _PhoneListPageState extends State<PhoneListPage> {
-
   var index = 0;
 
   void getInstances(BuildContext context, Song song) {
@@ -85,6 +84,8 @@ class _PhoneListPageState extends State<PhoneListPage> {
             ),
             drawer: NavigationDrawer.drawer(context,
                 end: false, currentPage: NavigationDrawer.LIST_PAGE),
+            endDrawer: NavigationDrawer.drawer(context,
+                end: true, currentPage: NavigationDrawer.LIST_PAGE),
           );
         });
   }
