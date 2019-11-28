@@ -65,7 +65,7 @@ class _TabletListPageState extends State<TabletListPage> {
   List<Widget> getActions(BuildContext context, List<Song> _songs) {
     return [
       Builder(
-          builder: (context) => _songs.length > 0
+          builder: (context) => (_songs != null && _songs.length > 0)
               ? IconButton(
                   icon: Icon(Icons.search),
                   tooltip: 'Filtrar',
