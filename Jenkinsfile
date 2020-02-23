@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'docker run -v ${PWD}:/build --workdir /build cirrusci/flutter:stable flutter build --release'
+        sh 'docker run -v ${PWD}:/build --workdir /build cirrusci/flutter:stable flutter build apk --release'
       }
     }
 
