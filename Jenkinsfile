@@ -10,7 +10,7 @@ pipeline {
 
     stage('Archive') {
       steps {
-        archiveArtifacts '${WORKSPACE}/build/app/outputs/apk/release/*.apk'
+        archiveArtifacts 'build/app/outputs/apk/release/*.apk'
       }
     }
 
