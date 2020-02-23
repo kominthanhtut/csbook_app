@@ -8,9 +8,15 @@ pipeline {
       }
     }
 
+    stage('Archive') {
+      steps {
+        archiveArtifacts '${WORKSPACE}/build/app/outputs/apk/release/*.apk'
+      }
+    }
+
     stage('Publish') {
       steps {
-        telegramUploader(filter: '${WORKSPACE}/build/app/outputs/apk/release/*.APK', chatId: 'hkfuertes')
+        telegramUploader(chatId: 'hkfuertes', filter: '${WORKSPACE}/build/app/outputs/apk/release/*.apk')
       }
     }
 
