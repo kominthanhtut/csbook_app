@@ -8,5 +8,11 @@ pipeline {
       }
     }
 
+    stage('Publish') {
+      steps {
+        telegramUploader(filter: '${WORKSPACE}/build/app/outputs/apk/release/*.APK', chatId: 'hkfuertes')
+      }
+    }
+
   }
 }
