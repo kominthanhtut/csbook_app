@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh ''' docker run --rm --volumes-from jenkins --workdir ${WORKSPACE} cirrusci/flutter:stable flutter build apk --target-platform android-arm,android-arm64 --split-per-abi
+        sh ''' docker run --rm --volumes-from jenkins-docker --workdir ${WORKSPACE} cirrusci/flutter:stable flutter build apk --target-platform android-arm,android-arm64 --split-per-abi
 '''
       }
     }
