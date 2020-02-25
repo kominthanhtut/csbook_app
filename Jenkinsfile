@@ -18,7 +18,7 @@ pipeline {
 
     stage('Publish') {
       steps {
-        telegramUploader(chatId: '-1001492622304', filter: 'build/app/outputs/apk/release/*.apk', caption: 'Build: ${BUILD_TAG}')
+        telegramUploader(chatId: '-1001492622304', filter: 'build/app/outputs/apk/release/*.apk')
       }
     }
 
