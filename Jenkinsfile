@@ -10,6 +10,8 @@ pipeline {
 
     stage('Archive') {
       steps {
+        sh 'mv  ${WORKSPACE}/build/app/outputs/apk/release/app-arm64-v8a-release.apk  ${WORKSPACE}/build/app/outputs/apk/release/CSBookApp-arm64-v8a.$(date +%d.%m.%Y).apk'
+        sh 'mv  ${WORKSPACE}/build/app/outputs/apk/release/app-armeabi-v7a-release.apk  ${WORKSPACE}/build/app/outputs/apk/release/CSBookApp-armeabi-v7a.$(date +%d.%m.%Y).apk'
         archiveArtifacts 'build/app/outputs/apk/release/*.apk'
       }
     }
